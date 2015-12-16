@@ -1,0 +1,33 @@
+permalink: /:year/:month/:day/:title.html
+markdown: kramdown
+pygments: true
+
+kramdown:
+  input: GFM
+
+# 作者信息
+author: 
+  name: Barry
+  email: 1025587160@qq.com
+  link: http://BarryLiu.github.io
+  weibo: http://weibo.com/
+  github: http://github.com/BarryLiu
+
+# 站点信息
+title: Barry的博客 
+description: Barry的博客
+url: http://Barry.org
+rss_url: /pages/atom.xml
+
+# avatar头像及Favicon
+avatar: http://barryliu.github.io/site-avatar.png
+favicon: http://barryliu.github.io/site-avatar.png
+
+# google analytics 设置
+ga:
+  id: UA-54767140-1
+  url: BarryLiu.github.io
+
+# disqus 设置
+disqus:
+  shortname: BarryLiu-zh
