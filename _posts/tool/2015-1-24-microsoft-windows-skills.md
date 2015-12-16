@@ -1,10 +1,10 @@
 ---
 layout: post
-title: 【高效工作】Windows系统下的奇技淫巧大汇总
-category: Windows
+title: 【高效工作】Windows系统下快捷键大汇总
+category: 
 tags: Windows
 keywords: Windows
-description: 【高效工作】Windows系统下的奇技淫巧大汇总
+description: 【高效工作】Windows系统下快捷键大汇总
 ---
 
 &emsp;&emsp;不管你是Linux粉、IOS粉还是软粉，都不应该在不熟悉一个操作系统的情况下贬低它，这三种主流系统能够并存，说明都有各自的优势，作为一个软粉，结合最近在知乎和Quora上看到关于Windows系统中一些鲜为人知的技巧（连接先文末），特地汇总一下以飨读者。
