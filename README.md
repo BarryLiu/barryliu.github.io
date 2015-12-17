@@ -18,6 +18,7 @@ GitCafe网站：[http://gitcafe.com/barryliu](http://gitcafe.com/barryliu)
 4. 修改CNAME，或者删掉这个文件，使用默认域名
 5. 修改`_config.yml`配置项
 6. It's done!
+7. fork给自己之后将_posts/barry目录删除了,哪个是博主我自己生活吐槽等
 
 ### 分支说明
 
