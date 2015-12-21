@@ -4,7 +4,7 @@ title: 持续写作的重要性
 category: Barry
 tags: Essay
 keywords: 写作,writing
-description: 不再学习技术或做项目，就不再产生内容，这就是我从6月中旬到现在都没有更新的原因
+description: 不再学习技术或做项目，就不再产生内容，这就是我从4月中旬到现在都没有更新的原因
 ---
 
 最近都没有怎么上微博，昨天上去看到这样一句话，让我挺有感触
