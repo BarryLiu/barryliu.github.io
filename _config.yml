@@ -20,8 +20,8 @@ url: http://Barry.org
 rss_url: /pages/atom.xml
 
 # avatar头像及Favicon
-avatar: http://barryliu.github.io/pic.jpg
-favicon: http://barryliu.github.io/pic.jpg
+avatar: http://barryliu.github.io/pic.png
+favicon: http://barryliu.github.io/pic.png
 
 # google analytics 设置
 ga:
