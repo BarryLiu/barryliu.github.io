@@ -11,6 +11,8 @@ CSDN网站：[http://blog.csdn.net/github_33764133](http://blog.csdn.net/github_
 ----------
 GitCafe网站：[http://gitcafe.com/barryliu](http://gitcafe.com/barryliu) 
 ----------
+GitCafe网站：[http://blog.sina.com.cn/barry110](http://blog.sina.com.cn/barry110) (不怎么玩)
+----------
 
 ### 安装说明
 
