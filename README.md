@@ -7,6 +7,8 @@ GitHub网站：[https://github.com/barryLiu](https://github.com/barryLiu)
 ----------
 开源中国网站：[http://git.oschina.net/barryliu](http://git.oschina.net/barryliu) 
 ----------
+CSDN网站：[http://blog.csdn.net/github_33764133](http://blog.csdn.net/github_33764133) 
+----------
 GitCafe网站：[http://gitcafe.com/barryliu](http://gitcafe.com/barryliu) 
 ----------
 
