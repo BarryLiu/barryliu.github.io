@@ -82,3 +82,12 @@ set CATALINA_HOME=D:\Program Files\apache-tomcat-7.0.40-band-test
     
 
 
+#进入tomcat端口直接进入项目   
+>tomcat 配置  server.xml下面找到   最下面找到配置给其配contextpath
+----------
+	<Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"  
+               prefix="localhost_access_log." suffix=".txt" pattern="common" rotatable="true" resolveHosts="false"/>
+		 
+		 <Context path="" docBase="E:\program\apache-tomcat-7.0.62-project-8082\webapps\project_manager" debug="0" reloadable="true"/>	
+		<!-- <Context path="/pagt" docBase="D:\Program Files\apache-tomcat-7.0.62_push\webapps\pagt" debug="0" reloadable="true"/> -->
+
