@@ -1,8 +1,8 @@
 ---
 layout: post
 title: Android中include标签的使用及注意事项
-category: android
-tags: android
+category: Android
+tags: Android
 keywords: android,include
 description: Android中include标签的使用及注意事项
 ---

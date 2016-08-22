@@ -1,8 +1,8 @@
 ---
 layout: post
 title: 在Adapter中使用Holder的那些坑
-category: android
-tags: android
+category: Android
+tags: Android
 keywords: android,BaseAdapter,Holder
 description: 在Adapter中使用Holder的那些坑
 ---
