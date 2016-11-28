@@ -91,3 +91,5 @@ set CATALINA_HOME=D:\Program Files\apache-tomcat-7.0.40-band-test
 		 <Context path="" docBase="E:\program\apache-tomcat-7.0.62-project-8082\webapps\project_manager" debug="0" reloadable="true"/>	
 		<!-- <Context path="/pagt" docBase="D:\Program Files\apache-tomcat-7.0.62_push\webapps\pagt" debug="0" reloadable="true"/> -->
 
+#TOMCAT 部署项目 页面刷新 有时正常显示 有时候报404 
+	问题解决办法 ,tomcat目录work 文件夹下 将对应的项目对应的文件夹删除掉
