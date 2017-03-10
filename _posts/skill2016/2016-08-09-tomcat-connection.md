@@ -93,3 +93,26 @@ set CATALINA_HOME=D:\Program Files\apache-tomcat-7.0.40-band-test
 
 #TOMCAT 部署项目 页面刷新 有时正常显示 有时候报404 
 	问题解决办法 ,tomcat目录work 文件夹下 将对应的项目对应的文件夹删除掉
+
+#tomcat部署项目如何去掉项目名称
+###直接在server.xml中<Host></Host>间加了一句<Context path="" docBase="/fts" debug="0" reloadable="true"/>,其中docBase="/test"中的/test是项目名字
+
+
+#把项目放到tomcat6\webapps下面
+
+修改Host
+
+<Host name="www.test.com"  debug="0" appBase="webapps" unpackWARs="true" autoDeploy="true" xmlValidation="false" xmlNamespaceAware="false"> 
+
+<Context path="/" docBase="/test"  debug="0" reloadable="true"></Context> 
+
+</Host> 
+
+这样就可以通过域名www.test.com访问test为项目名的项目了。
+
+如果主机中绑定多个域名，直接加host即可。
+
+
+jvisualvm
+
+http://jiajun.iteye.com/blog/810150
