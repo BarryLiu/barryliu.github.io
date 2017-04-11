@@ -43,4 +43,8 @@ description:
 ### 赋予数据库权限
 
     GRANT ALL ON testdb.* TO 'test'@'localhost';
-
+    
+    
+### 表追加插入 
+	INSERT INTO 表1 SELECT * FROM 表2   
+	注意主键冲突,表结构是否一致
