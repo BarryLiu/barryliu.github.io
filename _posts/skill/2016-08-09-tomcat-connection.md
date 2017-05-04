@@ -116,3 +116,23 @@ set CATALINA_HOME=D:\Program Files\apache-tomcat-7.0.40-band-test
 jvisualvm
 
 http://jiajun.iteye.com/blog/810150
+
+
+#tomcat session失效设置
+```
+
+	session失效时间设置  
+	一、java代码  
+	request.getSession().setMaxInactiveInterval(1800);/*秒为单位*/    
+	二、web.xml  
+	<session-config>   <!--分钟为单位-->  
+	    <session-timeout>30</session-timeout>  
+	</session-config>  
+	  
+	三、web服务器resin.conf，tomcat，  
+	<session-config>   <!--分钟为单位-->  
+	    <session-timeout>30</session-timeout>  
+	    <enable-url-rewriting>false</enable-url-rewriting>  
+	</session-config>  
+
+```
