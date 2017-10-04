@@ -1,4 +1,6 @@
-_site/
-_drafts/
+_site
+.sass-cache
+.jekyll-metadata
+.vscode
+.idea
 .DS_Store
-.idea/
