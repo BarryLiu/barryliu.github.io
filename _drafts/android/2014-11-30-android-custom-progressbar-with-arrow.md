@@ -13,7 +13,7 @@ Android原生的进度条可以根据不同的主题有不同的视觉效果，�
 ![Progressbar](http://img.blog.csdn.net/20140912124731250?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvZWtldXk=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
 
 但你会发现，进度图片像是被截断了一样，看上去同样不美观，所以现在很多应用都会在进度条上玩花样，做出各种各样的效果，本例介绍的是在进度条的头部加上光晕箭头的效果，最终效果类似于这样，知道如何做这个效果和，其它效果（一个动画带着进度条跑、火箭进度条等）自然而然也就会了： 
- 
+
 ![CustomProgressbar](http://img.blog.csdn.net/20140912124742375?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvZWtldXk=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
 
 ### 实现原理
@@ -21,16 +21,16 @@ Android原生的进度条可以根据不同的主题有不同的视觉效果，�
 
 - 给ProgressBar换前景和背景图，这个在布局文件中定义Progressbar的时候直接设置其progressDrawableJ就可以了，eg:
 
-		<ProgressBar
-			    android:id="@+id/downloadProgressId"
-				style="?android:attr/progressBarStyleHorizontal"
-				android:layout_width="893.0dp"
-				android:layout_height="14.0dp"
-				android:layout_centerInParent="true"
-				android:progressDrawable="@drawable/arrow_progress_bg"
-				android:max="100"
-				android:progress="0"
-				/>
+   <ProgressBar
+   		    android:id="@+id/downloadProgressId"
+   			style="?android:attr/progressBarStyleHorizontal"
+   			android:layout_width="893.0dp"
+   			android:layout_height="14.0dp"
+   			android:layout_centerInParent="true"
+   			android:progressDrawable="@drawable/arrow_progress_bg"
+   			android:max="100"
+   			android:progress="0"
+   			/>
 
 arrow_progress_bg.xml如下：
 
