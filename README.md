@@ -1,17 +1,18 @@
 ### 我的博客
 
 
-GitHub博客： [http://barryliu.github.io](http://barryliu.github.io)
+##GitHub博客： 
+[http://barryliu.github.io](http://barryliu.github.io)
 -----------
-GitHub网站：[https://github.com/barryLiu](https://github.com/barryLiu) 
+##GitHub网站：[https://github.com/barryLiu](https://github.com/barryLiu) 
 ----------
-开源中国网站：[http://git.oschina.net/barryliu](http://git.oschina.net/barryliu) 
+##开源中国网站：[http://git.oschina.net/barryliu](http://git.oschina.net/barryliu) 
 ----------
-CSDN网站：[http://blog.csdn.net/github_33764133](http://blog.csdn.net/github_33764133) 
+##CSDN网站：[http://blog.csdn.net/github_33764133](http://blog.csdn.net/github_33764133) 
 ----------
-GitCafe网站：[http://gitcafe.com/barryliu](http://gitcafe.com/barryliu) 
+##Coding网站：[https://coding.net/u/BarryLiu](https://coding.net/u/BarryLiu) 
 ----------
-GitCafe网站：[http://blog.sina.com.cn/barry110](http://blog.sina.com.cn/barry110) (不怎么玩)
+##sina网站：[http://blog.sina.com.cn/barry110](http://blog.sina.com.cn/barry110) (不怎么玩)
 ----------
 
 ### 安装说明
