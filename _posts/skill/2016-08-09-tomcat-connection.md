@@ -9,9 +9,9 @@ description:
 
 
 
-#很久没有写博客了,没有心情写,也懒得写,今天加班没事做忽然想把自己想写的记一下
+# 很久没有写博客了,没有心情写,也懒得写,今天加班没事做忽然想把自己想写的记一下
 
-##有的时候看到这个代码不知道 其实是tomcat连接,次连接直接连接tomcat 下的   conf目录下context.xml 文件中的配置
+## 有的时候看到这个代码不知道 其实是tomcat连接,次连接直接连接tomcat 下的   conf目录下context.xml 文件中的配置
 
 ```java
  Connection dbConn = null;
@@ -60,10 +60,10 @@ description:
 ```
 
 
-#tomcat更改端口号 
+# tomcat更改端口号 
 
 -------
-##找到 tomcat 下的server.xml文件 (更改3个端口)
+## 找到 tomcat 下的server.xml文件 (更改3个端口)
 	1.<Server port="8005" shutdown="SHUTDOWN">	//8005
 
 	2.<Connector port="8080" protocol="HTTP/1.1"
@@ -73,7 +73,7 @@ description:
 	3. <Connector port="8009" protocol="AJP/1.3" redirectPort="8443" /> //8009 
 
 
-#tomcat启动问题
+# tomcat启动问题
 >有的时候需要给其配置jdk路径可以直接在tomcat下的 	startup.bat里面写
 
 -------
@@ -84,7 +84,7 @@ set CATALINA_HOME=D:\Program Files\apache-tomcat-7.0.40-band-test
 ​    
 
 
-#进入tomcat端口直接进入项目   
+# 进入tomcat端口直接进入项目   
 >tomcat 配置  server.xml下面找到   最下面找到配置给其配contextpath
 ----------
 	<Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"  
@@ -93,14 +93,14 @@ set CATALINA_HOME=D:\Program Files\apache-tomcat-7.0.40-band-test
 		 <Context path="" docBase="E:\program\apache-tomcat-7.0.62-project-8082\webapps\project_manager" debug="0" reloadable="true"/>	
 		<!-- <Context path="/pagt" docBase="D:\Program Files\apache-tomcat-7.0.62_push\webapps\pagt" debug="0" reloadable="true"/> -->
 
-#TOMCAT 部署项目 页面刷新 有时正常显示 有时候报404 
+# TOMCAT 部署项目 页面刷新 有时正常显示 有时候报404 
 	问题解决办法 ,tomcat目录work 文件夹下 将对应的项目对应的文件夹删除掉
 
-#tomcat部署项目如何去掉项目名称
-###直接在server.xml中<Host></Host>间加了一句<Context path="" docBase="/fts" debug="0" reloadable="true"/>,其中docBase="/test"中的/test是项目名字
+# tomcat部署项目如何去掉项目名称
+### 直接在server.xml中<Host></Host>间加了一句<Context path="" docBase="/fts" debug="0" reloadable="true"/>,其中docBase="/test"中的/test是项目名字
 
 
-#把项目放到tomcat6\webapps下面
+# 把项目放到tomcat6\webapps下面
 
 修改Host
 
@@ -120,7 +120,7 @@ jvisualvm
 http://jiajun.iteye.com/blog/810150
 
 
-#tomcat session失效设置
+# tomcat session失效设置
 ```
 
 	session失效时间设置  
