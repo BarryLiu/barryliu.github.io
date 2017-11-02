@@ -43,4 +43,3 @@ mysql 与 postgreSql 数据库简单使用,命令对比
 
 ## 退出登录
 	\q
-	quit 或者\q

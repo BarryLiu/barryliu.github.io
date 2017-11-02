@@ -14,6 +14,8 @@ Tomcat 是一个小型的轻量级应用服务器，在中小型系统和并发�
 
 
 
+
+
 ## 有的时候看到这个代码不知道 其实是tomcat连接,次连接直接连接tomcat 下的   conf目录下context.xml 文件中的配置
 
 ```java
@@ -78,6 +80,7 @@ Tomcat 是一个小型的轻量级应用服务器，在中小型系统和并发�
 # tomcat启动问题
 > 有的时候需要给其配置jdk路径可以直接在tomcat下的 	startup.bat里面写
 
+
 -------
 编辑 startup.bat
 写在第一行：eg
@@ -88,6 +91,7 @@ set CATALINA_HOME=D:\Program Files\apache-tomcat-7.0.40-band-test
 
 # 进入tomcat端口直接进入项目   
 > tomcat 配置  server.xml下面找到   最下面找到配置给其配contextpath
+
 ----------
 	<Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"  
 	           prefix="localhost_access_log." suffix=".txt" pattern="common" rotatable="true" resolveHosts="false"/>
@@ -99,7 +103,9 @@ set CATALINA_HOME=D:\Program Files\apache-tomcat-7.0.40-band-test
 	问题解决办法 ,tomcat目录work 文件夹下 将对应的项目对应的文件夹删除掉
 
 # tomcat部署项目如何去掉项目名称
+
 ###直接在server.xml中<Host></Host>间加了一句<Context path="" docBase="/fts" debug="0" reloadable="true"/>,其中docBase="/test"中的/test是项目名字
+
 
 
 # 把项目放到tomcat6\webapps下面
