@@ -48,6 +48,13 @@
       title: 'push系统',
       core_tech: '公司内部系统',
       description: '为公司开发并维护push系统。轮循推送apk'
+	  },{
+      demo_link: 'https://www.stubook.com.cn/HomeworkManagement/',
+      img_link: '/images/stubook.jpg',
+      code_link: '#',
+      title: 'stubook学生平板',
+      core_tech: '公司内部系统',
+      description: '公司开发主要系统学生作业平板后台api'
 	  },
 	  {
       demo_link: 'http://gaohaoyang.github.io/ToDo-WebApp/',
