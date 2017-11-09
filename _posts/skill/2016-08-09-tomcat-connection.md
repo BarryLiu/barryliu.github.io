@@ -144,4 +144,16 @@ http://jiajun.iteye.com/blog/810150
 	    <session-timeout>30</session-timeout>  
 	    <enable-url-rewriting>false</enable-url-rewriting>  
 	</session-config>  
+	
+	
+# Tomcat配置远程调试端口
+>当我们需要定位生产环境问题，而日志又不清晰的情况下，我们可以借助Tomcat提供的远程调试
+
+``` 
+	// Linxu系统: apach/bin/startup.sh开始处中增加如下内容： 
+	declare -x CATALINA_OPTS="-server -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8081"
+
+
+	// Windows系统: apach/bin/startup.bat开始处中增加如下内容：
+	SET CATALINA_OPTS=-server -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8081
 ```
