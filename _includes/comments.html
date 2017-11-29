@@ -19,6 +19,13 @@
 <!-- 多说公共JS代码 end -->
 {% endif %}
 
+<!-- 友言第三方评论 -->
+{% if site.uyan_shortname %}
+ <div id="uyan_frame"></div>
+  <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid={{site.uyan_shortname}}"></script>
+{% endif %}
+
+
 {% if site.disqus_shortname %}
 <div id="disqus_thread"></div>
 <script>
@@ -44,3 +51,5 @@
 </script>
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
 {% endif %}
+
+ 
