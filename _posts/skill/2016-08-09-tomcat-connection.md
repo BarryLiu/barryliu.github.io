@@ -80,7 +80,6 @@ Tomcat 是一个小型的轻量级应用服务器，在中小型系统和并发�
 # tomcat启动问题
 > 有的时候需要给其配置jdk路径可以直接在tomcat下的 	startup.bat里面写
 
-
 -------
 编辑 startup.bat
 写在第一行：eg
@@ -148,12 +147,25 @@ http://jiajun.iteye.com/blog/810150
 	
 # Tomcat配置远程调试端口
 >当我们需要定位生产环境问题，而日志又不清晰的情况下，我们可以借助Tomcat提供的远程调试
-
-``` 
+```
 	// Linxu系统: apach/bin/startup.sh开始处中增加如下内容： 
 	declare -x CATALINA_OPTS="-server -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8081"
 
 
 	// Windows系统: apach/bin/startup.bat开始处中增加如下内容：
 	SET CATALINA_OPTS=-server -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8081
-```
+
+
+#修改tomcat 内存
+
+## 前台程序修改
+	修改catalina.bat 文件,加入 JAVA_OPTS=-Xms256m -Xmx512m 
+
+
+## 后台修改
+	win+r >  regedit 找到 tomcat的注册表信息
+	HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Apache Software Foundation\Procrun 2.0\TomcatName 修改里面的
+	参考：http://blog.csdn.net/lfsf802/article/details/46700553
+
+
+![注册表修改](http://owpmx0n2u.bkt.clouddn.com/regedit_tomcat.png)
