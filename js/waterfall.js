@@ -42,13 +42,13 @@
       core_tech: '公司内部系统',
       description: '为公司维护push系统。主要功能:开发好的系统版本发给工厂量产'
 	  },{
-      demo_link: 'http://ota.wheatek.com:8604/padm/',
-      img_link: '/images/push.jpg',
-      code_link: '#',
-      title: 'push系统',
-      core_tech: '公司内部系统',
-      description: '为公司开发并维护push系统。轮循推送apk'
-	  },{
+        demo_link: 'http://oyag.wheagoogle.com/index.html',
+        img_link: '/images/push2.png',
+        code_link: '#',
+        title: '新 push 系统',
+        core_tech: 'SpringBoot+JPA+Freemarker+Maven系统',
+        description: '为公司开发并维护push系统。轮循推送apk,统计等动作'
+      },{
       demo_link: 'https://www.stubook.com.cn/HomeworkManagement/',
       img_link: '/images/stubook.jpg',
       code_link: '#',

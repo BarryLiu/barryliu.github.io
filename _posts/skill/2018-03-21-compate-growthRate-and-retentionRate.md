@@ -136,4 +136,162 @@ END
 
 
 
-​	
+### 系统每天调用代码
+
+```java
+ 
+@Configuration
+@EnableScheduling
+public class PushTaskConfig {
+	private Logger logger = Logger.getLogger(PushTaskConfig.class);
+    @Resource 
+    private ProjectService projectService;
+    @Resource 
+    private VisitService visitService;
+    /**
+     * @author  
+     * @date: 2018年3月1日 
+     */
+    @Scheduled(cron = "0 30 1 * * ?") // 每天凌晨1点半计算昨天的请求数据统计到统计表,
+    public void complateYestoryGetMsg() {
+        logger.warn("complateYestoryGetMsg 定时任务启动 ");
+        
+//        visitService.taskCompateYestordayGetMsg();
+        Date date = new Date();
+       String torday = DateUtil.formatDate(date);
+        DateUtil.addDay(date, -1);
+        String dateStr = DateUtil.formatDate(date);
+        projectService.compateLastActiveTime(torday); 	//定时每天计算最后访问时间
+        
+        projectService.compateProcRetentionRate(dateStr);//调用计算
+        
+        logger.warn("complateYestoryGetMsg 定时任务执行完成");
+    }
+```
+
+``` java
+
+public interface RetentionRateRepository  extends PagingAndSortingRepository<RetentionRate, Long>, JpaSpecificationExecutor<RetentionRate>{
+	
+	/**
+	 * 调用 存储过程计算昨天的push情况 到 retention_rate表
+	 * @user: 
+	 * @date: 2018年3月16日
+	 */
+	 @Procedure("proc_retention_rate_by_day")
+	void explicitlyRetentionRate(String dateStr);
+}
+
+```
+
+
+
+
+
+### java实体类
+
+``` java
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper=false)
+@Entity
+@Table(name="t_retention_rate")
+public class RetentionRate implements Serializable{
+	private static final long serialVersionUID = 12341224212L;
+
+	@Id
+	@GeneratedValue
+	protected Long id;
+	
+	@Column(name="create_time",length=100,nullable=false)
+	@NotNull(message="创建时间不能为空")
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	protected Date createTime;
+	
+	@Column(name="stat_time",length=100,nullable=false)
+	@NotNull(message="日期不能为空")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	protected Date statTime;
+	
+	
+	@Column(name="client_count",length=100,nullable=false)
+	@NotNull(message="客户端总数不能为空")
+	protected Long clientCount;
+	
+	@Column(name="active_count",length=100,nullable=false)
+	@NotNull(message="客户端活跃总数不能为空")//请求任务,调用getMsg
+	protected Long activeCount;
+	
+	@Column(name="register_nums",length=100,nullable=false)
+	@NotNull(message="客户端当天注册总数不能为空")//
+	protected Long registerNums;
+	
+	@Column(name="active_nums",length=100,nullable=false)
+	@NotNull(message="客户端当天活跃总数不能为空")//
+	protected Long activeNums;
+	
+	@Column(name="register_rage",length=100,nullable=false)
+	@NotNull(message="客户端当天注册增长率不能为空")//增长率: 今天总注册时/昨天注册总数(register_nums/(clientCount-1Day))*100%
+	protected Double registerRage;
+	
+	@Column(name="active_rage",length=100,nullable=false)
+	@NotNull(message="客户端当天活跃增长率不能为空")//日活率: 今天总活跃数/昨天活跃总数(activeNums/(activeCount-1Day))*100%
+	protected Double activeRage;
+	
+	
+	@Column(name="nums",length=100,nullable=false)
+	@NotNull(message="客户端当天新活跃数不能为空")//nums新活跃数,不包括昨天注册今天再活跃的数据 用于 计算以前的留存率 今天新添加nums (昨天注册并且昨天请求)/(昨天nums)    
+	protected Long nums;
+	
+	// daysAgo1 是一天前留存率, 前天依次类推
+	@Column(name="days_ago_1",length=5)
+	private Double daysAgo1;
+	
+	@Column(name="days_ago_2",length=5)
+	private Double daysAgo2;
+	
+	@Column(name="days_ago_3",length=5)
+	private Double daysAgo3;
+	
+	@Column(name="days_ago_4",length=5)
+	private Double daysAgo4;
+	
+	@Column(name="days_ago_5",length=5)
+	private Double daysAgo5;
+	
+	@Column(name="days_ago_6",length=5)
+	private Double daysAgo6;
+	
+	@Column(name="days_ago_7",length=5)
+	private Double daysAgo7;
+	
+	@Column(name="days_ago_8",length=5)
+	private Double daysAgo8;
+	
+	@Column(name="days_ago_9",length=5)
+	private Double daysAgo9;
+	
+	@Column(name="days_ago_10",length=5)
+	private Double daysAgo10;
+	
+	@Column(name="days_ago_11",length=5)
+	private Double daysAgo11;
+	
+	@Column(name="days_ago_12",length=5)
+	private Double daysAgo12;
+	
+	@Column(name="days_ago_13",length=5)
+	private Double daysAgo13;
+	
+	@Column(name="days_ago_14",length=5)
+	private Double daysAgo14;
+	
+}
+```
+
+
+
+### 效果图	
+
