@@ -64,6 +64,32 @@ mysql 系统统计计算
 	)ENGINE=MYISAM DEFAULT CHARSET=utf8;  
 ```
 
+### 添加辅助的存储函数
+
+``` sql
+
+-- 如果数据库   里的存在函数 selectPrevRetentionRateNums ，就删除这个函数
+DROP FUNCTION IF EXISTS  selectPrevRetentionRateNums;
+-- 创建一个函数更具传入时间取前一天活跃数量 
+CREATE FUNCTION  selectPrevRetentionRateNums(searchDate datetime)
+-- 定义返回值类型和长度
+RETURNS decimal(18,6) 
+BEGIN
+    -- 定义一个变量 prevNums，类型为 decimal(18,6)，
+    -- 默认值为0， 
+    DECLARE prevNums decimal(18,6) DEFAULT 0.00;
+	select IFNULL(sum(nums) ,0) into prevNums  from t_retention_rate where stat_time =  date_sub(searchDate, interval 1 day) ;
+    RETURN prevNums; 
+END 
+
+```
+
+
+
+
+
+
+
 ### 每天进行计算
 
 ``` sql
@@ -117,18 +143,18 @@ update t_retention_rate set days_ago_3 =  days_ago_2;
 update t_retention_rate set days_ago_2 =  days_ago_1; 
 
 -- 修改前天(anteayerDay)的留存  公式: 前天留存率= 前天活跃/大前天总注册
--- 下面的修改语句能够支持到很多天前的数据昨日概率,
-update t_retention_rate set days_ago_1 = (
+-- 下面的修改语句能够支持到很多天前的数据昨日概率,(建议就存访问量,不存访问数据,也就是分子,需要显示时再除)
+update t_retention_rate rr set days_ago_1 = (
 	select(
 		IFNULL(
-			cast(
-				(select count(0) from t_client where (last_active_time between yesterday and today) and  (first_active_time between stat_time and date_sub(stat_time, interval -1 day) )) -- 找到昨天计算要注册的那一天
+			 
+				(select count(0) from t_client where (last_active_time between '2018-03-21' and '2018-03-22') and  (first_active_time between stat_time and date_sub(stat_time, interval -1 day) )) -- 找到昨天计算要注册的那一天
 				/ 
-				(SELECT t.nums from  (select IFNULL(sum(nums) ,0) as nums from t_retention_rate where stat_time =  date_sub(stat_time, interval 1 day)  LIMIT 1) as t ) # 修改的这一条数据的前一天新活跃的量
-			 as decimal(18,2))  
+				-- ( select IFNULL(sum(r.nums) ,0) as nums from t_retention_rate  r where r.stat_time =  date_sub(stat_time, interval 1 day)  LIMIT 1  ) # 修改的这一条数据的前一天新活跃的量
+			    selectPrevRetentionRateNums(stat_time)  -- 取传入时间前一天nums 数量
 			,0)
 	)
-) where stat_time = anteayerDay; 
+);
 
 END
 -- CALL proc_retention_rate_by_day('2018-03-19');
