@@ -148,7 +148,7 @@ update t_retention_rate rr set days_ago_1 = (
 	select(
 		IFNULL(
 			 
-				(select count(0) from t_client where (last_active_time between '2018-03-21' and '2018-03-22') and  (first_active_time between stat_time and date_sub(stat_time, interval -1 day) )) -- 找到昨天计算要注册的那一天
+				(select count(0) from t_client where (last_active_time between yesterday and today) and  (first_active_time between date_sub(stat_time, interval 1 day) and stat_time )) -- 找到昨天计算要注册的那一天
 				/ 
 				-- ( select IFNULL(sum(r.nums) ,0) as nums from t_retention_rate  r where r.stat_time =  date_sub(stat_time, interval 1 day)  LIMIT 1  ) # 修改的这一条数据的前一天新活跃的量
 			    selectPrevRetentionRateNums(stat_time)  -- 取传入时间前一天nums 数量
