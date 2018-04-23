@@ -2,8 +2,8 @@
 layout: post
 title: 我的开发工具汇总
 category: 技术
-tags: tool
-keywords: tool
+tags: 工具
+keywords: tool 工具
 description:  记录我用过或推荐的开发工具
 ---
 
@@ -116,7 +116,7 @@ description:  记录我用过或推荐的开发工具
 
 ## netSpeedMonitor
 
-​	> 软件流量监控软件,软件小巧,功能单一,在windows下工具栏实时监控
+> 软件流量监控软件,软件小巧,功能单一,在windows下工具栏实时监控
 
 ### LICEcap
 
@@ -124,3 +124,5 @@ description:  记录我用过或推荐的开发工具
 
 软件介绍 https://www.cockos.com/licecap/ ,也是最后编辑文档的时候找这款软件是才发现在https://www.cockos.com下还有一些其他软件,LICEcap只是其中一个产品,有图片,音频等小软件
 
+### python + pydev
+> python 语言, pydev 是 eclipse上面python开发工具插件
