@@ -33,12 +33,25 @@ description: windows下打开文件或应用程序经常需要手点，作为键
 
 	netstat –ano 查看所有端口    
 	netstat –ano |findStr "80" 搜索包含80的端口 的进程  
-	
+
+
+​	
 	tasklist|findstr 			进程号根据进程搜索   如:tasklist|findstr 3112
 	
 	taskkill /f /t /im 进程名称    根据进程名称杀死进程   如:taskkill /f /t /im /javaw.exe
 
 Win7下打开“运行”的快捷键是 Win+R
+
+
+
+### 查找指定端口
+
+ netstat -ano |findstr 9090
+
+### 根据进程id 
+taskkill /F /pid 6564
+
+
 
 ## 打开系统命令
 windows的“运行”功能本来就是帮助用户快速打开程序的，不过其支持的主要是系统的一些程序，大致如下(来自网络，有一部分失效或无法打开)：
@@ -182,5 +195,5 @@ cmd 网络 : 	arp -a
 
 ## 小功能
 
-​iis,防火墙,odbc、、、 
+iis,防火墙,odbc、、、 
 
