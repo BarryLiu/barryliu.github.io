@@ -126,3 +126,26 @@ description:  记录我用过或推荐的开发工具
 
 ### python + pydev
 > python 语言, pydev 是 eclipse上面python开发工具插件
+
+
+
+
+
+### node 版本管理:nvm 
+
+> [node 版本管理工具](https://github.com/coreybutler/nvm-windows/releases)
+>
+> 
+>
+> eg: 
+>
+> nvm -v
+>
+> nvm list
+>
+> nvm use v14.16.0
+>
+> nvm install v14.16.0
+>
+> nvm uninstall v14.16.0
+
