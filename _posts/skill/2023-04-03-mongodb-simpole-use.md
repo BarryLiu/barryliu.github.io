@@ -44,6 +44,8 @@ db.system.users.find()
      docker run -p 27017:27017 -v /data/mongo:/data/db --name mongodb -d mongo --auth
      
      
+     docker run -p 27017:27017 -v D:/myDocker/mongodb/db:/data/db -v  D:/myDocker/mongodb/bin:/usr/bin --name mongodb -d mongo
+     
     ```
     
     
