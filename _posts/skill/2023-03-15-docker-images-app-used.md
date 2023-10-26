@@ -48,7 +48,19 @@ docker run -d \
 
 #### 相册 [Lychee](https://hub.docker.com/r/lycheeorg/lychee)
 
-> 相册
+> 相册  
+>
+> 同类型相册
+>
+> lychee 、 轻量级，快，能播放视频，功能少
+>
+> Photoprism 、新起之秀，不过该有的都有了：人脸识别、地图，主题等 ,github starts 18w+
+>
+> Piwigo 、老牌软件 Piwigo ,有客户端app
+>
+> LibrePhotos 、和PhotoPrism差不多，无中文 （不推荐）
+>
+> Photoview = 、新起之秀，也有人脸识别等功能，在不断更新中，汉化不是很完整 、
 
 ``` shell
 # 下载
@@ -610,12 +622,20 @@ harbor官方github地址：https://github.com/vmware/harbor
 
 * 6.客户端docker配置 信任仓库
 
-  > 
+  > vim /etc/docker/daemon.json
+  >
+  > //insecure-registries 节点下添加 仓库地址
+  >
+  > services docker restart 或者 systemctl restart docker
+
+* 7.登陆
+
+  docker login -u admin -p Harbor12345 192.168.86.20:85
 
   
 
   
-  
+
   
 
 
