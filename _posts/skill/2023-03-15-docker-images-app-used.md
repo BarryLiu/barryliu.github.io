@@ -616,7 +616,7 @@ harbor官方github地址：https://github.com/vmware/harbor
 
 * 4.执行安装命令
 
-  ./intall.sh
+  ./install.sh
 
 * 5.登陆后台配置,默认账号 admin Harbor12345
 
@@ -624,18 +624,27 @@ harbor官方github地址：https://github.com/vmware/harbor
 
   > vim /etc/docker/daemon.json
   >
-  > //insecure-registries 节点下添加 仓库地址
+  > //insecure-registries 节点下添加 仓库地址  "insecure-registries":["192.168.110.218:8082"]
   >
-  > services docker restart 或者 systemctl restart docker
+  > services docker restart 或者 systemctl restart docker 
+  >
+  > 或者重载配置 无需重启
+  >
+  > systemctl reload docker
 
 * 7.登陆
 
   docker login -u admin -p Harbor12345 192.168.86.20:85
 
-  
+* 8.harbor 启动与停止
+	> docker-compose stop
+  >
+  > docker-compose up -d
 
   
-
+  
+  
+  
   
 
 

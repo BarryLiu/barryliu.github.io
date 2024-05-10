@@ -10,7 +10,7 @@
 
 
 
-![image-20230411170504330](F:\workGit\barryliu.github.io\_posts\skill\assets\image-20230411170504330.png)
+![image-20230411170504330](.\assets\image-20230411170504330.png)
 
 
 
@@ -56,7 +56,7 @@ LogRotator构造参数分别为：
 
 
 
-![image-20230411165745546](F:\workGit\barryliu.github.io\_posts\skill\assets\image-20230411165745546.png)
+![image-20230411165745546](.\assets\image-20230411165745546.png)
 
 
 

@@ -185,5 +185,25 @@ python /usr/local/monitor/server_running_info_app.py
 
 
 
+# 20240109 启动次序
 
+1. 先启动zookeeper
+
+33.49上
+
+
+
+2. 启动应用
+
+60.205.181.239
+
+/usr/local/tomcat_homework_8080/bin/startup.sh
+
+如果启动不了报目录错误,mkdir /data/upQuestions/temp
+
+
+
+/usr/local/tomcat_zeus_api_8081/bin/startup.sh
+
+/usr/local/tomcat_zeus_console_8082/bin/startup.sh
 
