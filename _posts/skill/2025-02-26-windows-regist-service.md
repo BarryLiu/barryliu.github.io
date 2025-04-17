@@ -2,6 +2,14 @@
 
 
 
+国外查毒网站
+
+ * https://www.virustotal.com/
+
+   > 上传文件上去,用全球很多种(70多个)杀毒软件过一遍，有没有毒查出来
+
+
+
 ### 准备一个.ps1 脚本
 
 
@@ -85,11 +93,14 @@ Install-Module -Name ps2exe
 
 # 将混淆加密后的脚本打包成exe文件
 # 此命令此参数日志输出全藏起来了,打开应用之后在后台偷偷运行,(具体命令安自己需要做)
-ps2exe ./tools/Monitor-USBDevice2.ps1 ./tools/XcComTool.exe -title 'Xc串口固定工具' -version '1.0.0' -requireAdmin -noConsole -noOutput -noError
+ps2exe ./tools/Monitor-USBDevice2.ps1 ./tools/XcComTool.exe -title 'Xc串口固定工具' -version '1.0.0.0' -requireAdmin -noConsole -noOutput -noError
 
 # 注意,打包后的exe是可以提取出脚本文件的,所以安全起见混淆一下,提取方式如下,(Output.exe是打包后的exe文件)
 Output.exe -extract:C:\Output.ps1
 
+ps2exe ./install_service.ps1 ./install_service.exe -title 'Xc串口安装服务' -version '1.0.0.3' -requireAdmin -noConsole -noOutput -noError
+
+ps2exe ./uninstall_service.ps1 ./uninstall_service.exe -title 'Xc串口卸载服务' -version '1.0.0.3' -requireAdmin -noConsole -noOutput -noError
 ````
 
 参数含义
