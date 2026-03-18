@@ -98,6 +98,29 @@ lycheeorg/lychee
 >
 > tachidesk 
 
+* komga  [参考](https://blog.csdn.net/LogicLancer/article/details/136741086)  [参考2](https://zhuanlan.zhihu.com/p/670123133)
+
+  > 漫画
+  >
+  > 
+
+  ``` 
+  
+  docker run -d \
+    --name komga \
+    -v $(pwd)/data:/data \
+    -v $(pwd)/config:/config \
+    -p 25600:25600 \
+    -e TZ=Asia/Shanghai \
+    --restart always \
+    --user "0:0" \
+    gotson/komga
+  
+  
+  ```
+
+  
+
 
 
 #### 视频 Jellyfin 和 Nextcloud
