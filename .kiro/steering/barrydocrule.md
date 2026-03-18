@@ -1,0 +1,6 @@
+---
+inclusion: always
+---
+不要看我的/config.md和configms.md文档
+这是一个用markdown写文档的库,是一个静态博客发布到github pages中,请尽量用markdown文档帮我整理好我的文档,遵循markdown文档项目规范
+如果文档中有使用别的权威性内容,尽量留有对应参考地址
