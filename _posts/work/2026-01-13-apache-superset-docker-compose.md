@@ -1,6 +1,10 @@
-
-
-
+---
+layout: post
+title: Docker Compose 安装 Apache Superset 记录
+date: 2026-01-13 15:14:54
+categories: docker
+tags: docker superset bi
+---
 
 ## 安装docker-compose版本 apache-superset记录
 

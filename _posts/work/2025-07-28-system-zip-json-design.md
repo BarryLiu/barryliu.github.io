@@ -1,4 +1,10 @@
-
+---
+layout: post
+title: 系统压缩资源包设计
+date: 2025-07-28 15:14:54
+categories: system
+tags: 系统设计 JSON 资源配置
+---
 
 ## 系统压缩资源包设计
 

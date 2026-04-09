@@ -1,16 +1,10 @@
 ---
 layout: post
-title:  idea插件-【Jenkins Control】使用
-date:   2024-03-06 15:14:54
+title: idea插件-【Jenkins Control】使用
+date: 2024-03-12 15:14:54
 categories: java
 tags: Intellij Idea jetbrains jenkins 插件
-
-
 ---
-
-
-
-
 
 #### jenkins
 

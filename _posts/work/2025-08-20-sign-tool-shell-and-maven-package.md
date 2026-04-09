@@ -1,3 +1,11 @@
+---
+layout: post
+title: 封装Java Jar包工具-制作子证书与签名APK功能
+date: 2025-08-20 15:14:54
+categories: java
+tags: java maven 证书 签名
+---
+
 ### 封装java jar包工具 制作子证书与 签名apk功能
 
 ## 业务需要,封装java
