@@ -23,6 +23,7 @@ desktop.ini
 
 # claude忽略文件
 .claude/
+.superpowers/
 
 # Ruby/Bundler
 Gemfile.lock
