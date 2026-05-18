@@ -1,0 +1,172 @@
+---
+title: "Linux 使用"
+date: 2017-03-10
+postSlug: "skill/linux"
+categories:
+  - "技术"
+tags:
+  - Linux
+description: Linux
+keywords: Linux
+featured: false
+---
+
+上线服务器工程需要会点linux命令
+[centos 各版本发行时间和内核对应列表](https://blog.csdn.net/SHELLCODE_8BIT/article/details/122251707)
+> 
+[Ubuntu新版发布周期](https://zhuanlan.zhihu.com/p/585631429)
+> Ubuntu 每六个月发布一个非 LTS 版本，每两年发布一个 LTS 版本，每个LTS有5年的维护时间。
+>
+> eg:ubuntu16.04 LTS 就是一个长期维护版本，而ubuntu 17.04 则为新特性版本
+### 开启ssh服务
+``` shell
+# 安装openssh-server
+apt-get install openssh-server
+# 输入"sudo ps -e |grep ssh"-->回车-->有sshd,说明ssh服务已经启动，如果没有启动，输入"sudo service ssh start"-->回车-->ssh服务就会启动
+ps -e |grep ssh
+service ssh start
+```
+* 重启
+  > shutdown -r now # 发送信号重启
+* 直接断电重启
+  > reboot
+# top 
+	Linux 查看cpu 
+​	
+# tail -f catalina.out 
+	查看linux cpu占用 
+​	
+# mysql ------  show proesslist 查看数据库查询占用情况 
+# df -h 查询linux 物理内存占用
+#  du --max-depth=1 -h / 查看文件指定大小  /为路径   现在是根目录
+# 查看进程:   ps -ef | grep xxxx    //xxxx 程序名称 eg:tomcat 
+tar
+-c: 建立压缩档案
+-x：解压
+-t：查看内容
+-r：向压缩归档文件末尾追加文件
+-u：更新原压缩包中的文件
+这五个是独立的命令，压缩解压都要用到其中一个，可以和别的命令连用但只能用其中一个。下面的参数是根据需要在压缩或解压档案时可选的。
+-z：有gzip属性的
+-j：有bz2属性的
+-Z：有compress属性的
+-v：显示所有过程
+-O：将文件解开到标准输出
+下面的参数-f是必须的
+-f: 使用档案名字，切记，这个参数是最后一个参数，后面只能接档案名。
+# tar -cf all.tar *.jpg
+这条命令是将所有.jpg的文件打成一个名为all.tar的包。-c是表示产生新的包，-f指定包的文件名。
+# tar -rf all.tar *.gif
+这条命令是将所有.gif的文件增加到all.tar的包里面去。-r是表示增加文件的意思。
+# tar -uf all.tar logo.gif
+这条命令是更新原来tar包all.tar中logo.gif文件，-u是表示更新文件的意思。
+# tar -tf all.tar
+这条命令是列出all.tar包中所有文件，-t是列出文件的意思
+# tar -xf all.tar
+这条命令是解出all.tar包中所有文件，-t是解开的意思
+压缩
+tar -cvf jpg.tar *.jpg //将目录里所有jpg文件打包成tar.jpg 
+tar -czf jpg.tar.gz *.jpg   //将目录里所有jpg文件打包成jpg.tar后，并且将其用gzip压缩，生成一个gzip压缩过的包，命名为jpg.tar.gz
+ tar -cjf jpg.tar.bz2 *.jpg //将目录里所有jpg文件打包成jpg.tar后，并且将其用bzip2压缩，生成一个bzip2压缩过的包，命名为jpg.tar.bz2
+tar -cZf jpg.tar.Z *.jpg   //将目录里所有jpg文件打包成jpg.tar后，并且将其用compress压缩，生成一个umcompress压缩过的包，命名为jpg.tar.Z
+rar a jpg.rar *.jpg //rar格式的压缩，需要先下载rar for linux
+zip jpg.zip *.jpg //zip格式的压缩，需要先下载zip for linux
+解压
+tar -xvf file.tar //解压 tar包
+tar -xzvf file.tar.gz //解压tar.gz
+tar -xjvf file.tar.bz2   //解压 tar.bz2
+tar -xZvf file.tar.Z   //解压tar.Z
+unrar e file.rar //解压rar
+unzip file.zip //解压zip
+总结
+1. *.tar 用 tar -xvf 解压
+2. *.gz 用 gzip -d或者gunzip 解压
+3. *.tar.gz和*.tgz 用 tar -xzf 解压
+4. *.bz2 用 bzip2 -d或者用bunzip2 解压
+5. *.tar.bz2用tar -xjf 解压
+6. *.Z 用 uncompress 解压
+7. *.tar.Z 用tar -xZf 解压
+8. *.rar 用 unrar e解压
+9. *.zip 用 unzip 解压
+## 防火墙
+​	
+​	iptables -I INPUT 4 -p tcp -m state --state NEW -m tcp --dport 8080 -j ACCEPT #允许8080 端口
+​	service iptables save #保存iptables 规则
+​	systemctl disable firewalld.service  #关闭防火墙 enable
+​	 systemctl start firewalld  #开启(start),关闭(stop),状态(status)
+## 查看内存占用
+ 1.  ps -aux   
+     ​     RSS列 表示， 程序占用了多少物理内存。
+ 2.  free -m  
+     ​    显示空余 已用总共内存
+## 清理内存
+http://www.jb51.net/LINUXjishu/281868.html
+  1. 敲  nync命令
+  2. 查看内存设置 cat /proc/sys/vm/drop_caches
+  3.  sync; echo 1 > /proc/sys/vm/drop_caches ， 只清除页面缓存；
+  4.  sync; echo 2 > /proc/sys/vm/drop_caches，清除目录项和inode；
+  5.  sync; echo 3 > /proc/sys/vm/drop_caches，清除页面缓存、目录项和节点
+  6. sync命令将刷新文件系统缓冲区，写入drop_cache将清除缓存而不会终止任何应用程序或服务。
+  7. 再查看 cat /proc/sys/vm/drop_caches
+ 
+ ## linux杀死占用某端口的所有进程
+ > http://blog.csdn.net/lissdy/article/details/70256032
+ * 以下命令可用于杀死占用某端口的所有进程。
+	kill -9 $(lsof -i tcp:进程号 -t)
+ * 另外，非root用户可能需要执行
+	kill -9 $(sudo lsof -i tcp:进程号 -t)
+	
+	
+## 查看端口通不通 
+> 如果没有nc命令 安装: yum install nc  -y
+	nc -z -w 1 18.222.69.30  6379
+	如果是通的 则有success,不同回车不返回
+### JAVA配置环境变量
+> 将以下内容配置在`/etc/profile`文件最底下即可
+``` shell
+# 1. 编辑环境变量, /etc/profile最底下添加
+export JAVA_HOME=/usr/local/java/jdk11.0.16.1  ## 这里要注意目录要换成自己解压的jdk 目录
+export JRE_HOME=${JAVA_HOME}/jre  
+export CLASSPATH=.:${JAVA_HOME}/lib:${JRE_HOME}/lib  
+export PATH=${JAVA_HOME}/bin:${PATH}  
+# 2. 重新载入环境变量
+source /etc/profile
+# 3. 验证是否成功
+java -version
+```
+## 上传文件
+> 可用工具上传下载，但是某些高权限的工具ssh不是高权限登录，无法上传到某些目录,(可上传到桌面等再用高权限移动)， 也可以sudo su后用命令上传 ，
+>
+> 安装: 
+>
+> ubuntu 
+>
+>  apt install lrzsz
+>
+> 用工具上传或者命令，
+>
+> 上传：rz    # 回车之后本地会弹出一个文件选择框，选择要上传的文件即可
+>
+> 下载:  sz    #  回车之后会弹出一个本地的路径选择框，选择要下载的路径即可
+>
+>  参数后面 -y  覆盖下载或上传
+## 清理文件
+> 服务器上的文件越来越多,占用超过90%,担心磁盘满了无法读写, 排查并清理不需要的文件
+* docker 
+  * 查看docker资源占用
+    >  docker system df
+  * 清理docker无用资源
+    > docker system prune -f
+* linux 
+  * 查看磁盘
+    > df -hl 
+  * 查看指定目录
+    > du /sh -BG --max-depth=1 /usr/
+    >
+    > -BG 表示按G为单位显示大小, 同理,BM为M单位，BK为kb单位
+    >
+    > --max-depth=1 表示只显示一层
+    >
+    > /usr/则为指定要看的目录
+    >
+    > 可以用上面命令一层一层找，找到占用多的自己分辨不重要就删掉

@@ -1,0 +1,245 @@
+@import "./tokens.css";
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background:
+    linear-gradient(90deg, rgb(40 247 255 / 9%) 1px, transparent 1px),
+    linear-gradient(0deg, rgb(40 247 255 / 8%) 1px, transparent 1px),
+    radial-gradient(circle at -4% -3%, rgb(40 247 255 / 22%), transparent 34rem),
+    radial-gradient(circle at 106% -2%, rgb(255 71 223 / 19%), transparent 34rem),
+    radial-gradient(circle at 50% 56rem, rgb(185 255 74 / 10%), transparent 36rem),
+    linear-gradient(135deg, #03040b 0%, #07152a 58%, #0b0312 100%);
+  background-size: 160px 160px, 160px 160px, auto, auto, auto;
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  line-height: 1.7;
+}
+
+body::before {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  content: "";
+  background: linear-gradient(180deg, rgb(3 4 11 / 10%), rgb(3 4 11 / 72%) 70%, #03040b);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--color-cyan);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+code,
+pre {
+  font-family: var(--font-mono);
+}
+
+.container {
+  width: var(--container);
+  margin-inline: auto;
+}
+
+.section {
+  padding: 72px 0;
+}
+
+.section-header {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(240px, 0.6fr);
+  gap: 32px;
+  align-items: end;
+  margin-bottom: 28px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: var(--color-magenta);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.section-title {
+  margin: 0;
+  color: var(--color-text);
+  font-size: clamp(2rem, 5vw, 2.85rem);
+  line-height: 1.14;
+}
+
+.section-desc {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.98rem;
+}
+
+.grid {
+  display: grid;
+  gap: 18px;
+}
+
+.grid.two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.grid.three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.button {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid var(--color-line-strong);
+  border-radius: 999px;
+  padding: 0 18px;
+  background: rgb(14 24 49 / 78%);
+  color: #dffbff;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.button.primary {
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--color-cyan), var(--color-lime));
+  color: #06111f;
+}
+
+.chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  padding: 4px 10px;
+  background: rgb(2 6 23 / 58%);
+  color: #dffbff;
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.prose {
+  color: #d9e7ef;
+  font-size: 1.02rem;
+}
+
+.prose h2,
+.prose h3,
+.prose h4 {
+  margin-top: 2.2em;
+  color: var(--color-text);
+  line-height: 1.25;
+}
+
+.prose h2 {
+  border-bottom: 1px solid var(--color-line);
+  padding-bottom: 0.35em;
+  font-size: 1.75rem;
+}
+
+.prose h3 {
+  font-size: 1.35rem;
+}
+
+.prose a {
+  color: var(--color-cyan);
+  border-bottom: 1px solid rgb(40 247 255 / 36%);
+}
+
+.prose p,
+.prose ul,
+.prose ol,
+.prose blockquote {
+  margin: 1.1em 0;
+}
+
+.prose blockquote {
+  border-left: 3px solid var(--color-cyan);
+  padding: 0.2rem 0 0.2rem 1rem;
+  color: #b8c7d2;
+  background: rgb(40 247 255 / 5%);
+}
+
+.prose pre {
+  overflow-x: auto;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  background: #020617;
+}
+
+.prose code:not(pre code) {
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: 6px;
+  padding: 0.1em 0.35em;
+  background: rgb(255 255 255 / 7%);
+}
+
+.prose table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+}
+
+.prose th,
+.prose td {
+  border: 1px solid var(--color-line);
+  padding: 8px 10px;
+}
+
+@media (max-width: 860px) {
+  .section {
+    padding: 52px 0;
+  }
+
+  .section-header,
+  .grid.two,
+  .grid.three {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  :root {
+    --container: min(100vw - 28px, 1120px);
+  }
+
+  .button {
+    width: 100%;
+  }
+}

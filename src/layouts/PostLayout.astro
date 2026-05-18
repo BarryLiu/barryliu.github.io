@@ -1,0 +1,179 @@
+---
+import CommentPanel from '../components/CommentPanel.astro';
+import BaseLayout from './BaseLayout.astro';
+import { formatDate, getDescription, getPrimaryCategory, getReadingTime, postUrl, taxonomySlug, type Post } from '../utils/posts';
+
+type Props = {
+  post: Post;
+  headings: { depth: number; slug: string; text: string }[];
+  previous?: Post;
+  next?: Post;
+};
+
+const { post, headings, previous, next } = Astro.props;
+const category = getPrimaryCategory(post);
+const description = getDescription(post);
+---
+
+<BaseLayout title={post.data.title} description={description} canonical={postUrl(post)}>
+  <article class="post-shell container">
+    <header class="post-hero">
+      <a class="category" href={`/category/${taxonomySlug(category)}/`}>{category}</a>
+      <h1>{post.data.title}</h1>
+      <p>{description}</p>
+      <div class="post-meta">
+        <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time>
+        <span>{getReadingTime(post)} 分钟读完</span>
+        {post.data.tags.slice(0, 5).map((tag) => <a href={`/tag/${taxonomySlug(tag)}/`}>#{tag}</a>)}
+      </div>
+    </header>
+
+    <div class="post-grid">
+      <div class="prose">
+        <slot />
+        <nav class="post-neighbors" aria-label="上一篇和下一篇">
+          {previous && <a href={postUrl(previous)}><span>上一篇</span><strong>{previous.data.title}</strong></a>}
+          {next && <a href={postUrl(next)}><span>下一篇</span><strong>{next.data.title}</strong></a>}
+        </nav>
+        <CommentPanel />
+      </div>
+
+      <aside class="toc" aria-label="文章目录">
+        <strong>目录</strong>
+        <nav>
+          {headings.filter((heading) => heading.depth <= 3).slice(0, 18).map((heading) => (
+            <a class={`depth-${heading.depth}`} href={`#${heading.slug}`}>{heading.text}</a>
+          ))}
+        </nav>
+      </aside>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .post-shell {
+    padding: 64px 0 90px;
+  }
+
+  .post-hero {
+    display: grid;
+    max-width: 900px;
+    gap: 16px;
+    margin-bottom: 42px;
+  }
+
+  .category {
+    width: fit-content;
+    border: 1px solid var(--color-line-strong);
+    border-radius: 999px;
+    padding: 6px 12px;
+    color: var(--color-cyan);
+    font-size: 0.82rem;
+    font-weight: 800;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(2.35rem, 7vw, 4.7rem);
+    line-height: 1.08;
+    letter-spacing: 0;
+  }
+
+  .post-hero p {
+    margin: 0;
+    color: #b8c7d2;
+    font-size: 1.05rem;
+  }
+
+  .post-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    color: var(--color-muted);
+    font-size: 0.88rem;
+  }
+
+  .post-meta a {
+    color: var(--color-lime);
+  }
+
+  .post-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 760px) minmax(220px, 280px);
+    gap: 58px;
+    align-items: start;
+  }
+
+  .toc {
+    position: sticky;
+    top: 104px;
+    display: grid;
+    gap: 12px;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    background: rgb(9 20 36 / 72%);
+  }
+
+  .toc strong {
+    color: var(--color-text);
+  }
+
+  .toc nav {
+    display: grid;
+    gap: 8px;
+  }
+
+  .toc a {
+    color: var(--color-muted);
+    font-size: 0.86rem;
+    line-height: 1.4;
+  }
+
+  .toc .depth-3 {
+    padding-left: 12px;
+  }
+
+  .post-neighbors {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 44px;
+  }
+
+  .post-neighbors a {
+    display: grid;
+    gap: 6px;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    background: rgb(9 20 36 / 62%);
+  }
+
+  .post-neighbors span {
+    color: var(--color-subtle);
+    font-size: 0.78rem;
+  }
+
+  .post-neighbors strong {
+    color: #dffbff;
+    line-height: 1.35;
+  }
+
+  @media (max-width: 980px) {
+    .post-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .toc {
+      position: static;
+      order: -1;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .post-neighbors {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

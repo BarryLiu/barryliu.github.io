@@ -1,0 +1,202 @@
+---
+title: "Python 基础笔记"
+date: 2017-08-23
+postSlug: "skill/python"
+categories:
+  - "技术"
+tags:
+  - Python
+  - "编程语言"
+description: "Python 编程语言基础笔记，包含命名规范、数据类型、运算符和流程控制"
+keywords: "python, 基础语法, 数据类型, 命名规范"
+featured: false
+---
+
+## Python 命名规范
+1. 项目名称
+​		首字母大写+大写式驼峰，如：ProjectName
+2. 模块名和包名、模块名、局部变量名、函数&方法名
+全部小写+下划线驼峰，如：module_name  package_name
+3. 类名称，异常
+首字母大写+大写式驼峰，如：class ClassName:   ，ExceptionName
+4. 全局变量、常量
+全部使用大写字母+下划线驼峰，如：GLOBAL_VAR_NAME，CONSTANT_NAME
+5. 方法名，函数名，其余变量，参数，实例
+全部小写+下划线驼峰，如：method_name，function_name，instance_var_name, function_parameter_name, local_var_name
+6. 处理计数器外，不使用单字母命名
+7. 异常
+	因为异常也是一个类，所以遵守类的命名规则。此外，如果异常实际上指代一个错误的话，应该使用“Error”做后缀。
+7. 见名知义
+变量名要有意义，除常见的一些简写外（如res, req, num等），尽量用全拼，通过命名可以大致猜到变量的用处
+8. 严禁使用关键字作为变量名
+9. 关于下划线
+   一个前导下划线：表示私有。一个后缀下划线：避免关键字冲突。以单下划线开头，是弱内部使用标识，from M import * 时，将不会导入该对象（python 一切皆对象）。两个前导下划线：当命名一个类属性引起名称冲突时使用。两个前导和后缀下划线：有特殊用途的对象或者属性，例如init或者file。绝对不要创造这样的名字，而只是使用它们。以双下划线开头的变量名，主要用于类内部标识类私有，不能直接访问。双下划线开头且双下划线截尾的命名方法尽量不要用，这是标识
+PS：python查看关键字——
+import keyword
+print(keyword.kwlist)
+————————————————
+## Python 基础 
+> 简单整理python语法
+--------
+http://www.runoob.com/python3/python3-data-type.html	
+## 标准数据类型
+Python3 中有六个标准的数据类型：
+> [数据结构](http://www.runoob.com/python3/python3-data-structure.html)
+- Number（数字）  int、float、bool、complex [操作](http://www.runoob.com/python3/python3-number.html)
+- String（字符串）[操作](http://www.runoob.com/python3/python3-string.html)
+- List（列表） list = [ 'abcd', 786 , 2.23, 'runoob', 70.2 ] ，[操作](http://www.runoob.com/python3/python3-list.html)      
+- Tuple（元组） tuple = ( 'abcd', 786 , 2.23, 'runoob', 70.2  ) [操作](http://www.runoob.com/python3/python3-tuple.html)
+- Sets（集合）student = {'Tom', 'Jim', 'Mary', 'Tom', 'Jack', 'Rose'} [操作]()
+- Dictionary（字典）dict = {'name': 'abcd','code':1, 'site': 'abcd.com'} [操作](http://www.runoob.com/python3/python3-dictionary.html)
+Python3 的六个标准数据类型中：
+- **不可变数据（四个）：**Number（数字）、String（字符串）、Tuple（元组）、Sets（集合）；
+- **可变数据（两个）：**List（列表）、Dictionary（字典）。
+## 运算符
+> 都可以写到if里面参与逻辑判断
+- [算术运算符](http://www.runoob.com/python3/python3-basic-operators.html#ysf1)  + - * / % ** // 
+- [比较（关系）运算符](http://www.runoob.com/python3/python3-basic-operators.html#ysf2)  >, < , >= ,<=, == ,!
+- [赋值运算符](http://www.runoob.com/python3/python3-basic-operators.html#ysf3)  = , +=,-=, *= ,/= ,%=,**=,//=
+- [逻辑运算符](http://www.runoob.com/python3/python3-basic-operators.html#ysf4) and , or , not 
+- [位运算符](http://www.runoob.com/python3/python3-basic-operators.html#ysf5) &, | , ^ , << , >> 
+- [成员运算符](http://www.runoob.com/python3/python3-basic-operators.html#ysf6)  in , not in 
+- [身份运算符](http://www.runoob.com/python3/python3-basic-operators.html#ysf7)  is , is not 
+- [运算符优先级](http://www.runoob.com/python3/python3-basic-operators.html#ysf8)
+## 条件控制
+* if
+```python
+number = 7
+guess = -1
+guess = int(input("请输入你猜的数字："))
+if guess == number:
+        print("恭喜，你猜对了！")
+    elif guess < number:
+        print("猜的数字小了...")
+    else:
+        print("猜的数字大了...")
+```
+* where 
+  
+* while 
+  ```python
+  n = 100
+   
+  sum = 0
+  counter = 1
+  while counter <= n:
+  	if counter == 20:
+  		break
+      sum = sum + counter
+      counter += 1
+   
+  print("1 到 %d 之和为: %d" % (n,sum))
+  ```
+* for 
+  ```python
+  for i in range(5):
+  	if i == 4:
+  		continue
+  	print(i)
+  ```
+* exception
+  ```python
+  # 定义异常
+  class MyError(Exception):
+          def __init__(self, value):
+              self.value = value
+          def __str__(self):
+              return repr(self.value)
+     
+   try:
+   	raise MyError(2*2)
+   except MyError as e:
+   	print('My exception occurred, value:', e.value)
+          
+  ```
+  
+* pass Python pass是空语句，是为了保持程序结构的完整性。不做任何事情，一般用做占位语句
+## 函数 
+```python
+# 定义函数
+def printvalue( str ):
+   "打印任何传入的字符串"
+   print (str)
+   return
+ 
+# 调用函数
+printvalue("hello !")
+# 方式2 lambda的匿名函数
+# 可写函数说明
+sum = lambda arg1, arg2: arg1 + arg2
+# 调用sum函数
+print ("的值为 : ", sum( 10, 20 ))
+```
+## pip
+```bash
+# 记录虚拟环境副本 精确版本号以便下个环境部署
+pip freeze >requirements.txt
+# 安装虚拟环境副本
+pip install -r requirements.txt
+# 有的时候在虚拟环境中没有安装pip , 可 which pip 或者 Get-Command pip 查看是不是外面的，外面的可能导致包安装了，程序运行报错找不到，可用下面命令执行安装虚拟环境中pip 
+python -m ensurepip --upgrade 
+python -m pip install xxx 和 pip install xxx 有可能有区别的
+```
+## 虚拟环境
+```shell
+# 安装虚拟环境(方式1)
+pip install virtualenv
+# 在指定目录创建虚拟环境
+virtualenv my_test
+```
+```bash
+# 创建虚拟环境(方式2)
+python -m venv myenv
+#激活虚拟环境
+myenv\Scripts\activate  # Windows
+source myenv/bin/activate  # Unix/MacOS
+#退出虚拟环境
+deactivate
+```
+## 文件
+ * open(filename, mode) [操作](http://www.runoob.com/python3/python3-inputoutput.html)
+   ​
+ *  [**os** 模块提供了非常丰富的方法用来处理文件和目录](http://www.runoob.com/python3/python3-os-file-methods.html)
+    * 文件通配符 [glob](http://www.runoob.com/python3/python3-stdlib.html)
+   
+## 线程
+> thread 库已被遗弃, python3不支持thread, 为了兼容将 thread 重命名为 "_thread"
+* [_thread库与threading库 ](http://www.runoob.com/python3/python3-multithreading.html)
+## 正则
+* [re 模块](http://www.runoob.com/python3/python3-reg-expressions.html)
+## 网络
+* BeautifulSoup
+* urllib
+* requests
+## json数据处理
+* [json库](http://www.runoob.com/python3/python3-json.html)
+## 数据库
+* mysql [PyMysql模块](http://www.runoob.com/python3/python3-mysql.html)
+  ```python
+  
+  import pymysql
+   
+  # 打开数据库连接
+  db = pymysql.connect("localhost","root","root","test" )
+   
+  # 使用 cursor() 方法创建一个游标对象 cursor
+  cursor = db.cursor()
+   
+  # 使用 execute()  方法执行 SQL 查询 
+  cursor.execute("SELECT VERSION()")
+   
+  # 使用 fetchone() 方法获取单条数据.
+  data = cursor.fetchone()
+   
+  print ("Database version : %s " % data)
+   
+  # 关闭数据库连接
+  db.close()
+  ```
+  
+## 常用模块
+## 内置函数 
+> http://www.runoob.com/python3/python3-built-in-functions.html

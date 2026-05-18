@@ -1,0 +1,30 @@
+---
+import PostCard from '../../components/PostCard.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getAllPosts, getTaxonomyCounts, postsWithTaxonomy, type Post } from '../../utils/posts';
+
+export async function getStaticPaths() {
+  const posts = await getAllPosts();
+  return getTaxonomyCounts(posts, 'tags').map((tag) => ({
+    params: { tag: tag.slug },
+    props: { name: tag.name, posts: postsWithTaxonomy(posts, 'tags', tag.slug) },
+  }));
+}
+
+const { name, posts } = Astro.props as { name: string; posts: Post[] };
+---
+
+<BaseLayout title={`标签：${name}`} description={`标签 ${name} 下的文章`}>
+  <section class="section container">
+    <div class="section-header">
+      <div>
+        <p class="eyebrow">Tag</p>
+        <h1 class="section-title">#{name}</h1>
+      </div>
+      <p class="section-desc">共 {posts.length} 篇文章。</p>
+    </div>
+    <div class="grid three">
+      {posts.map((post) => <PostCard post={post} />)}
+    </div>
+  </section>
+</BaseLayout>

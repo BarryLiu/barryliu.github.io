@@ -1,0 +1,16 @@
+---
+title: "家里过年"
+date: 2016-02-09
+postSlug: "barry/metoo"
+categories:
+  - Barry
+tags:
+  - Essay
+description: "家里过年"
+featured: false
+---
+
+今天又是玩一天，大过年真是搞不进去学习阿
+几天没写代码，今天一看竟然有一天是空缺的！
+明天就去长沙了，这个年过的啊！~
+到了长沙，一天的车，还是睡觉吧。

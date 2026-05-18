@@ -1,0 +1,806 @@
+---
+title: "Docker 简单使用"
+date: 2017-06-22
+postSlug: "skill/docker"
+categories:
+  - "技术"
+tags:
+  - Docker
+  - "容器"
+  - DevOps
+description: "Docker 容器技术使用指南，包含常用命令、docker-compose编排、Swarm集群和K8s基础"
+keywords: "docker, 容器, 镜像, docker-compose, k8s"
+featured: false
+---
+
+百度: Docker 是一个开源的应用容器引擎，让开发者可以打包他们的应用以及依赖包到一个可移植的容器中，然后发布到任何流行的 Linux 机器上，也可以实现虚拟化。容器是完全使用沙箱机制，相互之间不会有任何接口。
+[docker命令 ](http://www.runoob.com/docker/docker-command-manual.html)
+[Docker与K8s基本概念](https://zhuanlan.zhihu.com/p/53260098)
+[参考文档](https://www.kancloud.cn/websoft9/docker-guide/828059)
+## Docker 基础概念
+### Image 镜像
+## 安装
+```bash
+# 更新下载工具
+apt-get update
+# 安装docker
+apt-get install -y docker.io
+```
+## 常用命令
+	service docker [status|start|stop|restart| ]
+	或者
+	systemctl docker [status|start|stop|restart| ]
+* docker inspect xxx //image name 查看某镜像详细信息
+* 查看正运行的镜像 
+  > docker ps   //查看正在运行的实例
+  >
+  > docker ps -all  查看所有运行过的实例
+  
+* docker images //所有镜像
+* docker run 镜像名称 //运行
+  > -e 指定环境变量
+  >
+  > --restart=always # 容器为自动重启
+* docker update # 已有的容器更新为自动重启
+  > docker update --restart=always 容器ID(或者容器名)
+* docker stop 镜像名称 //停止镜像
+* docker exec 镜像名称 命令    //进入镜像
+  > docker exec -it 镜像id   /bin/bash
+* docker logs -f 镜像ID	//实时查看log 
+	> docker logs -f 镜像id 
+- docker save 是将一个镜像导出成一个tarball文件，对应的导入命令是docker load，将该文件导入成一个镜像。
+  > 导出
+  >
+  > docker save -o centos.tar 67fa590cfc1c
+  >
+  > 导入
+  >
+  > docker load --input centos.tar
+  >
+  > 也可以 导出导入(有坑,不能用镜像id,要用名字和版本,否则会丢失版本和名字)
+  >
+  > docker save ef8ad29b999a > localbaseopenjdk8.tar
+  >
+  > docker load < localbaseopenjdk8.tar 
+  >
+  > 需要使用如下
+  >
+  > docker save redis:5.0.9 > redis_5.0.9.tar
+  >
+  > docker load < redis_5.0.9.tar
+  
+- docker export 是将一个容器导出成一个tarball文件，对应的导入命令时docker import，将该文件导入成一个镜像（注意不是容器）。
+- docker stats   查看运行的程序资源占用情况 
+  > docker stats  或者 docker stats <容器名称>
+### 
+docker 的镜像与容器都存储在 /var/lib/docker
+标准 隔离
+镜像 容器 仓库(BUILD SHIP RUN)
+## 安装docker
+sudo apt-get update
+sudo apt-get install docker.io
+或者
+``` shell 
+#安装
+sudo apt-get update && sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - && sudo add-apt-repository "deb [arch=amd64] http://mirrors.aliyun.com/docker-ce/linux/ubuntu $(lsb_release -cs) stable" && sudo apt-get update && sudo apt-get install -y docker-ce
+```
+### WSL
+> sss
+[参考地址](https://learn.microsoft.com/zh-tw/windows/wsl/basic-commands)
+[参考地址2](https://learn.microsoft.com/zh-cn/windows/wsl/tutorials/wsl-containers)
+```bash
+# wsl 显示列表
+wsl -l -v
+# 检查状态
+wsl --status
+# 查看版本
+wsl --version
+# Shutdown
+wsl --shutdown
+```
+wmmem消耗内存大,
+在 WSL2 中使用 Docker 时，可能会造成 Vmmem 进程消耗掉全部的内存，导致机器卡顿，且通过任务管理器或者通过 taskkill 都无法终止此进程。
+方案
+1. 在用户目录下新建文件 .wslconfig，增加下面的配置，限制其内存占用：
+```bash
+[wsl2]
+memory=6GB
+swap=0
+localhostForwarding=true
+```
+> memory 的配置根据自己机器的内存配置，比如可以配置成机器内存的 1 / 3 或 1 / 4，以保证其他应用流畅使用。更多配置可查看 WSL 的 发行说明
+1. 重启 WSL2：打开 服务（可通过 Win + R，运行 services.msc），找到 LxssManager 服务，将其重启
+## 开启docker服务
+sudo service docker start
+* 查看docker版本
+  > docker version
+* 查看docker信息
+	> docker info
+* 查看docker所有镜像
+  > docker images
+* 搜索名为hello-world的docker镜像
+  >  docker search hello-world
+* 下载名为hello-word的镜像
+  > docker pull hello-world
+  >
+  > docker run image-id/repository
+* 查看docker容器进程
+  > docker ps # 默认查询正在运行的，-a 查看所有，-l 查看最新创建的，-n=1 查看最后创建的1个
+* 终止容器运行
+  > docker stop 容器名或容器ID
+  >
+  
+*  强制终止容器运行
+  > docker kill 容器ID
+  
+* 删除容器
+  > docker rm 容器名或容器ID
+* 删除所有容器
+  > docker rm $(docker ps -a -q)
+* 在当前目录创建镜像
+  >  docker build -t aaaa:1.0  .
+  >
+  >  //指定目录dockerfile
+  >
+  >  docker build -t aaaa:1.0  -f /root/Dockerfile  .
+* 镜像打tag(类似于提交前的commit)
+  > docker tag aaaa:1.0  myregistry/aaa:1.0
+* 上传镜像
+  > docker push image-id
+  >
+  > docker push myregistry/aaa:1.0
+* 新创建一个镜像
+  > docker run -it 要生成的镜像的名称 /bin/bash
+  >
+  > -t 表示在新容器内指定一个伪终端或终端
+  > -i 表示允许我们对容器内的 (STDIN) 进行交互
+* 启动或进入容器
+  > docker start 容器ID # 启动容器 docker exec -it 容器ID /bin/bash # 进入容器
+  > exit # 退出容器
+* 提交镜像的修改
+  > docker commit -m "修改注释" -a "作者名字" 容器环境ID 生成后的镜像名称
+* 删除镜像
+  > docker rmi 镜像名/镜像ID
+  
+* 查看网络
+  > docker network ls
+* 清理无用的镜像
+  >  docker image prune 
+* 清理无用的镜像容器和网络
+  >  docker system prune -f 
+* 查看Docker 资源占用
+  > docker system df
+### 查看某容器挂载的磁盘
+```bash
+# 可能需要安装jq插件,格式化json
+docker inspect --format='{{ json .Mounts }}' pdm-pdm-backend-1 | jq
+```
+### 主机与容器之间的文件复制
+```bash
+ # 从主机复制到容器
+docker cp host_path containerID:container_path
+# 从容器复制到主机
+docker cp containerID:container_path host_path 
+```
+### 修改为国内镜像地址，修改 /etc/default/docker 
+DOCKER_OPTS="--registry-mirror=https://registry.docker-cn.com"
+* 修改为自己的[阿里云镜像](https://cr.console.aliyun.com/cn-shanghai/instances/mirrors)
+  > linux修改 /etc/docker/daemon.json文件下的配置后重启,
+  >
+  > {  "registry-mirrors": ["https://xxxx.mirror.aliyuncs.com"] }
+* 登陆阿里云[先建镜像仓库](https://cr.console.aliyun.com/repository/cn-shanghai/workspace1/test1/details)
+  > ```
+  > docker login --username=15***4072 registry.cn-shanghai.aliyuncs.com
+  > ***********99*
+  > ```
+* docker 运行镜像仓库
+  1. docker官方提供镜像 registry 第一种
+     ```bash
+     # pull镜像
+     docker pull registry 
+     # 运行镜像
+     docker run -p 5000:5000 -v /home/registry_images:/var/lib/registry -d rgistry
+     
+     # 建立完成后修改客户端docker的/etc/docker/daemon.json 镜像仓库配置
+     
+     ```
+  2. docker官方提供镜像 registry 第二种  [自建docker仓库-文章链接](https://blog.csdn.net/hallyz945/article/details/124696972)
+     ```bash
+     #
+     $ docker pull registry:2
+     $ docker run -d -v /opt/registry:/var/lib/registry -p 5000:5000 --name myregistry registry:2
+     # http://127.0.0.1:5000/v2 返回{}表示正常
+     
+     # 建立完成后修改客户端docker的/etc/docker/daemon.json 镜像仓库配置
+     
+     # 验证 (本地先下载好nginx镜像)
+     ##1.镜像打包
+     docker tag nginx:latest localhost:5000/nginx:latest
+     
+     ##2.推送镜像
+     docker push localhost:5000/nginx:latest
+     
+     ##3.访问 http://127.0.0.1:5000/v2/_catalog 查看私有仓库目录，可以看到刚上传的镜像了：
+     {repositories:["nginx"]}
+     
+     ##4.下载该镜像
+     docker pull localhost:5000/镜像名:版本号
+     例如
+     docker pull localhost:5000/nginx:latest
+     
+     ```
+      
+  3.  harbor 的搭建
+     > docker 官方提供的私有仓库 registry，用起来虽然简单 ，但在管理的功能上存在不足。 Harbor是一个用于存储和分发[Docker镜像](https://so.csdn.net/so/search?q=Docker镜像&spm=1001.2101.3001.7020)的企业级Registry服务器，harbor使用的是官方的docker registry(v2命名是distribution)服务去完成。harbor在docker distribution的基础上增加了一些安全、访问控制、管理的功能以满足企业对于镜像仓库的需求。
+     第三方的，理论更好用, [地址](https://blog.csdn.net/hallyz945/article/details/124696972)
+  
+* docker 添加不安全的镜像仓库
+  ```bash
+  # vi /etc/docker/daemon.json
+  
+  { 
+   # 非安全的仓库地址，自己的镜像仓库
+    "registry-mirrors": ["https://xxxx.mirror.aliyuncs.com"] #镜像地址
+  }
+  # 修改后重启
+  systemctl daemon-reload
+  systemctl restart docker
+  
+  ```
+  
+### Dockerfile 基本语法与关键字
+> FROM,RUN,CMD,ENTRYPOINT, EXPOSE
+* FROM 基于基础镜像
+* RUN 执行命令
+* ADD 拷贝文件
+  > ADD ./ /usr/local/xxx   # 将当前目录下所有文件拷贝到指定目录去
+* WORKDIR # 设置当前目录为工作目录
+  > WORKDIR /usr/local/xxx  
+* CMD 运行命令
+  > CMD ["python3" , "./main.py"] 
+* EXPOSE 对外暴露端口命令
+ Dockerfile 常用指令
+| 指令       | 语法                                            |                                                         说明 |
+| ---------- | ----------------------------------------------- | -----------------------------------------------------------: |
+| FROM       | `FROM <image>:<tag>`                            | 指明构建的新镜像是来自于哪个基础镜像，如果没有选择`tag`，那么默认值为`latest` |
+| MAINTAINER | `MAINTAINER <name>`                             | 指明镜像维护者及其联系方式（一般是邮箱地址）。官方说明已过时，推荐使用`LABEL` |
+| LABEL      | `LABEL <key>=<value> ...`                       |        功能是为镜像指定标签。也可以使用`LABEL`来指定镜像作者 |
+| RUN        | `RUN <command>`                                 | 构建镜像时运行的`Shell`命令，比如构建的新镜像中我们想在`/usr/local`目录下创建一个`java`目录 |
+| ADD        | `ADD <src>... <dest>`                           | 拷贝文件或目录到镜像中。src 可以是一个本地文件，还可以是一个`url`。然后自动下载和解压 |
+| COPY       | `COPY <src>... <dest>`                          | 拷贝文件或目录到镜像中。用法同 ADD，只是不支持自动下载和解压 |
+| EXPOSE     | `EXPOSE <port> [<port>/<protocol>...]`          | 暴露容器运行时的监听端口给外部，可以指定端口是监听 TCP 还是 UDP，如果未指定协议，则默认为 TCP |
+| ENV        | `ENV <key>=<value> ...`                         |                                           设置容器内环境变量 |
+| CMD        | `CMD ["executable","param1","param2"]`          | 启动容器时执行的`Shell`命令。在`Dockerfile`中只能有一条`CMD`指令。如果设置了多条`CMD`，只有最后一条会生效 |
+| ENTRYPOINT | `ENTRYPOINT ["executable", "param1", "param2"]` | 启动容器时执行的 Shell 命令，同 CMD 类似，不会被 docker run 命令行指定的参数所覆盖，如果设置了多条`ENTRYPOINT`，只有最后一条会生效 |
+| WORKDIR    | `WORKDIR param`                                 |        为 RUN、CMD、ENTRYPOINT 以及 COPY 和 AND 设置工作目录 |
+| VOLUME     | `VOLUME ["param"]`                              | 指定容器挂载点到宿主机自动生成的目录或其他容器。一般的使用场景为需要持久化存储数据时 |
+## 容器编排 docker-compose
+> docker-compose.yml 将多个镜像一起处理
+[参考文档](https://huaweicloud.csdn.net/63311428d3efff3090b51866.html?spm=1001.2101.3001.6650.5&utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~activity-5-118558700-blog-119191532.pc_relevant_3mothn_strategy_recovery&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~activity-5-118558700-blog-119191532.pc_relevant_3mothn_strategy_recovery&utm_relevant_index=6)
+[参考文档2](https://blog.csdn.net/weixin_43420255/article/details/106495197)
+[参考文档3](https://blog.csdn.net/tabingbuxiaode/article/details/126365978)
+[参考文档4](http://www.rssso.com/news/E2BCDD6305979CB8)
+#### 安装
+```bash
+# 下载
+sudo curl -L "https://github.com/docker/compose/releases/download/v2.20.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+# 执行权限
+sudo chmod +x /usr/local/bin/docker-compose
+# 软连接
+sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+# 验证
+docker-compose --version
+```
+##### docker-compose 启动会根据 yml所在文件夹命名，修改方式如下
+1. 命令启动
+   > `docker-compose -p $PROJECT_NAME up`.
+   >
+   > -p 意思是 --project_name
+2. yml文件启动
+   > 从Docker版本17.06.0开始,可以直接在docker-compose.yml文件中设置变量.
+   >
+   > 在docker-compose.yml文件夹下穿件有自定义项目名称和设置的.env文件
+   >
+   > COMPOSE_PROJECT_NAME=SOMEPROJECTNAME
+## 子命令
+| 命令                   | 描述                                                  |
+| ---------------------- | ----------------------------------------------------- |
+| docker-compose build   | 构建或重建服务                                        |
+| docker-compose convert | 将compose文件转换为平台的规范格式                     |
+| docker-compose cp      | 在服务容器和本地文件系统之间复制文件/文件夹           |
+| docker-compose create  | 为服务创建容器                                        |
+| docker-compose down    | 停止并移除容器，网络                                  |
+| docker-compose events  | 从容器中接收实时事件。                                |
+| docker-compose exec    | 在正在运行的容器中执行命令。                          |
+| docker-compose images  | 列出容器使用的镜像                                    |
+| docker-compose kill    | 强制停止服务容器。                                    |
+| docker-compose logs    | 查看容器的输出                                        |
+| docker-compose ls      | 运行compose项目的列表                                 |
+| docker-compose pause   | 暂停服务                                              |
+| docker-compose port    | 输出端口绑定的公共端口。                              |
+| docker-compose ps      | 列出容器列表                                          |
+| docker-compose pull    | 拉取服务镜像                                          |
+| docker-compose push    | 推送服务镜像                                          |
+| docker-compose restart | 重启服务容器                                          |
+| docker-compose rm      | 移除已停止的服务容器                                  |
+| docker-compose run     | 在服务上运行一次性命令。                              |
+| docker-compose start   | 开始服务查看docker service ps task: non-zero exit (1) |
+| docker-compose stop    | 停止服务                                              |
+| docker-compose top     | 显示正在运行的进程                                    |
+| docker-compose unpause | 取消暂停的服务                                        |
+| docker-compose up      | 创建并启动容器                                        |
+| docker-compose version | 显示Docker Compose的版本信息                          |
+栈列表
+docker stack ls 
+节点列表
+docker-node ls 
+服务列表
+docker sevice ls 
+显示执行内容
+docker service ps <serviceId>
+显示完整内容(不截断)
+docker service ps  --no-trunc <serviceId>
+查看service某个镜像中详情
+docker service inspect --pretty doctek_doctek-app
+创建服务
+```
+docker service create [OPTIONS] IMAGE [COMMAND] [ARG...]
+Options
+1、--detach , -d: 指定容器运行于前台还是后台，默认为false
+2、--name: 服务名称
+3、--network: 网络连接
+4、--publish , -p: 端口映射
+5、--env , -e: 设置环境变量
+6、--tty , -t: 分配tty设备，该可以支持终端登录
+7、--mount: 文件挂载
+8、--replicas: 指定任务数量
+eg：
+docker service create --replicas 3 -p 8080:80 --name api_131 \
+--mount type=bind,source=/storage/apiapp_log,destination=/go/src/logs \
+-e RUN_MODE=Production \
+-t registry.youkeshu.com:5000/nginx:php7.1v3 
+```
+[docker-compose up 与 docker stack deploy 区别](https://blog.csdn.net/m0_67402564/article/details/124171654)
+[docker stack deploy详细配置](https://www.jianshu.com/p/0b1817ebb7d1)
+ 
+#### Docker Stack命令
+```bash
+1) docker stack deploy
+用于根据 Stack 文件（通常是 docker-stack.yml）部署和更新 Stack 服务的命令。
+2) docker stack ls
+会列出 Swarm 集群中的全部 Stack，包括每个 Stack 拥有多少服务。
+3) docker stack ps [服务名]
+列出某个已经部署的 Stack 相关详情。该命令支持 Stack 名称作为其主要参数，列举了服务副本在节点的分布情况，以及期望状态和当前状态。
+4) docker stack rm  
+命令用于从 Swarm 集群中移除 Stack。移除操作执行前并不会进行二次确认
+```
+[给某台机器打标签](https://blog.csdn.net/weixin_42170236/article/details/113766564)
+```bash
+1.查看集群节点信息
+docker node ls
+2.添加标签
+docker node update --label-add role=cluster0001 ejxxvy9qx71uh4cs7twgczaui(nodeid)
+3.查看是否添加成功,查看  Spec下面是否有添加的
+docker node inspect ejxxvy9qx71uh4cs7twgczaui
+4.删除标签
+docker node update --label-rm role ejxxvy9qx71uh4cs7twgczaui
+5.约束方式
+1. 
+docker service create \
+  --name nginx_test \
+  --constraint 'node.labels.role == cluster001' \
+  nginx
+2. 
+deploy:
+      placement:
+        constraints: [node.labels.role==cluster0001] # 条件约束
+	
+```
+[docker 三剑客](https://blog.csdn.net/qq_47295318/article/details/123262866)
+[参考地址](https://blog.51cto.com/key3feng/5204096)
+[参考地址2](https://zhuanlan.zhihu.com/p/182198031)
+[参考地址3 docker swarm集群](https://www.bbsmax.com/A/Ae5RYqYYJQ/)
+[swarm集群](https://www.likecs.com/show-307069822.html#sc=2300)
+[docker-machine配置](https://blog.51cto.com/u_13831562/5984894)
+* docker-compose 多个容器编排
+* docker-machine  命令行工具 远程操作docker
+* docker-swarm 集群 
+```bash
+#docker-machine 链接主机
+# 1. 连接虚拟机
+docker-machine create --driver=virtualbox test 
+#查看访问所创建 Docker 环境所需要的配置信息
+docker-machine env test
+# 2.连接本地主机, 配置好ssh免密后连接另外一台装有docker的机器, ip: 101.132.157.**, user用户登录, 起名为 mst1
+  docker-machine create -d generic --generic-ip-address=101.132.157.** --generic-ssh-user=root mst1
+# 3.链接云驱动, 连接一些云平台的机器
+docker-machine create --driver amazonec2 --amazonec2-access-key AKI******* --amazonec2-secret－key 8T93C********* --amazonec2-vpc-id vpc-****** aws_instance
+```
+``` shell 
+docker-machine ls：查看docker-machine管理的Dockerized主机
+docker-machine rm –f Dockerized：删除指定的Dockerized主机
+docker-machine env Dockerized：查看指定的Dockerized主机环境变量
+docker-machine upgrate docker1 docker2：批量更新docker host版本
+docker-machine config docker1：查看host的docker daemon配置
+docker-machine start/status/restart/kill：对docker host所在的系统的操作
+docker-machine scp：docker host之间复制
+docker-machine use machine-name：激活docker化主机
+docker-machine ip machine-name：显示的主机的IP地址
+```
+管理节点与工作节点可以使用内网地址与外网地址，将192.168.1.200这台服务器初始化为管理节点，切换到200这台服务器。使用内网地址初始化节点：
+> 
+>
+> docker swarm init --advertise-addr 192.168.1.200
+> 或者
+> docker swarm init --advertise-addr 192.168.1.200 --listen-addr 192.168.1.200:2377
+查看集群节点情况
+> docker node ls
+查看加入为swarm manager的token
+> docker swarm join-token manager
+>
+> docker swarm join-token worker
+脱离集群
+> docker swarm leave
+集群master删除slave
+> id是 docker node ls里面的id
+>
+> docker node rm <id>  
+查看原有网络
+> docker network ls
+```bash
+本机启动:
+docker stack deploy -c docker-compose.yml [创建的服务名字]
+部署到 swarm
+https://cloud.tencent.com/developer/ask/sof/1934508
+$ docker-machine scp docker-compose.yml manager:~/
+$ docker-machine ssh manager docker stack deploy --compose-file=docker-compose.yml example
+或者
+docker-machine ssh manager docker stack deploy -c - example < docker-compose.yml
+```
+### docker-machine 常用命令
+| 命令                   | 说明                                        |
+| ---------------------- | ------------------------------------------- |
+| docker-machine create  | 创建一个 Docker 主机（常用`-d virtualbox`） |
+| docker-machine ls      | 查看所有的 Docker 主机                      |
+| docker-machine ssh     | SSH 到主机上执行命令                        |
+| docker-machine env     | 显示连接到某个主机需要的环境变量            |
+| docker-machine inspect | 输出主机更多信息                            |
+| docker-machine kill    | 停止某个主机                                |
+| docker-machine restart | 重启某台主机                                |
+| docker-machine rm      | 删除某台主机                                |
+| docker-machine scp     | 在主机之间复制文件                          |
+| docker-machine start   | 启动一个主机                                |
+| docker-machine status  | 查看主机状态                                |
+| docker-machine stop    | 停止一个主机                                |
+### docker swarm 常用命令
+| 命令                            | 说明                 |
+| ------------------------------- | -------------------- |
+| docker swarm init               | 初始化集群           |
+| docker swarm join-token worker  | 查看工作节点的 token |
+| docker swarm join-token manager | 查看管理节点的 token |
+| docker swarm join               | 加入集群中           |
+### docker node 常用命令
+| 命令                | 说明                               |
+| ------------------- | ---------------------------------- |
+| docker node ls      | 查看所有集群节点                   |
+| docker node rm      | 删除某个节点（`-f`强制删除）       |
+| docker node inspect | 查看节点详情                       |
+| docker node demote  | 节点降级，由管理节点降级为工作节点 |
+| docker node promote | 节点升级，由工作节点升级为管理节点 |
+| docker node update  | 更新节点                           |
+| docker node ps      | 查看节点中的 Task 任务             |
+### docker service 常用命令
+| 命令                   | 说明                                              |
+| ---------------------- | ------------------------------------------------- |
+| docker service create  | 部署服务                                          |
+| docker service inspect | 查看服务详情                                      |
+| docker service logs    | 产看某个服务日志                                  |
+| docker service ls      | 查看所有服务详情                                  |
+| docker service rm      | 删除某个服务（`-f`强制删除）                      |
+| docker service scale   | 设置某个服务个数 eg: docker service scale nginx=0 |
+| docker service update  | 更新某个服务                                      |
+|                        |                                                   |
+### docker stack 常用命令
+| 命令                  | 说明                         |
+| --------------------- | ---------------------------- |
+| docker stack deploy   | 部署新的堆栈或更新现有堆栈   |
+| docker stack ls       | 列出现有堆栈                 |
+| docker stack ps       | 列出堆栈中的任务             |
+| docker stack rm       | 删除堆栈                     |
+| docker stack services | 列出堆栈中的服务             |
+| docker stack down     | 移除某个堆栈（不会删除数据） |
+# 安装k8s
+[参考地址](https://www.jianshu.com/p/f2d4dd4d1fb1)
+[参考地址2](https://www.imooc.com/video/19158)
+* apt-get 翻墙安装
+  ```bash
+  新建翻墙配置文件,内容为下面三行:
+  Acquire::http::proxy "http://ip:端口/"
+  Acquire::ftp::proxy "ftp://ip:端口/"
+  Acquire::https::proxy "https://ip:端口/"
+  
+  apt-get -c 文件名(翻墙代理如果需要) install -y xxxx 
+   
+  
+  ```
+  
+```bash
+# 更新安装器
+apt-get install update 
+#  使得 apt 支持 ssl 传输
+apt-get install apt-transport-https
+# 如报错不能安装则重装apt-get(错误提示:The package lists or status file could not be parsed or opened.)
+# sudo rm -vf /var/lib/apt/lists/*
+# sudo apt-get update
+# 设置linux代理命令，echo $http_proxy 验证成功与否(需要科学上网)
+# export http_proxy=192.168.*.*:1087   && export https_proxy =http_proxy=192.168.*.*:1087
+# 安装命令
+apt-get install -y kubelet kubeadm kubectl
+# 禁止命令更新: apt-mark hold kubelet kubeadm kubectl
+```
+#### k8s master初始化
+#### 禁用虚拟内存
+* 方式1(重启后消失)
+  > swapoff -a 
+* 方式2，编辑/etc/fstab 配置,注释第二行文件，然后重启
+  ```bash
+  sudo vi /etc/fstab
+  ###编辑/etc/fstab 配置,注释第二行文件
+  UUID=e2048966-750b-4795-a9a2-7b477d6681bf /   ext4    errors=remount-ro 0    1
+  # /dev/fd0        /media/floppy0  auto    rw,user,noauto,exec,utf8 0       0
+  
+  #重启
+  reboot
+  ```
+  
+### k8s master初始化
+```bash
+#禁用虚拟内存
+swapoff -a 
+#初始化
+# 某些版本如果cpu小于一核会初始化失败,添加后面参数避免验证失败 --ignore-preflight-errors=NumCPU  
+kubeadmin init --pod-network-cidr=xxxxxxx/xx --ignore-preflight-errors=NumCPU
+#
+kubeadm init \
+--apiserver-advertise-address=192.168.56.11(master节点的服务器ip) \
+--image-repository registry.aliyuncs.com/google_containers \
+--pod-network-cidr=10.244.0.0/16
+```
+```bash
+# 检查node是不是ready状态
+kubectl get node 
+# 检查所有pod是不是正常
+kubectl get po --all-namespace -o wide 
+# 如果pod不是running状态,则查看该pod：  kubectl describe pod xxxx -n kube-system ,可能是镜像无法下载导致,如果是手动再node上pullimage
+# 然后在master上删除对应的pod, k8s会自动重新调度
+# 删除命令: kubectl delete pod xxx -n kube-system
+```
+* 设置一台服务器到另一台服务器免密登录
+  ```bash
+  # 生产密钥和公钥 (默认名字是id_rsa和id_rsa.pub)
+  ssh-keygen -t rsa 
+  
+  # 将公钥发送到另一台服务器
+  ssh-copy-id -i ~/.ssh/id_rsa.pub  root@otherip  
+  
+  #验证,不用输入密码能登录代表好了 
+  ssh root@otherip 
+  
+  
+  ```
+* 查看k8s运行的应用
+  > kubectl get services --all-namespaces 
+* 配置脚本
+  ```bash
+  #### deploy_docker.sh 
+  
+  #!/bin/sh
+  #maven01 $workspace $jarname
+  # ${projectName} ${docker_path} ${jarName}
+  
+  set -e
+  projectName=$1
+  docker_path=$2
+  appName=$3
+  
+  #user_name = 
+  #password=
+  
+  tag=$(date +%s)
+  
+  # 镜像仓库地址
+  server_path=192.168.22.22:5000
+  target_image=${projectName}:${tag}
+  #${BUILD_NUMBER}
+  echo ${target_image}
+  
+  cd ${docker_path}
+  
+  # 构建docker镜像
+  docker build --build-arg app=${appName} -t ${target_image} . 
+  
+  # 镜像打tag 
+  docker tag ${target_image } ${server_path}/${projectName}
+  echo The name of image is "${server_path}\/${target_image}"
+  
+  #推送镜像到仓库
+  docker push ${server_path}/${projectName}:latest
+  
+  # 删除镜像
+  docker rmi -f $(docker images | grep ${projectName} | grep {tag} | awk '{print $3}' | head -n 1)
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  ```
+* 运行命令
+  ```bash
+  
+  # 运行应用
+  kubectl apply -f kube.yaml 
+  
+  # 查看所有运行的service
+  kubel get sevices --all-namespace
+  
+  
+  ```
+  
+```bash
+cd ${WORKSPACE}/Doctek-docker
+chomd 777 ./copy.sh
+mv docker-compose.yml docker-compose_old.yml
+cp docker-compose-dev.yml docker-compose.yml
+docker-compose build 
+docker
+```
+# jenkins+ docker+kubernates
+1. jenkins 打包出jar文件
+   1. 执行shell 生成新的镜像推送到镜像服务器
+      ```bash
+      #!/bin/sh
+      
+      jarName=xxxx.jar
+      jarFolder=xx
+      projectName=xx
+      
+      docker_path=${WORKSPACE}
+      
+      cp ${WORKSPACE}/target/${jarName}  ${docker_path}
+      
+      # 执行镜像打包命令，命令内容上面有
+      sh /root/docker_dir/deploy_docker.sh  ${projectName} ${docker_path} ${jarName}
+      
+      
+      ```
+   2. 再执行shell, 将yaml配置文件拷贝到k8s master 上面运行应用
+      ```bash
+      
+      set -e
+      echo ok
+      echo ${WORKSPACE }
+      docker_path=${WORKSPACE }
+      
+      # 将k8s的yaml配置文件拷贝过去
+      scp ${WORKSPACE}/*.yaml k8smasterhostip:/root/
+      
+      # 远程执行命令部署k8s应用
+      ssh k8smasterhostip '/opt/bin/kubectl apply -f /root/kube.yaml'
+      ssh k8smasterhostip '/opt/bin/kubectl get svc|grep maven'
+      
+      
+      ```
+      
+2. 编译后执行docker打包成镜像命令
+3. 打包后推送镜像
+#### docker运行服务器运行脚本
+```bash
+project_name=192.168.86.20:85/ota-upgrade/upgrade-test
+#harbor_project_name=$2
+tag=latest
+port=8071
+imageName=$project_name:$tag
+echo "$imageName"
+#查询容器是否存在，存在则删除
+containerId=`docker ps -a | grep -w ${project_name}:${tag} | awk '{print $1}'`
+if [ "$containerId" != "" ] ; then
+	#停掉容器
+	docker stop $containerId
+	#删除容器
+	docker rm $containerId
+	echo "成功删除容器"
+fi
+#查询镜像是否存在，存在则删除
+imageId=`docker images | grep -w $project_name | awk '{print $3}'`
+if ["$imageId" != "" ] ; then
+	#删除镜像
+	docker rmi -f $imageId
+	echo "成功删除镜像"
+fi
+# 登录Harbor私服
+docker login -u admin -p Harbor12345 192.168.86.20:85
+# 下载镜像
+docker pull $imageName
+# 启动容器
+docker run -di -p $port:$port $imageName
+echo "容器启动成功"
+```
+[持续集成](http://static.kancloud.cn/king_om/jenkins/2621014)
+## jenkins+docker持续集成
+### jenkins+docker+docker-compose 部署
+1. jenkins新建item
+   > 略
+2. 配置好git拉取代码
+   > 略.  
+3. 编译前端或者后台代码
+   > 后台代码build
+   >
+   > Root POM填写到 pom.xml 的路径 	eg:  	ares/pom.xml
+   >
+   > Goals and options  填写 maven编译的命令。eg:  clean install -P run -Dmaven.test.skip=true
+   
+4. 编译镜像并且推送镜像到镜像服务器
+   > 保证登陆好镜像服务器
+   >
+   > docker login --username=150****4072 --password= *********  registry.cn-shanghai.aliyuncs.com
+   >
+   > docker-compose build & docker-compose push
+5. 运行服务器拉取镜像并部署
+   > docker-compose stop && docker-compose pull && docker-compose up -d 
+### 记事件
+#### 1. 服务器磁盘满了 查看大多磁盘被docker占用
+> 99G磁盘服务器, 查看到   /var/lib/docker/ 目录占用过大
+​	排查清理
+```bash
+# 查看里面大文件,一般是运行太久了,日志文件占用太大
+sudo du -sh /var/lib/docker/containers/*/*-json.log
+# 输出如果看到有很多大文件占用系统,说明需要改,
+方法1. 配置 
+```
+#### 方法一：配置 Docker daemon 默认日志选项（推荐）
+编辑 `/etc/docker/daemon.json`（若不存在则新建）：
+```
+{
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "100m",
+    "max-file": "3"
+  }
+}
+```
+- `max-size`: 单个日志文件最大 100MB
+- `max-file`: 保留最多 3 个文件 → 总日志最多 300MB/容器
+然后重启 Docker：sudo systemctl restart docker
+方法二: 单个容器运行时候配置日志大小
+```bash
+# docker直接运行
+docker run \
+  --log-driver json-file \
+  --log-opt max-size=100m \
+  --log-opt max-file=3 \
+  your-image
+  
+# docker-compose 运行
+services:
+  your-service:
+    image: your-image
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+```
+方法三: 临时删除日志, 不重启,
+> 不重启,清除日志
+```bash
+# 查看日志占用-大小降序
+sudo du -sh /var/lib/docker/containers/*/*-json.log | sort -hr
+# 清空指定容器的日志（不删除文件，不清除容器）
+sudo truncate -s 0 /var/lib/docker/containers/abcd1234.../abcd1234...-json.log
+# 一键清空所有容器日志（谨慎使用）--虽然安全，但会清掉所有容器的当前日志。如果你需要保留某些日志用于排查问题，请先备份或跳过
+sudo sh -c "truncate -s 0 /var/lib/docker/containers/*/*-json.log"
+```

@@ -1,0 +1,107 @@
+---
+title: "MySQL 常用操作与优化"
+date: 2017-03-10
+postSlug: "skill/mysql"
+categories:
+  - "技术"
+tags:
+  - MySQL
+  - "数据库"
+  - SQL
+description: "MySQL 常用操作命令、性能优化技巧、连接数管理和数据导入导出"
+keywords: "mysql, sql, 数据库优化, explain, 连接数"
+featured: false
+---
+
+## MySQL EXPLAIN 详解 
+	帮助分析mysql 查询效率
+>参考链接http://blog.csdn.net/zhuxineli/article/details/14455029
+## Too Many Connections 处理 
+	数据库连接用完了,不能再连接
+	默认151(自己查看的), 可以设置,连接数可以用  show  processlist; 查看结果数量, kill id 删除指定
+	
+	也可以  kill  通过下面这个sql 批量kill 
+	SELECT   CONCAT('KILL ',id,';')    FROM information_schema.PROCESSLIST t WHERE t.STATE LIKE 'Sending%';
+## 修改MySQL配置文件/etc/my.cnf,
+	设置成max_connections=1000,wait_timeout=5。如果没有此项设置可以自行添加，修改后重启MySQL服务即可
+## 查看最大连接数: show variables like '%max_connections%'; 
+## 查看连接数 show variables like '%timeout%'; 
+## set global max_connections=1000。
+	这种方式有个问题，就是设置的最大连接数只在mysql当前服务进程有效，一旦mysql重启，又会恢复到初始状态。因为mysql启动后的初始化工作是从其配置文件中读取数据的，而这种方式没有对其配置文件做更改。
+​	
+#### 根据用户查询连接数
+> 查询mysql用户连接资源不够的情况
+``` sql
+-- 查询mysql用户连接数
+select user,count(1) from information_schema.`PROCESSLIST` group by user;
+-- 查询用户连接数据库数
+select user,db,count(1) from information_schema.`PROCESSLIST` group by user,db;
+-- 查询用户ip连接数据库数
+SELECT USER, SUBSTRING_INDEX(HOST,":",1) as host_name, state,count(*) from information_schema.`PROCESSLIST` GROUP BY state,host_name;
+```
+## MySQL 查询大小限制
+>mysql 查询默认1024大小(可能版本不同有不同),如果大于报错
+set global max_allowed_packet = 1024*100;
+show variables like '%max_allowed_packet%';
+## MySQL 数据导出
+### 导出整个库
+```
+mysqldump -uroot -p db > db.sql
+```
+### 导出表结构
+``` 
+mysqldump -h localhost -uroot -proot  -d push_new_db > push_db_db.sql
+```
+## MySQL 数据导入
+```
+#进入mysql目标库里面
+source D://db.sql
+```
+```
+mysql -uroot -p db < db.sql
+```
+## 常用命令
+### 登录数据库
+    mysql -h localhost -uroot -p
+### 导出数据库
+    mysqldump -uroot -p db > db.sql
+### 导入数据库
+    mysql -uroot -p db < db.sql
+    // or
+    mysql -uroot -p db -e "source /path/to/db.sql"
+### 开启远程登录
+    grant all privileges on ss.* to 'root'@'%' indentified by 'passoword' with grant option;
+    // or 
+    update user set Host="%" and User="root"
+    // 注意%是不包含localhost的
+    flush privileges;
+### 创建用户
+    CREATE USER 'test'@'localhost' IDENTIFIED BY 'password';
+    grant all privileges on *.* to test@'localhost' identified by 'test';
+### 创建表
+    CREATE SCHEMA testdb DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+### 赋予数据库权限
+    GRANT ALL ON testdb.* TO 'test'@'localhost';
+​    
+### 表追加插入 
+	INSERT INTO 表1 SELECT * FROM 表2   
+	注意主键冲突,表结构是否一致
+## IP地址查询
+> 查询有多少用户ip查询数据库
+``` sql
+-- 1.查询有多少连接数据库
+SHOW  PROCESSLIST ;
+-- 2.查询有多少连接数据库中的 rds_db库
+select * from information_schema.processlist where user='rds_admin_001' and db='rds_db' ORDER BY host;
+-- 3.分组查询各个ip的连接数量
+select LEFT(host,15),count(*) from information_schema.processlist where user='rds_admin_001' and db='rds_db' group BY LEFT(host,13);
+```
+## mysql binlog
+``` sql
+# 显示binlog
+SHOW BINARY LOGS;
+#查看binlog时间
+SHOW VARIABLES LIKE '%binlog_expire%'
+# 清理这之前的binlog
+PURGE MASTER LOGS TO 'PC-20210918TDQF-bin.000376'
+```

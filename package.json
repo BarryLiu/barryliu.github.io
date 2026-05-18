@@ -1,0 +1,27 @@
+{
+  "name": "barryliu-github-io",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "migrate": "node scripts/migrate-posts.mjs",
+    "assets": "node scripts/copy-static-assets.mjs",
+    "predev": "npm run migrate && npm run assets",
+    "dev": "ASTRO_TELEMETRY_DISABLED=1 astro dev --host 0.0.0.0",
+    "prebuild": "npm run migrate && npm run assets",
+    "build": "ASTRO_TELEMETRY_DISABLED=1 astro build",
+    "preview": "ASTRO_TELEMETRY_DISABLED=1 astro preview",
+    "test": "node --test tests/*.test.mjs",
+    "deploy:cloudflare": "npm run build && wrangler pages deploy dist"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^4.2.5",
+    "@astrojs/rss": "^4.0.11",
+    "@astrojs/sitemap": "^3.2.1",
+    "astro": "^5.7.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3",
+    "wrangler": "^4.17.0"
+  }
+}

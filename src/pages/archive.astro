@@ -1,0 +1,43 @@
+---
+import PostCard from '../components/PostCard.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getAllPosts, groupPostsByYear } from '../utils/posts';
+
+const posts = await getAllPosts();
+const groups = groupPostsByYear(posts);
+---
+
+<BaseLayout title="归档" description="想飞的鱼博客文章归档">
+  <section class="section container">
+    <div class="section-header">
+      <div>
+        <p class="eyebrow">Archive</p>
+        <h1 class="section-title">文章归档</h1>
+      </div>
+      <p class="section-desc">共 {posts.length} 篇 Markdown 文章，按年份倒序整理。</p>
+    </div>
+    <div class="archive">
+      {groups.map(([year, yearPosts]) => (
+        <section>
+          <h2>{year}</h2>
+          <div class="grid two">
+            {yearPosts.map((post) => <PostCard post={post} />)}
+          </div>
+        </section>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .archive {
+    display: grid;
+    gap: 42px;
+  }
+
+  h2 {
+    margin: 0 0 16px;
+    color: var(--color-cyan);
+    font-size: 2rem;
+  }
+</style>

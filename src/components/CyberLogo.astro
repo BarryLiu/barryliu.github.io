@@ -1,0 +1,75 @@
+---
+const { compact = false } = Astro.props;
+---
+
+<a
+  class:list={['logo', { compact }]}
+  href="/"
+  aria-label="想飞的鱼首页"
+  data-i18n-aria-label-zh="想飞的鱼首页"
+  data-i18n-aria-label-en="Flying Fish homepage"
+>
+  <svg viewBox="0 0 88 56" role="img" aria-hidden="true">
+    <path class="wing" d="M16 33C29 6 57 0 75 7C62 15 50 26 47 44C37 36 28 33 16 33Z" />
+    <path class="body" d="M8 31C24 16 46 14 61 28C48 44 25 46 8 31Z" />
+    <path class="tail" d="M59 28L81 17L75 31L82 43L59 35Z" />
+    <circle cx="26" cy="29" r="3" />
+  </svg>
+  <span>
+    <strong data-i18n-zh="想飞的鱼" data-i18n-en="Flying Fish">想飞的鱼</strong>
+    {!compact && <small data-i18n-zh="Flying Fish Lab" data-i18n-en="Cyber Aquarium">Flying Fish Lab</small>}
+  </span>
+</a>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--color-text);
+    font-weight: 800;
+    line-height: 1.1;
+  }
+
+  svg {
+    width: 48px;
+    height: 32px;
+    overflow: visible;
+    filter: drop-shadow(0 0 16px rgb(40 247 255 / 45%));
+  }
+
+  path {
+    fill: none;
+    stroke: var(--color-cyan);
+    stroke-linejoin: round;
+    stroke-width: 3.5;
+  }
+
+  .wing {
+    stroke: var(--color-lime);
+    opacity: 0.82;
+  }
+
+  .tail {
+    stroke: var(--color-magenta);
+  }
+
+  circle {
+    fill: #fff;
+  }
+
+  span {
+    display: grid;
+    gap: 2px;
+  }
+
+  small {
+    color: var(--color-muted);
+    font-size: 0.72rem;
+    font-weight: 600;
+  }
+
+  .compact small {
+    display: none;
+  }
+</style>

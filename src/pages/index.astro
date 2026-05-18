@@ -1,0 +1,331 @@
+---
+import CyberHero from '../components/CyberHero.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import TaxonomySwitch from '../components/TaxonomySwitch.astro';
+import { projects } from '../data/projects';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { formatDate, getPrimaryCategory, getAllPosts, getTaxonomyCounts, postUrl, taxonomySlug } from '../utils/posts';
+
+const posts = await getAllPosts();
+const latestPosts = posts.slice(0, 4);
+const aiPosts = posts.filter((post) =>
+  post.data.categories.includes('ailearn') || post.data.tags.some((tag) => ['AI', 'RAG', 'Agent'].includes(tag)),
+).slice(0, 3);
+const categories = getTaxonomyCounts(posts, 'categories').slice(0, 18);
+const tags = getTaxonomyCounts(posts, 'tags').slice(0, 24);
+const featuredProject = projects.find((project) => project.featured) ?? projects[0];
+const compactProjects = projects.filter((project) => project.id !== featuredProject.id).slice(0, 4);
+---
+
+<BaseLayout>
+  <div class="home-stage">
+    <CyberHero postCount={posts.length} />
+
+    <section id="projects" class="section container">
+      <div class="section-header">
+        <div>
+          <p class="eyebrow" data-i18n-zh="项目雷达" data-i18n-en="Project Radar">项目雷达</p>
+          <h2 class="section-title" data-i18n-zh="个人项目展示区" data-i18n-en="Personal project dock">个人项目展示区</h2>
+        </div>
+        <p
+          class="section-desc"
+          data-i18n-zh="首页重点展示项目目标、技术栈、状态和关联文章，让访问者先看到你能构建什么，再进入细节阅读。"
+          data-i18n-en="The homepage leads with project goals, stacks, status, and related notes, so visitors see what you build before reading the details."
+        >
+          首页重点展示项目目标、技术栈、状态和关联文章，让访问者先看到你能构建什么，再进入细节阅读。
+        </p>
+      </div>
+      <div class="project-grid">
+        <ProjectCard project={featuredProject} featured />
+        <div class="compact-projects">
+          {compactProjects.map((project) => <ProjectCard project={project} />)}
+        </div>
+      </div>
+    </section>
+
+    <section class="section container">
+      <div class="section-header">
+        <div>
+          <p class="eyebrow" data-i18n-zh="最新笔记" data-i18n-en="Latest Notes">最新笔记</p>
+          <h2 class="section-title" data-i18n-zh="最新文章" data-i18n-en="Recent transmissions">最新文章</h2>
+        </div>
+        <p
+          class="section-desc"
+          data-i18n-zh="文章以任务日志形式呈现：专题、技术标签、状态和阅读入口一眼可扫，保留博客的核心阅读价值。"
+          data-i18n-en="Posts are presented as mission logs with topics, tags, status, and a direct reading entry."
+        >
+          文章以任务日志形式呈现：专题、技术标签、状态和阅读入口一眼可扫，保留博客的核心阅读价值。
+        </p>
+      </div>
+      <div class="article-topic-grid">
+        <div class="article-list">
+          {latestPosts.map((post, index) => (
+            <a class="article-row" href={postUrl(post)}>
+              <span class="article-index">{String(index + 1).padStart(2, '0')}</span>
+              <span class="article-text">
+                <strong>{post.data.title}</strong>
+                <small>{formatDate(post.data.date)} / {getPrimaryCategory(post)}</small>
+              </span>
+              <em data-i18n-zh="打开" data-i18n-en="OPEN">打开</em>
+            </a>
+          ))}
+        </div>
+        <aside class="topic-teaser">
+          <p class="eyebrow">Topic Cloud</p>
+          <h3 data-i18n-zh="从项目回到知识地图" data-i18n-en="From projects back to the knowledge map">从项目回到知识地图</h3>
+          <p
+            data-i18n-zh="AI、Agent、RAG 和工程工具被整理成可继续追踪的主题入口，文章不只是归档，也是项目雷达的材料。"
+            data-i18n-en="AI, agents, RAG, and engineering tools are grouped into glowing topic entries; posts become project material, not just archives."
+          >
+            AI、Agent、RAG 和工程工具被整理成可继续追踪的主题入口，文章不只是归档，也是项目雷达的材料。
+          </p>
+          <div class="topic-cloud">
+            {['Agent', 'RAG', 'MLOps', 'AI Search', 'Cloudflare'].map((tag) => (
+              <a href={`/tag/${taxonomySlug(tag)}/`}>{tag}</a>
+            ))}
+          </div>
+          <div class="mini-logo-card">
+            <span aria-hidden="true"></span>
+            <strong>Flying Fish System</strong>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section container split">
+      <div class="ai-panel">
+        <div>
+          <p class="eyebrow">AI Notes</p>
+          <h2 class="section-title" data-i18n-zh="AI 学习主线" data-i18n-en="AI learning route">AI 学习主线</h2>
+          <p data-i18n-zh="挑出最近的 AI 主线文章，作为进入完整路线的快速入口。" data-i18n-en="A fast lane into recent AI notes and the complete learning route.">挑出最近的 AI 主线文章，作为进入完整路线的快速入口。</p>
+        </div>
+        <div class="ai-route-list">
+          {aiPosts.map((post) => (
+            <a href={postUrl(post)}>
+              <strong>{post.data.title}</strong>
+              <span>{formatDate(post.data.date)}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+      <div class="taxonomy-stack">
+        <TaxonomySwitch title="分类入口" titleEn="Categories" hrefPrefix="category" items={categories} />
+        <TaxonomySwitch title="高频标签" titleEn="Frequent tags" hrefPrefix="tag" items={tags} />
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .home-stage {
+    position: relative;
+  }
+
+  .home-stage::before,
+  .home-stage::after {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    z-index: -1;
+    width: 1px;
+    pointer-events: none;
+    background: linear-gradient(180deg, transparent, rgb(40 247 255 / 28%), transparent);
+    content: "";
+  }
+
+  .home-stage::before {
+    left: max(20px, calc((100vw - 1312px) / 2));
+  }
+
+  .home-stage::after {
+    right: max(20px, calc((100vw - 1312px) / 2));
+  }
+
+  .project-grid {
+    display: grid;
+    grid-template-columns: 560px minmax(0, 1fr);
+    gap: 26px;
+    align-items: stretch;
+  }
+
+  .compact-projects {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px 26px;
+  }
+
+  .article-topic-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 820px) minmax(360px, 1fr);
+    gap: 30px;
+  }
+
+  .article-list {
+    display: grid;
+    gap: 16px;
+  }
+
+  .article-row {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr) auto;
+    gap: 18px;
+    align-items: center;
+    min-height: 82px;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    background: rgb(9 20 36 / 64%);
+  }
+
+  .article-index {
+    display: grid;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-cyan), var(--color-lime));
+    color: #06111f;
+    font-size: 0.82rem;
+    font-weight: 900;
+  }
+
+  .article-text {
+    display: grid;
+    gap: 4px;
+  }
+
+  .article-text strong {
+    color: #f0fdff;
+    line-height: 1.35;
+  }
+
+  .article-text small {
+    color: var(--color-muted);
+  }
+
+  .article-row em {
+    color: var(--color-lime);
+    font-size: 0.78rem;
+    font-style: normal;
+    font-weight: 900;
+  }
+
+  .topic-teaser,
+  .ai-panel {
+    display: grid;
+    align-content: start;
+    gap: 18px;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-sm);
+    padding: 24px;
+    background:
+      radial-gradient(circle at 88% 20%, rgb(255 71 223 / 14%), transparent 16rem),
+      rgb(9 20 36 / 64%);
+  }
+
+  .topic-teaser h3 {
+    margin: 0;
+    font-size: 1.55rem;
+  }
+
+  .topic-teaser p,
+  .ai-panel p {
+    margin: 0;
+    color: var(--color-muted);
+  }
+
+  .topic-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .topic-cloud a {
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    padding: 7px 11px;
+    background: rgb(2 6 23 / 60%);
+    color: #dffbff;
+    font-size: 0.82rem;
+    font-weight: 800;
+  }
+
+  .mini-logo-card {
+    display: flex;
+    min-height: 118px;
+    align-items: center;
+    gap: 18px;
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-sm);
+    padding: 18px;
+    background: rgb(2 6 23 / 62%);
+  }
+
+  .mini-logo-card span {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 62% 45%, #fff 0 4px, transparent 5px),
+      conic-gradient(from 220deg, var(--color-cyan), var(--color-lime), var(--color-magenta), var(--color-cyan));
+    box-shadow: var(--shadow-glow);
+  }
+
+  .mini-logo-card strong {
+    color: #f0fdff;
+  }
+
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 0.48fr);
+    gap: 34px;
+    align-items: start;
+  }
+
+  .section-header.compact {
+    grid-template-columns: 1fr auto;
+  }
+
+  .ai-route-list {
+    display: grid;
+    gap: 10px;
+  }
+
+  .ai-route-list a {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 12px;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-sm);
+    padding: 13px 14px;
+    background: rgb(2 6 23 / 44%);
+  }
+
+  .ai-route-list strong {
+    color: #dffbff;
+  }
+
+  .ai-route-list span {
+    color: var(--color-subtle);
+    font-size: 0.82rem;
+  }
+
+  .taxonomy-stack {
+    display: grid;
+    gap: 28px;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-sm);
+    padding: 22px;
+    background: rgb(9 20 36 / 60%);
+  }
+
+  @media (max-width: 900px) {
+    .project-grid,
+    .compact-projects,
+    .article-topic-grid,
+    .split,
+    .section-header.compact {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

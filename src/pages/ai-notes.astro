@@ -1,0 +1,25 @@
+---
+import PostCard from '../components/PostCard.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getAllPosts } from '../utils/posts';
+
+const posts = (await getAllPosts()).filter((post) =>
+  post.data.categories.includes('ailearn') ||
+  post.data.tags.some((tag) => ['AI', 'RAG', 'Agent', '机器学习', '深度学习'].includes(tag)),
+);
+---
+
+<BaseLayout title="AI 笔记" description="AI 学习路线、RAG、智能体、多模态和工程实践文章">
+  <section class="section container">
+    <div class="section-header">
+      <div>
+        <p class="eyebrow">AI Notes</p>
+        <h1 class="section-title">AI 笔记</h1>
+      </div>
+      <p class="section-desc">围绕 AI 学习路线、RAG、智能体、多模态和工程应用组织的专题文章。</p>
+    </div>
+    <div class="grid three">
+      {posts.map((post) => <PostCard post={post} />)}
+    </div>
+  </section>
+</BaseLayout>

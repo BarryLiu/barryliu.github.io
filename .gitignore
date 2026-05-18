@@ -4,6 +4,10 @@ _site/
 .jekyll-cache/
 .jekyll-metadata
 
+# Astro 构建输出和缓存
+dist/
+.astro/
+
 # IDE 和编辑器
 .vscode/
 .idea/
@@ -19,6 +23,8 @@ desktop.ini
 # 日志和临时文件
 *.log
 *.tmp
+test-results/
+playwright-report/
 
 
 # claude忽略文件
@@ -35,6 +41,15 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Astro 构建前由脚本复制的兼容静态资源
+public/images/
+public/posts-assets/
+public/favicon.ico
+public/CNAME
+public/assets/*
+!public/assets/brand/
+!public/assets/brand/**
 
 # 重要配置文件,不提交git
 config.md

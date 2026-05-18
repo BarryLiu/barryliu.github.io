@@ -1,10 +1,20 @@
-# docker compose up -d
+# Local Astro development environment.
+# Usage:
+#   docker compose up
+#   docker compose run --rm astro npm run build
 services:
-  jekyll:
-    image: jekyll/jekyll:3.8
-    container_name: jekyll-blog
+  astro:
+    image: node:22-alpine
+    container_name: astro-blog
+    working_dir: /app
     ports:
-      - "4000:4000"
+      - "4321:4321"
     volumes:
-      - .:/srv/jekyll
-    command: jekyll serve --host 0.0.0.0 --force_polling
+      - .:/app
+      - astro_node_modules:/app/node_modules
+    environment:
+      ASTRO_TELEMETRY_DISABLED: "1"
+    command: sh -c "npm install && npm run dev"
+
+volumes:
+  astro_node_modules:

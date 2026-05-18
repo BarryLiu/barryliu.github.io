@@ -1,0 +1,59 @@
+---
+import PostCard from '../components/PostCard.astro';
+import TaxonomySwitch from '../components/TaxonomySwitch.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getAllPosts, getTaxonomyCounts } from '../utils/posts';
+
+const posts = await getAllPosts();
+const categories = getTaxonomyCounts(posts, 'categories');
+const tags = getTaxonomyCounts(posts, 'tags');
+const knowledgePosts = posts.filter((post) =>
+  post.data.categories.some((category) => ['skill', 'tool', 'work', 'resource'].includes(category.toLowerCase())) ||
+  post.data.tags.some((tag) => ['Linux', 'Git', 'MySQL', 'Python', '工具'].includes(tag)),
+).slice(0, 12);
+---
+
+<BaseLayout title="知识库" description="工程工具、数据库、脚本、工作笔记和技术资源知识库">
+  <section class="section container">
+    <div class="section-header">
+      <div>
+        <p class="eyebrow">Knowledge Base</p>
+        <h1 class="section-title">知识库</h1>
+      </div>
+      <p class="section-desc">把工具、数据库、脚本、工作记录和学习笔记按分类与标签重新组织。</p>
+    </div>
+    <div class="knowledge-grid">
+      <div class="grid two">
+        {knowledgePosts.map((post) => <PostCard post={post} />)}
+      </div>
+      <aside>
+        <TaxonomySwitch title="全部分类" hrefPrefix="category" items={categories} />
+        <TaxonomySwitch title="全部标签" hrefPrefix="tag" items={tags.slice(0, 48)} />
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .knowledge-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 0.42fr);
+    gap: 28px;
+    align-items: start;
+  }
+
+  aside {
+    display: grid;
+    gap: 28px;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-sm);
+    padding: 20px;
+    background: rgb(9 20 36 / 60%);
+  }
+
+  @media (max-width: 920px) {
+    .knowledge-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

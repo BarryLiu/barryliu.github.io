@@ -1,0 +1,191 @@
+---
+import CyberLogo from './CyberLogo.astro';
+import GlobalSearch from './GlobalSearch.astro';
+import LanguageToggle from './LanguageToggle.astro';
+import { site } from '../data/site';
+---
+
+<header class="site-header">
+  <nav class="nav nav-panel container" aria-label="主导航" data-i18n-aria-label-zh="主导航" data-i18n-aria-label-en="Primary navigation">
+    <CyberLogo />
+    <div class="desktop-links">
+      {site.nav.map((item) => <a href={item.href} data-i18n-zh={item.label} data-i18n-en={item.labelEn}>{item.label}</a>)}
+    </div>
+    <div class="desktop-actions">
+      <GlobalSearch />
+      <LanguageToggle />
+      <a class="icon-link" href={site.github} aria-label="GitHub">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.18-3.37-1.18a2.65 2.65 0 0 0-1.11-1.46c-.91-.62.07-.61.07-.61a2.1 2.1 0 0 1 1.53 1.03a2.13 2.13 0 0 0 2.91.83a2.13 2.13 0 0 1 .64-1.34c-2.22-.25-4.56-1.11-4.56-4.94a3.87 3.87 0 0 1 1.03-2.68a3.6 3.6 0 0 1 .1-2.64s.84-.27 2.75 1.02a9.48 9.48 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02c.37.84.4 1.8.1 2.64a3.85 3.85 0 0 1 1.03 2.68c0 3.84-2.34 4.69-4.57 4.94c.36.31.68.92.68 1.86v2.76c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/></svg>
+      </a>
+      <a class="contact" href={`mailto:${site.email}`} data-i18n-zh="联系" data-i18n-en="Contact">联系</a>
+    </div>
+    <details class="mobile-menu">
+      <summary aria-label="打开菜单" data-i18n-aria-label-zh="打开菜单" data-i18n-aria-label-en="Open menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </summary>
+      <div class="mobile-panel">
+        {site.nav.map((item) => <a href={item.href} data-i18n-zh={item.label} data-i18n-en={item.labelEn}>{item.label}</a>)}
+        <a href="/archive/" data-search-open data-i18n-zh="全局搜索" data-i18n-en="Global search">全局搜索</a>
+        <LanguageToggle compact />
+        <a href={site.github}>GitHub</a>
+        <a href={`mailto:${site.email}`} data-i18n-zh="邮箱联系" data-i18n-en="Email">邮箱联系</a>
+      </div>
+    </details>
+  </nav>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    padding: 20px 0 0;
+    pointer-events: none;
+  }
+
+  .nav {
+    display: flex;
+    min-height: 92px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+  }
+
+  .nav-panel {
+    pointer-events: auto;
+    border: 1px solid rgb(40 247 255 / 22%);
+    border-radius: 24px;
+    padding: 14px 18px;
+    background: rgb(8 16 31 / 80%);
+    box-shadow: 0 24px 64px rgb(0 0 0 / 40%), var(--shadow-glow);
+    backdrop-filter: blur(18px);
+  }
+
+  .desktop-links,
+  .desktop-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .desktop-links a {
+    border-radius: 999px;
+    padding: 8px 12px;
+    color: #c6d6e1;
+    font-size: 0.92rem;
+    font-weight: 700;
+  }
+
+  .desktop-links a:hover {
+    background: rgb(40 247 255 / 10%);
+  }
+
+  .icon-link,
+  .contact {
+    display: inline-flex;
+    height: 38px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    background: rgb(14 24 49 / 70%);
+  }
+
+  .icon-link {
+    width: 38px;
+  }
+
+  .contact {
+    padding: 0 14px;
+    color: #dffbff;
+    font-size: 0.86rem;
+    font-weight: 800;
+  }
+
+  svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+  }
+
+  .mobile-menu {
+    display: none;
+    position: relative;
+  }
+
+  summary {
+    display: grid;
+    width: 42px;
+    height: 42px;
+    cursor: pointer;
+    place-items: center;
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    background: rgb(14 24 49 / 80%);
+    list-style: none;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  summary span {
+    display: block;
+    width: 18px;
+    height: 2px;
+    background: var(--color-cyan);
+  }
+
+  .mobile-panel {
+    position: absolute;
+    top: 58px;
+    right: 0;
+    display: grid;
+    min-width: 240px;
+    overflow: hidden;
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-md);
+    background: var(--color-panel-strong);
+    box-shadow: var(--shadow-glow);
+  }
+
+  .mobile-panel a {
+    padding: 13px 16px;
+    color: #dffbff;
+    font-weight: 700;
+  }
+
+  .mobile-panel :global(.language-toggle) {
+    margin: 10px 12px;
+  }
+
+  .mobile-panel a + a,
+  .mobile-panel a + :global(.language-toggle),
+  .mobile-panel :global(.language-toggle) + a {
+    border-top: 1px solid var(--color-line);
+  }
+
+  @media (max-width: 1060px) {
+    .desktop-links {
+      gap: 4px;
+    }
+
+    .desktop-links a {
+      padding: 8px 9px;
+      font-size: 0.84rem;
+    }
+  }
+
+  @media (max-width: 920px) {
+    .desktop-links,
+    .desktop-actions {
+      display: none;
+    }
+
+    .mobile-menu {
+      display: block;
+    }
+  }
+</style>

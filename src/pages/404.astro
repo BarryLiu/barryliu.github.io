@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="页面未找到" description="页面未找到">
+  <section class="section container not-found">
+    <p class="eyebrow">404</p>
+    <h1 class="section-title">这片水域还没有文章</h1>
+    <p>可以回到首页、归档或知识库继续浏览。</p>
+    <div class="button-row">
+      <a class="button primary" href="/">回到首页</a>
+      <a class="button" href="/archive/">查看归档</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found {
+    min-height: 62vh;
+  }
+
+  p {
+    color: var(--color-muted);
+  }
+</style>

@@ -1,0 +1,159 @@
+---
+import type { Project } from '../data/projects';
+
+const { project, featured = false } = Astro.props as { project: Project; featured?: boolean };
+---
+
+<article class:list={['project-card', { featured }]}>
+  <div class="project-top">
+    <span
+      data-i18n-zh={featured ? '主项目' : project.status}
+      data-i18n-en={featured ? 'Featured' : (project.statusEn ?? project.status)}
+    >
+      {featured ? '主项目' : project.status}
+    </span>
+    <a href={project.github} aria-label={`${project.title} GitHub`}>GitHub</a>
+  </div>
+  <h3 data-i18n-zh={project.title} data-i18n-en={project.titleEn ?? project.title}>{project.title}</h3>
+  <p data-i18n-zh={project.summary} data-i18n-en={project.summaryEn ?? project.summary}>{project.summary}</p>
+  <div class="chip-list">
+    {project.stack.map((item) => <span class="chip">{item}</span>)}
+  </div>
+  {featured && project.proofs && (
+    <div class="proof-strip">
+      {project.proofs.map((proof) => (
+        <a href={project.github}>
+          <span data-i18n-zh={proof.label} data-i18n-en={proof.labelEn ?? proof.label}>{proof.label}</span>
+          <strong>{proof.value}</strong>
+        </a>
+      ))}
+    </div>
+  )}
+  {featured && project.signals && (
+    <div class="signal-chart" aria-label={`${project.title} signal chart`}>
+      {project.signals.map((signal) => <span style={`--h: ${signal}px`}></span>)}
+    </div>
+  )}
+  {!featured && project.metrics && (
+    <div class="card-row">
+      <span>{project.metrics[0]}</span>
+      <span>{project.metrics[1]}</span>
+    </div>
+  )}
+</article>
+
+<style>
+  .project-card {
+    display: grid;
+    min-height: 250px;
+    align-content: start;
+    gap: 16px;
+    border: 1px solid var(--color-line);
+    border-radius: 28px;
+    padding: 22px;
+    background: var(--color-panel);
+  }
+
+  .project-card.featured {
+    min-height: 520px;
+    padding: 30px;
+    border-color: rgb(40 247 255 / 34%);
+    border-radius: 32px;
+    background:
+      linear-gradient(135deg, rgb(40 247 255 / 12%), transparent 40%),
+      var(--color-panel);
+    box-shadow: var(--shadow-glow);
+  }
+
+  .project-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .project-top span,
+  .project-top a {
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    padding: 4px 10px;
+    background: rgb(2 6 23 / 58%);
+    color: var(--color-cyan);
+    font-size: 0.75rem;
+    font-weight: 800;
+  }
+
+  h3 {
+    margin: 0;
+    color: var(--color-text);
+    font-size: clamp(1.45rem, 4vw, 2.25rem);
+    line-height: 1.15;
+  }
+
+  p {
+    margin: 0;
+    color: #aebdca;
+  }
+
+  .featured h3 {
+    font-size: clamp(2rem, 5vw, 2.45rem);
+  }
+
+  .proof-strip {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 4px;
+  }
+
+  .proof-strip a,
+  .card-row span {
+    display: grid;
+    gap: 2px;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    background: rgb(2 6 23 / 58%);
+  }
+
+  .proof-strip span,
+  .card-row span {
+    color: var(--color-subtle);
+    font-size: 0.72rem;
+    font-weight: 800;
+  }
+
+  .proof-strip strong {
+    color: #dffbff;
+    font-size: 0.86rem;
+  }
+
+  .signal-chart {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    align-items: end;
+    gap: 10px;
+    min-height: 150px;
+    margin-top: auto;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    background:
+      linear-gradient(0deg, rgb(40 247 255 / 12%) 1px, transparent 1px),
+      rgb(2 6 23 / 42%);
+    background-size: 100% 32px;
+  }
+
+  .signal-chart span {
+    height: var(--h);
+    border-radius: 999px 999px 4px 4px;
+    background: linear-gradient(180deg, var(--color-cyan), var(--color-magenta));
+    box-shadow: 0 0 18px rgb(40 247 255 / 22%);
+  }
+
+  .card-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: auto;
+  }
+</style>

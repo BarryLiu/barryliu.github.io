@@ -1,0 +1,33 @@
+---
+import { site } from '../data/site';
+---
+
+<section class="comments" aria-labelledby="comments-title">
+  <h2 id="comments-title">讨论与反馈</h2>
+  <p>评论系统预留为 giscus。当前未配置 GitHub Discussions 仓库参数，可先通过 GitHub 或邮箱交流。</p>
+  <div class="button-row">
+    <a class="button" href={site.github}>GitHub</a>
+    <a class="button primary" href={`mailto:${site.email}`}>邮箱联系</a>
+  </div>
+</section>
+
+<style>
+  .comments {
+    display: grid;
+    gap: 14px;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-sm);
+    margin-top: 42px;
+    padding: 22px;
+    background: rgb(9 20 36 / 62%);
+  }
+
+  h2,
+  p {
+    margin: 0;
+  }
+
+  p {
+    color: var(--color-muted);
+  }
+</style>

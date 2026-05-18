@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 92" role="img" aria-labelledby="title">
+  <title id="title">想飞的鱼 Flying Fish Lab</title>
+  <rect width="320" height="92" rx="18" fill="#03040B"/>
+  <g transform="translate(18 18)">
+    <path d="M16 33C29 6 57 0 75 7C62 15 50 26 47 44C37 36 28 33 16 33Z" fill="none" stroke="#B9FF4A" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M8 31C24 16 46 14 61 28C48 44 25 46 8 31Z" fill="none" stroke="#28F7FF" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M59 28L81 17L75 31L82 43L59 35Z" fill="none" stroke="#FF47DF" stroke-width="4" stroke-linejoin="round"/>
+    <circle cx="26" cy="29" r="3" fill="#FFFFFF"/>
+  </g>
+  <text x="116" y="39" fill="#F0FDFF" font-family="Arial, sans-serif" font-size="24" font-weight="800">想飞的鱼</text>
+  <text x="116" y="64" fill="#8EA7B8" font-family="Arial, sans-serif" font-size="14" font-weight="700">Flying Fish Lab</text>
+</svg>

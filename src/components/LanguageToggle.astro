@@ -1,0 +1,146 @@
+---
+const { compact = false } = Astro.props;
+---
+
+<button
+  class:list={['language-toggle', { compact }]}
+  type="button"
+  data-lang-toggle
+  data-i18n-aria-label-zh="切换语言"
+  data-i18n-aria-label-en="Switch language"
+  aria-label="切换语言"
+>
+  <span class="lang-current" data-lang-current data-i18n-zh="中文" data-i18n-en="EN">中文</span>
+  <span class="lang-divider">/</span>
+  <span class="lang-next" data-lang-next>EN</span>
+</button>
+
+<script is:inline>
+  (() => {
+    if (window.__flyingFishLanguageLoaded) return;
+    window.__flyingFishLanguageLoaded = true;
+
+    const storageKey = 'flying-fish-lang';
+    const supported = new Set(['zh', 'en']);
+
+    const readStoredLanguage = () => {
+      try {
+        const saved = localStorage.getItem(storageKey);
+        return supported.has(saved) ? saved : 'zh';
+      } catch {
+        return 'zh';
+      }
+    };
+
+    const writeStoredLanguage = (lang) => {
+      try {
+        localStorage.setItem(storageKey, lang);
+      } catch {
+        // Local storage can be unavailable in strict privacy modes.
+      }
+    };
+
+    const translateTextNodes = (lang) => {
+      document.querySelectorAll('[data-i18n-zh][data-i18n-en]').forEach((node) => {
+        const value = node.getAttribute(`data-i18n-${lang}`);
+        if (value === null) return;
+        if (node.hasAttribute('data-i18n-html')) {
+          node.innerHTML = value;
+          return;
+        }
+        node.textContent = value;
+      });
+    };
+
+    const translateAttribute = (lang, attr) => {
+      document.querySelectorAll(`[data-i18n-${attr}-zh][data-i18n-${attr}-en]`).forEach((node) => {
+        const value = node.getAttribute(`data-i18n-${attr}-${lang}`);
+        if (value !== null) node.setAttribute(attr, value);
+      });
+    };
+
+    const updateToggles = (lang) => {
+      document.querySelectorAll('[data-lang-toggle]').forEach((toggle) => {
+        toggle.setAttribute('aria-pressed', lang === 'en' ? 'true' : 'false');
+        const current = toggle.querySelector('[data-lang-current]');
+        const next = toggle.querySelector('[data-lang-next]');
+        if (current) current.textContent = lang === 'en' ? 'EN' : '中文';
+        if (next) next.textContent = lang === 'en' ? '中文' : 'EN';
+      });
+    };
+
+    const applyLanguage = (lang, persist = true) => {
+      const nextLang = supported.has(lang) ? lang : 'zh';
+      document.documentElement.dataset.lang = nextLang;
+      document.documentElement.lang = nextLang === 'en' ? 'en' : 'zh-CN';
+      translateTextNodes(nextLang);
+      translateAttribute(nextLang, 'aria-label');
+      translateAttribute(nextLang, 'placeholder');
+      translateAttribute(nextLang, 'title');
+      updateToggles(nextLang);
+      if (persist) writeStoredLanguage(nextLang);
+      window.dispatchEvent(new CustomEvent('flying-fish:lang', { detail: { lang: nextLang } }));
+    };
+
+    window.FlyingFishLang = {
+      get: () => document.documentElement.dataset.lang || readStoredLanguage(),
+      set: (lang) => applyLanguage(lang),
+      toggle: () => applyLanguage((document.documentElement.dataset.lang || 'zh') === 'en' ? 'zh' : 'en'),
+    };
+
+    const start = () => {
+      applyLanguage(readStoredLanguage(), false);
+      document.addEventListener('click', (event) => {
+        const toggle = event.target.closest('[data-lang-toggle]');
+        if (!toggle) return;
+        window.FlyingFishLang.toggle();
+      });
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', start, { once: true });
+    } else {
+      start();
+    }
+  })();
+</script>
+
+<style>
+  .language-toggle {
+    display: inline-flex;
+    min-width: 72px;
+    height: 40px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border: 1px solid rgb(255 71 223 / 36%);
+    border-radius: 999px;
+    background: rgb(14 24 49 / 72%);
+    color: #f8e8ff;
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 900;
+    line-height: 1;
+  }
+
+  .language-toggle:hover {
+    border-color: rgb(255 71 223 / 72%);
+    box-shadow: 0 0 24px rgb(255 71 223 / 18%);
+  }
+
+  .lang-current {
+    color: var(--color-magenta);
+  }
+
+  .lang-divider,
+  .lang-next {
+    color: #8ea7b8;
+  }
+
+  .language-toggle.compact {
+    width: 100%;
+    justify-content: space-between;
+    padding: 0 14px;
+  }
+</style>

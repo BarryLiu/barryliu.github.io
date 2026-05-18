@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 88 56" role="img" aria-labelledby="title">
+  <title id="title">Flying Fish logo mark</title>
+  <rect width="88" height="56" rx="14" fill="#03040B"/>
+  <path d="M16 33C29 6 57 0 75 7C62 15 50 26 47 44C37 36 28 33 16 33Z" fill="none" stroke="#B9FF4A" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M8 31C24 16 46 14 61 28C48 44 25 46 8 31Z" fill="none" stroke="#28F7FF" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M59 28L81 17L75 31L82 43L59 35Z" fill="none" stroke="#FF47DF" stroke-width="4" stroke-linejoin="round"/>
+  <circle cx="26" cy="29" r="3" fill="#FFFFFF"/>
+</svg>

@@ -1,0 +1,59 @@
+---
+import { formatDate, getDescription, getPrimaryCategory, getReadingTime, postUrl, taxonomySlug, type Post } from '../utils/posts';
+
+const { post } = Astro.props as { post: Post };
+const category = getPrimaryCategory(post);
+---
+
+<article class="post-card">
+  <a class="category" href={`/category/${taxonomySlug(category)}/`}>{category}</a>
+  <h3><a href={postUrl(post)}>{post.data.title}</a></h3>
+  <p>{getDescription(post)}</p>
+  <div class="meta">
+    <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time>
+    <span>{getReadingTime(post)} 分钟读完</span>
+  </div>
+  {post.data.tags.length > 0 && (
+    <div class="chip-list">
+      {post.data.tags.slice(0, 4).map((tag) => <a class="chip" href={`/tag/${taxonomySlug(tag)}/`}>{tag}</a>)}
+    </div>
+  )}
+</article>
+
+<style>
+  .post-card {
+    display: grid;
+    gap: 12px;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-sm);
+    padding: 20px;
+    background: rgb(9 20 36 / 68%);
+  }
+
+  .category {
+    width: fit-content;
+    color: var(--color-magenta);
+    font-size: 0.75rem;
+    font-weight: 800;
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    line-height: 1.35;
+  }
+
+  p {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 0.94rem;
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    color: var(--color-subtle);
+    font-size: 0.78rem;
+  }
+</style>
