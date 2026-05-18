@@ -478,7 +478,7 @@ for text in test_texts:
 
 ---
 
-**下一篇**：[文本表示进阶]({{ site.baseurl }}{% post_url /ailearn/04-nlp-basics/2026-04-15-02-text-representation %})
+**下一篇**：[文本分类实战]({{ site.baseurl }}{% post_url /ailearn/04-nlp-basics/2026-04-15-02-text-classification %})
 
 **返回**：[NLP基础]({{ site.baseurl }}{% post_url /ailearn/2026-04-10-04-nlp-basics %})
 

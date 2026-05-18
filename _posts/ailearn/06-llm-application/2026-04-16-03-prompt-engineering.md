@@ -605,7 +605,7 @@ print(formatted)
 
 **上一篇**：[大模型API应用]({{ site.baseurl }}{% post_url /ailearn/06-llm-application/2026-04-16-01-llm-api %})
 
-**下一篇**：[模型微调实战]({{ site.baseurl }}{% post_url /ailearn/06-llm-application/2026-04-16-03-fine-tuning %})
+**下一篇**：[模型微调实战]({{ site.baseurl }}{% post_url /ailearn/06-llm-application/2026-04-16-04-fine-tuning %})
 
 **返回**：[大模型应用]({{ site.baseurl }}{% post_url /ailearn/2026-04-10-06-llm-application %})
 
