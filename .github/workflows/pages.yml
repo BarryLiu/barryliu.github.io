@@ -33,12 +33,24 @@ jobs:
 
       - name: Set Cloudflare Secrets
         run: |
-          echo "${{ secrets.AUTH_COOKIE_SECRET }}" | npx wrangler pages secret put AUTH_COOKIE_SECRET --project-name=${{ secrets.CLOUDFLARE_PROJECT_NAME }}
-          echo "${{ secrets.CF_GITHUB_OAUTH_CLIENT_ID }}" | npx wrangler pages secret put CF_GITHUB_OAUTH_CLIENT_ID --project-name=${{ secrets.CLOUDFLARE_PROJECT_NAME }}
-          echo "${{ secrets.CF_GITHUB_OAUTH_CLIENT_SECRET }}" | npx wrangler pages secret put CF_GITHUB_OAUTH_CLIENT_SECRET --project-name=${{ secrets.CLOUDFLARE_PROJECT_NAME }}
+          set -euo pipefail
+          for name in CLOUDFLARE_PROJECT_NAME AUTH_COOKIE_SECRET GITHUB_OAUTH_CLIENT_ID GITHUB_OAUTH_CLIENT_SECRET; do
+            if [ -z "${!name:-}" ]; then
+              echo "::error::$name is not configured in GitHub Actions secrets"
+              exit 1
+            fi
+          done
+
+          printf '%s' "$AUTH_COOKIE_SECRET" | npx wrangler pages secret put AUTH_COOKIE_SECRET --project-name="$CLOUDFLARE_PROJECT_NAME"
+          printf '%s' "$GITHUB_OAUTH_CLIENT_ID" | npx wrangler pages secret put GITHUB_OAUTH_CLIENT_ID --project-name="$CLOUDFLARE_PROJECT_NAME"
+          printf '%s' "$GITHUB_OAUTH_CLIENT_SECRET" | npx wrangler pages secret put GITHUB_OAUTH_CLIENT_SECRET --project-name="$CLOUDFLARE_PROJECT_NAME"
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_PROJECT_NAME: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}
+          AUTH_COOKIE_SECRET: ${{ secrets.AUTH_COOKIE_SECRET }}
+          GITHUB_OAUTH_CLIENT_ID: ${{ secrets.GITHUB_OAUTH_CLIENT_ID || secrets.CF_GITHUB_OAUTH_CLIENT_ID }}
+          GITHUB_OAUTH_CLIENT_SECRET: ${{ secrets.GITHUB_OAUTH_CLIENT_SECRET || secrets.CF_GITHUB_OAUTH_CLIENT_SECRET }}
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3

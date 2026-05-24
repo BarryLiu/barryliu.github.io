@@ -59,10 +59,3 @@ MAC_README.md
 
 # Cloudflare Wrangler
 .wrangler/
-
-# Cloudflare Pages Functions
-functions/api/auth/
-
-# 正在开发的功能(未完成)
-src/pages/favorites.astro
-tests/favorites.test.mjs

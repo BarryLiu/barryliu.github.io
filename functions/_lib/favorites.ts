@@ -30,7 +30,7 @@ export function parseFavorites(raw: string | null): FavoritesPayload {
   }
 }
 
-export async function readFavorites(store: FavoritesStore, githubUserId: number) {
+export async function readFavorites(store: FavoritesStore, githubUserId: number | string) {
   return parseFavorites(await store.get(favoritesKey(githubUserId)));
 }
 

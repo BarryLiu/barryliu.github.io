@@ -2,7 +2,6 @@ export type AuthEnv = {
   AUTH_COOKIE_SECRET?: string;
   GITHUB_OAUTH_CLIENT_ID?: string;
   GITHUB_OAUTH_CLIENT_SECRET?: string;
-} | {
   CF_GITHUB_OAUTH_CLIENT_ID?: string;
   CF_GITHUB_OAUTH_CLIENT_SECRET?: string;
 };
@@ -27,6 +26,23 @@ const encoder = new TextEncoder();
 const decoder = new TextDecoder();
 const sessionMaxAge = 60 * 60 * 24 * 30;
 const stateMaxAge = 60 * 10;
+
+export function getGitHubOAuthConfig(env: AuthEnv) {
+  const clientId = env.GITHUB_OAUTH_CLIENT_ID ?? env.CF_GITHUB_OAUTH_CLIENT_ID;
+  const clientSecret = env.GITHUB_OAUTH_CLIENT_SECRET ?? env.CF_GITHUB_OAUTH_CLIENT_SECRET;
+  if (!env.AUTH_COOKIE_SECRET || !clientId || !clientSecret) return null;
+  return {
+    authCookieSecret: env.AUTH_COOKIE_SECRET,
+    clientId,
+    clientSecret,
+  };
+}
+
+export function createOAuthState() {
+  const bytes = new Uint8Array(16);
+  crypto.getRandomValues(bytes);
+  return [...bytes].map((byte) => byte.toString(16).padStart(2, '0')).join('');
+}
 
 function base64UrlEncode(value: string | ArrayBuffer) {
   const bytes = typeof value === 'string' ? encoder.encode(value) : new Uint8Array(value);

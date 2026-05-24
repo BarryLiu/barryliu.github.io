@@ -28,10 +28,20 @@ describe('project configuration', () => {
   it('keeps Cloudflare deployment configuration in source control', () => {
     const workflow = read('.github/workflows/pages.yml');
     const wrangler = read('wrangler.toml');
+    const gitignore = read('.gitignore');
     const packageJson = JSON.parse(read('package.json'));
 
     assert.match(workflow, /Cloudflare Pages/);
     assert.match(workflow, /cloudflare\/wrangler-action/);
+    assert.match(workflow, /set -euo pipefail/);
+    assert.match(workflow, /GITHUB_OAUTH_CLIENT_ID:\s*\$\{\{ secrets\.GITHUB_OAUTH_CLIENT_ID \|\| secrets\.CF_GITHUB_OAUTH_CLIENT_ID \}\}/);
+    assert.match(workflow, /GITHUB_OAUTH_CLIENT_SECRET:\s*\$\{\{ secrets\.GITHUB_OAUTH_CLIENT_SECRET \|\| secrets\.CF_GITHUB_OAUTH_CLIENT_SECRET \}\}/);
+    assert.match(workflow, /secret put GITHUB_OAUTH_CLIENT_ID/);
+    assert.match(workflow, /secret put GITHUB_OAUTH_CLIENT_SECRET/);
+    assert.doesNotMatch(workflow, /secret put CF_GITHUB_OAUTH_CLIENT_ID/);
+    assert.doesNotMatch(workflow, /secret put CF_GITHUB_OAUTH_CLIENT_SECRET/);
+    assert.doesNotMatch(gitignore, /functions\/api\/auth\//);
+    assert.doesNotMatch(gitignore, /src\/pages\/favorites\.astro/);
     assert.match(wrangler, /pages_build_output_dir = "dist"/);
     assert.equal(packageJson.scripts['deploy:cloudflare'], 'npm run build && wrangler pages deploy dist');
   });

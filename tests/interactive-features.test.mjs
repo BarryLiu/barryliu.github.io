@@ -51,6 +51,11 @@ describe('interactive site features', () => {
     const layout = read('src/layouts/PostLayout.astro');
     const actions = read('src/components/PostFloatingActions.astro');
     const favorites = read('src/pages/favorites.astro');
+    const authStart = read('functions/api/auth/github/start.ts');
+    const authCallback = read('functions/api/auth/github/callback.ts');
+    const authMe = read('functions/api/auth/me.ts');
+    const authLogout = read('functions/api/auth/logout.ts');
+    const authHelper = read('functions/_lib/auth.ts');
 
     assert.match(layout, /PostFloatingActions/);
     assert.match(layout, /postSlug=\{post\.data\.postSlug\}/);
@@ -71,8 +76,18 @@ describe('interactive site features', () => {
     assert.match(favorites, /\/api\/favorites/);
     assert.match(favorites, /\/api\/auth\/github\/start\?returnTo=\/favorites\//);
     assert.match(favorites, /Cloudflare KV/);
+    assert.match(favorites, /\.favorites-shell\s+\[hidden\]/);
     assert.doesNotMatch(favorites, /localStorage/);
     assert.match(favorites, /post\.data\.postSlug/);
+    assert.match(authStart, /github\.com\/login\/oauth\/authorize/);
+    assert.match(authStart, /createStateCookie/);
+    assert.match(authHelper, /GITHUB_OAUTH_CLIENT_ID/);
+    assert.match(authHelper, /CF_GITHUB_OAUTH_CLIENT_ID/);
+    assert.match(authCallback, /github\.com\/login\/oauth\/access_token/);
+    assert.match(authCallback, /api\.github\.com\/user/);
+    assert.match(authCallback, /createSessionCookie/);
+    assert.match(authMe, /authenticated:\s*true/);
+    assert.match(authLogout, /clearCookie/);
   });
 
   it('supports a persistent zh and en UI language switch', () => {

@@ -1,0 +1,250 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { formatDate, getDescription, getPrimaryCategory, getAllPosts, postUrl } from '../utils/posts';
+
+const posts = (await getAllPosts()).map((post) => ({
+  category: getPrimaryCategory(post),
+  date: formatDate(post.data.date),
+  description: getDescription(post),
+  slug: post.data.postSlug,
+  tags: post.data.tags.slice(0, 4),
+  title: post.data.title,
+  url: postUrl(post),
+}));
+---
+
+<BaseLayout title="我的收藏" description="使用 GitHub OAuth 登录后同步到 Cloudflare KV 的文章收藏">
+  <section class="section container">
+    <div class="section-header">
+      <div>
+        <p class="eyebrow">Favorites</p>
+        <h1 class="section-title">我的收藏</h1>
+      </div>
+      <p class="section-desc">登录 GitHub 后，收藏会同步保存在 Cloudflare KV，换设备也能继续阅读。</p>
+    </div>
+
+    <div class="favorites-shell" data-favorites-app>
+      <div class="favorites-toolbar">
+        <div>
+          <p class="toolbar-label">同步状态</p>
+          <p class="toolbar-status" data-favorites-status>正在连接 GitHub 账号...</p>
+        </div>
+        <div class="button-row">
+          <a class="button primary" href="/api/auth/github/start?returnTo=/favorites/" data-login-link>GitHub 登录</a>
+          <a class="button" href="/api/auth/logout?returnTo=/favorites/" data-logout-link hidden>退出登录</a>
+        </div>
+      </div>
+
+      <div class="favorites-empty" data-favorites-empty hidden>
+        <p>还没有同步收藏。打开任意文章，点击右下角收藏按钮即可加入这里。</p>
+      </div>
+
+      <div class="favorites-list" data-favorites-list></div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script define:vars={{ favoritePosts: posts }}>
+  (() => {
+    const root = document.querySelector('[data-favorites-app]');
+    if (!root) return;
+
+    const status = root.querySelector('[data-favorites-status]');
+    const list = root.querySelector('[data-favorites-list]');
+    const empty = root.querySelector('[data-favorites-empty]');
+    const loginLink = root.querySelector('[data-login-link]');
+    const logoutLink = root.querySelector('[data-logout-link]');
+
+    const setStatus = (message) => {
+      if (status) status.textContent = message;
+    };
+
+    const fetchJson = async (url, options) => {
+      const response = await fetch(url, {
+        credentials: 'same-origin',
+        ...options,
+        headers: {
+          accept: 'application/json',
+          ...(options?.headers || {}),
+        },
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        const error = new Error(data?.error || 'request_failed');
+        error.status = response.status;
+        throw error;
+      }
+      return data;
+    };
+
+    const createPost = (post) => {
+      const article = document.createElement('article');
+      article.className = 'favorite-card';
+      article.innerHTML = `
+        <span class="favorite-category"></span>
+        <h2><a></a></h2>
+        <p class="favorite-desc"></p>
+        <div class="favorite-meta">
+          <span></span>
+          <span></span>
+        </div>
+        <div class="chip-list"></div>
+      `;
+
+      article.querySelector('.favorite-category').textContent = post.category;
+      const link = article.querySelector('h2 a');
+      link.href = post.url;
+      link.textContent = post.title;
+      article.querySelector('.favorite-desc').textContent = post.description;
+      const meta = article.querySelectorAll('.favorite-meta span');
+      meta[0].textContent = post.date;
+      meta[1].textContent = post.slug;
+
+      const chips = article.querySelector('.chip-list');
+      post.tags.forEach((tag) => {
+        const chip = document.createElement('span');
+        chip.className = 'chip';
+        chip.textContent = tag;
+        chips.appendChild(chip);
+      });
+
+      return article;
+    };
+
+    const renderFavorites = (slugs) => {
+      const favoriteSlugs = new Set(slugs);
+      const items = favoritePosts.filter((post) => favoriteSlugs.has(post.slug));
+      list.replaceChildren(...items.map(createPost));
+      empty.hidden = items.length > 0;
+      setStatus(items.length ? `已同步 ${items.length} 篇收藏文章` : '账号暂无收藏文章');
+    };
+
+    const initialize = async () => {
+      loginLink.href = '/api/auth/github/start?returnTo=/favorites/';
+      const auth = await fetchJson('/api/auth/me').catch(() => ({ authenticated: false }));
+
+      if (!auth.authenticated) {
+        logoutLink.hidden = true;
+        loginLink.hidden = false;
+        empty.hidden = false;
+        setStatus('请先登录 GitHub 读取账号收藏');
+        return;
+      }
+
+      loginLink.hidden = true;
+      logoutLink.hidden = false;
+      setStatus(`已登录 GitHub：${auth.user.login}`);
+
+      try {
+        const favorites = await fetchJson('/api/favorites');
+        renderFavorites(Array.isArray(favorites.slugs) ? favorites.slugs : []);
+      } catch {
+        empty.hidden = false;
+        setStatus('收藏服务暂不可用，请稍后重试');
+      }
+    };
+
+    initialize();
+  })();
+</script>
+
+<style>
+  .favorites-shell {
+    display: grid;
+    gap: 22px;
+  }
+
+  .favorites-shell [hidden] {
+    display: none !important;
+  }
+
+  .favorites-toolbar {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: center;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-sm);
+    padding: 18px;
+    background: rgb(9 20 36 / 68%);
+  }
+
+  .toolbar-label,
+  .toolbar-status,
+  .favorites-empty p {
+    margin: 0;
+  }
+
+  .toolbar-label {
+    color: var(--color-magenta);
+    font-size: 0.76rem;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .toolbar-status {
+    color: #dffbff;
+    font-weight: 700;
+  }
+
+  .favorites-empty {
+    border: 1px dashed rgb(40 247 255 / 36%);
+    border-radius: var(--radius-sm);
+    padding: 22px;
+    color: var(--color-muted);
+    background: rgb(2 6 23 / 46%);
+  }
+
+  .favorites-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  :global(.favorite-card) {
+    display: grid;
+    gap: 12px;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-sm);
+    padding: 20px;
+    background: rgb(9 20 36 / 68%);
+  }
+
+  :global(.favorite-category) {
+    width: fit-content;
+    color: var(--color-magenta);
+    font-size: 0.75rem;
+    font-weight: 800;
+  }
+
+  :global(.favorite-card h2) {
+    margin: 0;
+    font-size: 1.2rem;
+    line-height: 1.35;
+  }
+
+  :global(.favorite-desc) {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 0.94rem;
+  }
+
+  :global(.favorite-meta) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    color: var(--color-subtle);
+    font-size: 0.78rem;
+  }
+
+  @media (max-width: 860px) {
+    .favorites-toolbar,
+    .favorites-list {
+      grid-template-columns: 1fr;
+    }
+
+    .favorites-toolbar {
+      display: grid;
+    }
+  }
+</style>
