@@ -48,13 +48,18 @@ binding = "POST_STATS"            # KV 命名空间标识，代码中引用
 
 #### 环境变量（Cloudflare Pages Settings）
 
+> [!TIP]
+> 本地部署和 CI 部署需要分别配置 secrets：
+> - **本地部署**：`wrangler secret put` 存入 Cloudflare，变量名无前缀
+> - **CI 部署**：存入 GitHub Secrets，变量名需加 `CF_` 前缀
+
 在 Cloudflare Pages → Settings → Environment Variables 中配置：
 
 | Variable | 说明 | 获取方式 |
 |----------|------|----------|
 | `AUTH_COOKIE_SECRET` | Cookie 签名密钥 | `openssl rand -base64 32` 生成 |
-| `GITHUB_OAUTH_CLIENT_ID` | GitHub OAuth App Client ID | GitHub Developer Settings → 你的 OAuth App |
-| `GITHUB_OAUTH_CLIENT_SECRET` | GitHub OAuth App Client Secret | GitHub Developer Settings → 你的 OAuth App → 生成 Client Secret |
+| `GITHUB_OAUTH_CLIENT_ID` | GitHub OAuth App Client ID（本地用） | GitHub Developer Settings → 你的 OAuth App |
+| `GITHUB_OAUTH_CLIENT_SECRET` | GitHub OAuth App Client Secret（本地用） | GitHub Developer Settings → 你的 OAuth App |
 
 **GitHub OAuth App 创建**：
 1. https://github.com/settings/developers → New OAuth App
@@ -71,6 +76,9 @@ binding = "POST_STATS"            # KV 命名空间标识，代码中引用
 | `CLOUDFLARE_API_TOKEN` | API Token |
 | `CLOUDFLARE_ACCOUNT_ID` | Account ID |
 | `CLOUDFLARE_PROJECT_NAME` | wrangler.toml 中的 name |
+| `AUTH_COOKIE_SECRET` | Cookie 签名密钥 |
+| `CF_GITHUB_OAUTH_CLIENT_ID` | GitHub OAuth App Client ID（CI 用，不能 GITHUB_ 开头） |
+| `CF_GITHUB_OAUTH_CLIENT_SECRET` | GitHub OAuth App Client Secret |
 
 #### 自动部署
 

@@ -2,6 +2,9 @@ export type AuthEnv = {
   AUTH_COOKIE_SECRET?: string;
   GITHUB_OAUTH_CLIENT_ID?: string;
   GITHUB_OAUTH_CLIENT_SECRET?: string;
+} | {
+  CF_GITHUB_OAUTH_CLIENT_ID?: string;
+  CF_GITHUB_OAUTH_CLIENT_SECRET?: string;
 };
 
 export type GitHubUser = {
