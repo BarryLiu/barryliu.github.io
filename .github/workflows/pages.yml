@@ -31,13 +31,19 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Set Cloudflare Secrets
+        run: |
+          echo "${{ secrets.AUTH_COOKIE_SECRET }}" | npx wrangler pages secret put AUTH_COOKIE_SECRET --project-name=${{ secrets.CLOUDFLARE_PROJECT_NAME }}
+          echo "${{ secrets.CF_GITHUB_OAUTH_CLIENT_ID }}" | npx wrangler pages secret put CF_GITHUB_OAUTH_CLIENT_ID --project-name=${{ secrets.CLOUDFLARE_PROJECT_NAME }}
+          echo "${{ secrets.CF_GITHUB_OAUTH_CLIENT_SECRET }}" | npx wrangler pages secret put CF_GITHUB_OAUTH_CLIENT_SECRET --project-name=${{ secrets.CLOUDFLARE_PROJECT_NAME }}
+        env:
+          AUTH_COOKIE_SECRET: ${{ secrets.AUTH_COOKIE_SECRET }}
+          CF_GITHUB_OAUTH_CLIENT_ID: ${{ secrets.CF_GITHUB_OAUTH_CLIENT_ID }}
+          CF_GITHUB_OAUTH_CLIENT_SECRET: ${{ secrets.CF_GITHUB_OAUTH_CLIENT_SECRET }}
+
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: |
-            printf '%s' '${{ secrets.AUTH_COOKIE_SECRET }}' | wrangler pages secret put AUTH_COOKIE_SECRET --project-name=${{ secrets.CLOUDFLARE_PROJECT_NAME }}
-            printf '%s' '${{ secrets.CF_GITHUB_OAUTH_CLIENT_ID }}' | wrangler pages secret put CF_GITHUB_OAUTH_CLIENT_ID --project-name=${{ secrets.CLOUDFLARE_PROJECT_NAME }}
-            printf '%s' '${{ secrets.CF_GITHUB_OAUTH_CLIENT_SECRET }}' | wrangler pages secret put CF_GITHUB_OAUTH_CLIENT_SECRET --project-name=${{ secrets.CLOUDFLARE_PROJECT_NAME }}
-            wrangler pages deploy dist --project-name=${{ secrets.CLOUDFLARE_PROJECT_NAME }}
+          command: pages deploy dist --project-name=${{ secrets.CLOUDFLARE_PROJECT_NAME }}
