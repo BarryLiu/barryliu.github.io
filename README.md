@@ -45,9 +45,25 @@ binding = "POST_STATS"            # KV 命名空间标识，代码中引用
 | Account ID | Cloudflare Dashboard 右侧边栏底部 |
 | API Token | [Dashboard API Tokens](https://dash.cloudflare.com/profile/api-tokens) → 创建 "Edit Cloudflare Workers" 模板 |
 
-#### 配置 GitHub Secrets
+#### 环境变量（Cloudflare Pages Settings）
 
-仓库 Settings → Secrets and variables → Actions 中添加：
+在 Cloudflare Pages → Settings → Environment Variables 中配置：
+
+| Variable | 说明 | 获取方式 |
+|----------|------|----------|
+| `AUTH_COOKIE_SECRET` | Cookie 签名密钥 | `openssl rand -base64 32` 生成 |
+| `GITHUB_OAUTH_CLIENT_ID` | GitHub OAuth App Client ID | GitHub Developer Settings → 你的 OAuth App |
+| `GITHUB_OAUTH_CLIENT_SECRET` | GitHub OAuth App Client Secret | GitHub Developer Settings → 你的 OAuth App → 生成 Client Secret |
+
+**GitHub OAuth App 创建**：
+1. https://github.com/settings/developers → New OAuth App
+2. 填写：
+   - Application name：任意
+   - Homepage URL：`https://你的域名`
+   - Authorization callback URL：`https://你的域名/api/auth/github/callback`
+3. 创建后复制 Client ID 和 Client Secret 到 Cloudflare Pages
+
+#### GitHub Secrets（CI/CD 部署用）
 
 | Secret Name | 说明 |
 |-------------|------|

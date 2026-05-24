@@ -1,0 +1,293 @@
+---
+type Props = {
+  postSlug: string;
+  commentsEnabled?: boolean;
+};
+
+const { postSlug, commentsEnabled = false } = Astro.props;
+---
+
+<div class="post-actions" data-post-actions data-post-slug={postSlug} data-comments-enabled={commentsEnabled ? 'true' : 'false'}>
+  <button class="action-button" type="button" data-scroll-top aria-label="回到顶部" title="回到顶部">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 5.2 5.4 11.8l1.4 1.4 4.2-4.2v9.8h2V9l4.2 4.2 1.4-1.4L12 5.2Z" />
+    </svg>
+  </button>
+  <button class="action-button favorite-button" type="button" data-favorite-toggle aria-pressed="false" aria-label="收藏文章" title="收藏文章">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="m12 3.4 2.58 5.22 5.76.84-4.17 4.06.99 5.74L12 16.55l-5.16 2.71.99-5.74-4.17-4.06 5.76-.84L12 3.4Zm0 4.53-1.25 2.54-2.8.41 2.03 1.98-.48 2.79 2.5-1.31 2.5 1.31-.48-2.79 2.03-1.98-2.8-.41L12 7.93Z" />
+    </svg>
+  </button>
+  <a class="action-button favorites-link" href="/favorites/" data-favorites-link aria-label="查看我的收藏" title="查看我的收藏">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M5 4.5A2.5 2.5 0 0 1 7.5 2h9A2.5 2.5 0 0 1 19 4.5v16.2l-7-3.5-7 3.5V4.5Zm2.5-.5a.5.5 0 0 0-.5.5v12.96l5-2.5 5 2.5V4.5a.5.5 0 0 0-.5-.5h-9Zm2.1 4.4h4.8v2H9.6v-2Zm0 3.6h3.2v2H9.6v-2Z" />
+    </svg>
+  </a>
+  <span class="action-status" data-favorite-status role="status" aria-live="polite" hidden></span>
+</div>
+
+<script is:inline>
+  (() => {
+    if (window.__flyingFishPostActionsLoaded) return;
+    window.__flyingFishPostActionsLoaded = true;
+
+    const statusTimers = new WeakMap();
+    let authStatePromise;
+    let favoritesPromise;
+    let favoriteSlugs = new Set();
+
+    const setStatus = (root, message) => {
+      const status = root.querySelector('[data-favorite-status]');
+      if (!status) return;
+      status.textContent = message;
+      status.hidden = false;
+      clearTimeout(statusTimers.get(root));
+      statusTimers.set(root, setTimeout(() => {
+        status.hidden = true;
+      }, 2400));
+    };
+
+    const applyFavoriteState = (root, favorited) => {
+      const button = root.querySelector('[data-favorite-toggle]');
+      if (!button) return;
+      button.setAttribute('aria-pressed', favorited ? 'true' : 'false');
+      button.toggleAttribute('data-active', favorited);
+      button.setAttribute('aria-label', favorited ? '取消收藏文章' : '收藏文章');
+      button.setAttribute('title', favorited ? '取消收藏' : '收藏文章');
+    };
+
+    const authReturnTo = () => `${window.location.pathname}${window.location.search}${window.location.hash}`;
+
+    const loginHref = () => `/api/auth/github/start?returnTo=${encodeURIComponent(authReturnTo())}`;
+
+    const fetchJson = async (url, options) => {
+      const response = await fetch(url, {
+        credentials: 'same-origin',
+        ...options,
+        headers: {
+          accept: 'application/json',
+          ...(options?.headers || {}),
+        },
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        const error = new Error(data?.error || 'request_failed');
+        error.status = response.status;
+        throw error;
+      }
+      return data;
+    };
+
+    const getAuthState = () => {
+      authStatePromise ||= fetchJson('/api/auth/me').catch(() => ({ authenticated: false, user: null, unavailable: true }));
+      return authStatePromise;
+    };
+
+    const getGiscusUser = () => new Promise((resolve) => {
+      const checkGiscus = () => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe?.contentWindow) {
+          resolve(null);
+          return;
+        }
+        iframe.contentWindow.postMessage({ cmd: 'getCurrentUser', variant: 'lite' }, 'https://giscus.app');
+      };
+
+      const handler = (event) => {
+        if (event.origin !== 'https://giscus.app' || !event.data?.giscus) return;
+        if (event.data.giscus.signedIn) {
+          resolve({ id: event.data.giscus.user?.id, username: event.data.giscus.user?.login });
+          window.removeEventListener('message', handler);
+        } else {
+          resolve(null);
+          window.removeEventListener('message', handler);
+        }
+      };
+
+      window.addEventListener('message', handler);
+      setTimeout(() => {
+        window.removeEventListener('message', handler);
+        resolve(null);
+      }, 3000);
+      checkGiscus();
+    });
+
+    const getFavorites = async () => {
+      favoritesPromise ||= fetchJson('/api/favorites').then((data) => {
+        favoriteSlugs = new Set(Array.isArray(data.slugs) ? data.slugs : []);
+        return data;
+      });
+      return favoritesPromise;
+    };
+
+    const syncFavorite = async (slug, favorited, giscusUser) => {
+      const data = await fetchJson('/api/favorites', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ slug, favorited, giscusUser }),
+      });
+      favoriteSlugs = new Set(Array.isArray(data.slugs) ? data.slugs : []);
+      favoritesPromise = Promise.resolve(data);
+      return data;
+    };
+
+    const redirectToLogin = (root) => {
+      setStatus(root, '请先登录 GitHub，同步收藏到账号');
+      window.setTimeout(() => {
+        window.location.href = loginHref();
+      }, 600);
+    };
+
+    const initializeRoot = async (root) => {
+      const slug = root.getAttribute('data-post-slug');
+      if (!slug || root.dataset.initialized === 'true') return;
+      root.dataset.initialized = 'true';
+      root.querySelector('[data-favorites-link]')?.setAttribute('href', `/favorites/`);
+
+      root.querySelector('[data-scroll-top]')?.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      root.querySelector('[data-favorite-toggle]')?.addEventListener('click', async () => {
+        const auth = await getAuthState();
+        const giscusUser = await getGiscusUser();
+        if (!auth.authenticated && !giscusUser) {
+          redirectToLogin(root);
+          return;
+        }
+
+        const nextFavorited = !favoriteSlugs.has(slug);
+        const previousFavorited = !nextFavorited;
+        applyFavoriteState(root, nextFavorited);
+
+        try {
+          await syncFavorite(slug, nextFavorited, giscusUser);
+          applyFavoriteState(root, favoriteSlugs.has(slug));
+          setStatus(root, nextFavorited ? '已同步到账号收藏' : '已取消账号收藏');
+        } catch (error) {
+          applyFavoriteState(root, previousFavorited);
+          if (error?.status === 401) {
+            authStatePromise = Promise.resolve({ authenticated: false, user: null });
+            redirectToLogin(root);
+          } else {
+            setStatus(root, '收藏同步失败，请稍后重试');
+          }
+        }
+      });
+
+      const auth = await getAuthState();
+      if (!auth.authenticated) {
+        applyFavoriteState(root, false);
+        return;
+      }
+
+      try {
+        await getFavorites();
+        applyFavoriteState(root, favoriteSlugs.has(slug));
+      } catch {
+        setStatus(root, '收藏同步服务暂不可用');
+      }
+    };
+
+    const initialize = () => {
+      document.querySelectorAll('[data-post-actions]').forEach(initializeRoot);
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initialize, { once: true });
+    } else {
+      initialize();
+    }
+  })();
+</script>
+
+<style>
+  .post-actions {
+    position: fixed;
+    right: max(20px, env(safe-area-inset-right));
+    bottom: max(24px, env(safe-area-inset-bottom));
+    z-index: 60;
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+  }
+
+  .action-button {
+    display: grid;
+    width: 46px;
+    height: 46px;
+    cursor: pointer;
+    place-items: center;
+    border: 1px solid rgb(40 247 255 / 34%);
+    border-radius: var(--radius-sm);
+    background:
+      linear-gradient(135deg, rgb(40 247 255 / 14%), rgb(9 20 36 / 88%)),
+      rgb(2 6 23 / 78%);
+    color: #dffbff;
+    box-shadow: 0 12px 32px rgb(0 0 0 / 34%), 0 0 22px rgb(40 247 255 / 12%);
+    backdrop-filter: blur(14px);
+    transition: border-color 160ms ease, color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+  }
+
+  .action-button:hover,
+  .action-button:focus-visible {
+    border-color: var(--color-cyan);
+    color: #ffffff;
+    outline: 0;
+    transform: translateY(-2px);
+    box-shadow: 0 16px 36px rgb(0 0 0 / 38%), 0 0 26px rgb(40 247 255 / 22%);
+  }
+
+  .favorite-button[data-active] {
+    border-color: rgb(255 71 223 / 72%);
+    color: var(--color-magenta);
+    background:
+      linear-gradient(135deg, rgb(255 71 223 / 16%), rgb(9 20 36 / 90%)),
+      rgb(2 6 23 / 82%);
+  }
+
+  svg {
+    width: 21px;
+    height: 21px;
+    fill: currentColor;
+  }
+
+  .action-status {
+    position: absolute;
+    right: 0;
+    bottom: 58px;
+    width: max-content;
+    max-width: min(280px, calc(100vw - 40px));
+    border: 1px solid rgb(185 255 74 / 30%);
+    border-radius: var(--radius-sm);
+    padding: 8px 10px;
+    background: rgb(4 12 24 / 92%);
+    color: #dffbff;
+    font-size: 0.78rem;
+    font-weight: 800;
+    line-height: 1.4;
+    box-shadow: 0 14px 32px rgb(0 0 0 / 36%);
+  }
+
+  .action-status[hidden] {
+    display: none;
+  }
+
+  @media (max-width: 620px) {
+    .post-actions {
+      right: 14px;
+      bottom: 14px;
+      gap: 8px;
+    }
+
+    .action-button {
+      width: 42px;
+      height: 42px;
+    }
+
+    .action-status {
+      bottom: 52px;
+      max-width: calc(100vw - 28px);
+    }
+  }
+</style>
