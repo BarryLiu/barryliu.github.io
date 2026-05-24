@@ -4,5 +4,5 @@ pages_build_output_dir = "dist"
 
 [[kv_namespaces]]
 binding = "POST_STATS"
-id = "local_post_stats"
-preview_id = "local_post_stats_preview"
+id = "81842e7005854e9a928d69b16f8ebd30"
+preview_id = "7c7460a5ae4b4feeb43b9f9f6d255e6b"

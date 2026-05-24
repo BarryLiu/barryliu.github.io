@@ -12,6 +12,21 @@ export const site = {
   postStats: {
     enabled: true,
   },
+  comments: {
+    enabled: true,
+    provider: 'giscus',
+    repo: 'BarryLiu/barryliu.github.io',
+    repoId: 'MDEwOlJlcG9zaXRvcnk0ODA5NTc0OQ==',
+    category: 'General',
+    categoryId: 'DIC_kwDOAt3iBc4C9uWC',
+    mapping: 'pathname',
+    strict: '0',
+    reactionsEnabled: '1',
+    emitMetadata: '0',
+    inputPosition: 'top',
+    theme: 'transparent_dark',
+    lang: 'zh-CN',
+  },
   nav: [
     { label: '首页', labelEn: 'Home', href: '/' },
     { label: 'AI 笔记', labelEn: 'AI Notes', href: '/ai-notes/' },

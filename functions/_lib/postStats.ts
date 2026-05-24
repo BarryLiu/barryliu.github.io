@@ -10,6 +10,8 @@ export type PostStatsStore = {
   put(slug: string, value: string): Promise<void>;
 };
 
+export type PostVote = 'like' | 'dislike';
+
 const emptyStats = (): PostStatsPayload => ({
   slug: '',
   views: 0,
@@ -52,9 +54,17 @@ export async function incrementView(store: PostStatsStore, slug: string) {
   return writeStats(store, stats);
 }
 
-export async function applyVote(store: PostStatsStore, slug: string, vote: 'like' | 'dislike') {
+function voteCountKey(vote: PostVote) {
+  return vote === 'like' ? 'likes' : 'dislikes';
+}
+
+export async function applyVote(store: PostStatsStore, slug: string, vote: PostVote, previousVote?: PostVote) {
   const stats = await readStats(store, slug);
-  if (vote === 'like') stats.likes += 1;
-  if (vote === 'dislike') stats.dislikes += 1;
+  if (previousVote === vote) return stats;
+  if (previousVote) {
+    const previousKey = voteCountKey(previousVote);
+    stats[previousKey] = Math.max(0, stats[previousKey] - 1);
+  }
+  stats[voteCountKey(vote)] += 1;
   return writeStats(store, stats);
 }

@@ -1,14 +1,47 @@
 ---
 import { site } from '../data/site';
+
+const comments = site.comments;
+const commentsEnabled =
+  comments?.enabled === true &&
+  comments.provider === 'giscus' &&
+  Boolean(comments.repo) &&
+  Boolean(comments.repoId) &&
+  Boolean(comments.category) &&
+  Boolean(comments.categoryId);
 ---
 
 <section class="comments" aria-labelledby="comments-title">
   <h2 id="comments-title">讨论与反馈</h2>
-  <p>评论系统预留为 giscus。当前未配置 GitHub Discussions 仓库参数，可先通过 GitHub 或邮箱交流。</p>
-  <div class="button-row">
-    <a class="button" href={site.github}>GitHub</a>
-    <a class="button primary" href={`mailto:${site.email}`}>邮箱联系</a>
-  </div>
+  {commentsEnabled ? (
+    <div class="comment-widget">
+      <script
+        src="https://giscus.app/client.js"
+        data-repo={comments.repo}
+        data-repo-id={comments.repoId}
+        data-category={comments.category}
+        data-category-id={comments.categoryId}
+        data-mapping={comments.mapping}
+        data-strict={comments.strict}
+        data-reactions-enabled={comments.reactionsEnabled}
+        data-emit-metadata={comments.emitMetadata}
+        data-input-position={comments.inputPosition}
+        data-theme={comments.theme}
+        data-lang={comments.lang}
+        crossorigin="anonymous"
+        async
+        is:inline
+      ></script>
+    </div>
+  ) : (
+    <>
+      <p>评论系统暂未启用，可先通过 GitHub 或邮箱交流。</p>
+      <div class="button-row">
+        <a class="button" href={site.github}>GitHub</a>
+        <a class="button primary" href={`mailto:${site.email}`}>邮箱联系</a>
+      </div>
+    </>
+  )}
 </section>
 
 <style>
@@ -29,5 +62,9 @@ import { site } from '../data/site';
 
   p {
     color: var(--color-muted);
+  }
+
+  .comment-widget {
+    min-height: 180px;
   }
 </style>

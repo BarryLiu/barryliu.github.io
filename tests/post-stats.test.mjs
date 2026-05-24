@@ -32,6 +32,8 @@ describe('post stats', () => {
     assert.match(component, /viewedSlugs/);
     assert.match(component, /\/api\/post-stats/);
     assert.match(component, /localStorage/);
+    assert.match(component, /previousVote/);
+    assert.match(component, /currentVote/);
   });
 
   it('provides a Cloudflare Pages Function for views likes and dislikes', () => {
@@ -46,6 +48,9 @@ describe('post stats', () => {
     assert.match(store, /dislikes/);
     assert.match(store, /incrementView/);
     assert.match(store, /applyVote/);
+    assert.match(store, /previousVote/);
+    assert.match(store, /Math\.max\(0/);
+    assert.match(api, /previousVote/);
   });
 
   it('documents and configures the Cloudflare KV binding', () => {
@@ -54,7 +59,8 @@ describe('post stats', () => {
     const packageJson = JSON.parse(read('package.json'));
 
     assert.match(wrangler, /binding = "POST_STATS"/);
-    assert.match(wrangler, /preview_id = "local_post_stats_preview"/);
+    assert.match(wrangler, /id = "[a-f0-9]{32}"/);
+    assert.match(wrangler, /preview_id = "[a-f0-9]{32}"/);
     assert.match(agents, /POST_STATS/);
     assert.match(agents, /api\/post-stats/);
     assert.match(agents, /post-stats/);

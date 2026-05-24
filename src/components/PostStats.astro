@@ -43,13 +43,17 @@ const { slug, variant = 'compact' } = Astro.props as Props;
       const target = root.querySelector(selector);
       if (target) target.textContent = String(value ?? 0);
     };
-    const updateVoteState = (slug) => {
-      let liked = false;
-      let disliked = false;
+    const currentVote = (slug) => {
       try {
-        liked = localStorage.getItem(`flying-fish-liked:${slug}`) === '1';
-        disliked = localStorage.getItem(`flying-fish-disliked:${slug}`) === '1';
+        if (localStorage.getItem(`flying-fish-liked:${slug}`) === '1') return 'like';
+        if (localStorage.getItem(`flying-fish-disliked:${slug}`) === '1') return 'dislike';
       } catch {}
+      return undefined;
+    };
+    const updateVoteState = (slug) => {
+      const vote = currentVote(slug);
+      const liked = vote === 'like';
+      const disliked = vote === 'dislike';
       rootsForSlug(slug).forEach((root) => {
         root.querySelectorAll('[data-post-like]').forEach((button) => {
           if (liked) button.setAttribute('aria-pressed', 'true');
@@ -76,11 +80,11 @@ const { slug, variant = 'compact' } = Astro.props as Props;
       if (!response.ok) return;
       renderStats(slug, await response.json());
     };
-    const send = async (slug, action) => {
+    const send = async (slug, action, previousVote) => {
       const response = await fetch('/api/post-stats', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ slug, action }),
+        body: JSON.stringify({ slug, action, previousVote }),
       });
       if (!response.ok) return;
       renderStats(slug, await response.json());
@@ -105,25 +109,27 @@ const { slug, variant = 'compact' } = Astro.props as Props;
 
         root.querySelectorAll('[data-post-like]').forEach((button) => {
           button.addEventListener('click', async () => {
+            const previousVote = currentVote(slug);
+            if (previousVote === 'like') return;
             try {
-              if (localStorage.getItem(likedKey) === '1') return;
               localStorage.setItem(likedKey, '1');
               localStorage.removeItem(dislikedKey);
             } catch {}
             updateVoteState(slug);
-            await send(slug, 'like');
+            await send(slug, 'like', previousVote);
           });
         });
 
         root.querySelectorAll('[data-post-dislike]').forEach((button) => {
           button.addEventListener('click', async () => {
+            const previousVote = currentVote(slug);
+            if (previousVote === 'dislike') return;
             try {
-              if (localStorage.getItem(dislikedKey) === '1') return;
               localStorage.setItem(dislikedKey, '1');
               localStorage.removeItem(likedKey);
             } catch {}
             updateVoteState(slug);
-            await send(slug, 'dislike');
+            await send(slug, 'dislike', previousVote);
           });
         });
       });

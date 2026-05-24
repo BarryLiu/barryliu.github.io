@@ -73,4 +73,23 @@ describe('interactive site features', () => {
     assert.match(comment, /site\.email/);
     assert.match(about, /site\.email/);
   });
+
+  it('configures GitHub discussion comments on post pages', () => {
+    const site = read('src/data/site.ts');
+    const comment = read('src/components/CommentPanel.astro');
+
+    assert.match(site, /comments/);
+    assert.match(site, /provider:\s*'giscus'/);
+    assert.match(site, /repo:\s*'BarryLiu\/barryliu\.github\.io'/);
+    assert.match(site, /repoId:\s*'MDEwOlJlcG9zaXRvcnk0ODA5NTc0OQ=='/);
+    assert.match(site, /category:\s*'General'/);
+    assert.match(site, /categoryId:\s*'DIC_kwDOAt3iBc4C9uWC'/);
+    assert.match(site, /mapping:\s*'pathname'/);
+    assert.match(comment, /commentsEnabled/);
+    assert.match(comment, /https:\/\/giscus\.app\/client\.js/);
+    assert.match(comment, /data-repo=\{comments\.repo\}/);
+    assert.match(comment, /data-repo-id=\{comments\.repoId\}/);
+    assert.match(comment, /data-category-id=\{comments\.categoryId\}/);
+    assert.match(comment, /data-theme=\{comments\.theme\}/);
+  });
 });

@@ -40,7 +40,7 @@ featured: false
        driver: local
        driver_opts:
          type: cifs
-         o: username=yingjing.liu,password=Dream@123@@,vers=2.1,addr=192.168.110.94,r
+         o: username=yingjing.liu,password=******,vers=2.1,addr=192.168.110.94,r
          device: "//192.168.110.94/SW-Version"
    networks:
      proxynetwork:
