@@ -12,6 +12,9 @@ export const site = {
   postStats: {
     enabled: true,
   },
+  features: {
+    githubOAuth: true,
+  },
   comments: {
     enabled: true,
     provider: 'giscus',
@@ -22,7 +25,7 @@ export const site = {
     mapping: 'pathname',
     strict: '0',
     reactionsEnabled: '1',
-    emitMetadata: '0',
+    emitMetadata: '1',
     inputPosition: 'top',
     theme: 'transparent_dark',
     lang: 'zh-CN',

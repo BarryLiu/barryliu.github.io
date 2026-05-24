@@ -20,6 +20,7 @@
 3. clone 到本地，在 `src/content/posts` 创建正式文章，在 `src/content/drafts` 保存草稿
 4. 修改 CNAME 或删掉使用默认域名
 5. 修改 `src/data/site.ts` 配置项
+6. 如需启用 GitHub OAuth 收藏功能，配置环境变量（见下方"GitHub OAuth 收藏功能"章节）
 
 ### 2. Cloudflare Pages 部署
 
@@ -80,7 +81,19 @@ npm ci → npm run build → Deploy to Cloudflare Pages
 
 手动触发：GitHub → Actions → "Deploy Astro site to Cloudflare Pages" → Run workflow
 
-### 3. 分支说明
+### 3. 功能开关
+
+编辑 `src/data/site.ts` 中的 `features` 节点：
+
+```ts
+features: {
+  githubOAuth: true,  // GitHub OAuth 收藏功能（默认 false）
+},
+```
+
+| 开关 | 说明 | 依赖 |
+|------|------|------|
+| `githubOAuth` | 开启后显示收藏/查看收藏按钮，依赖 GitHub OAuth 环境变量 | 需配置 `AUTH_COOKIE_SECRET` + `GITHUB_OAUTH_CLIENT_ID` + `GITHUB_OAUTH_CLIENT_SECRET` |
 
 ---
 

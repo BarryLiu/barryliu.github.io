@@ -1,5 +1,6 @@
 ---
 import CommentPanel from '../components/CommentPanel.astro';
+import PostFloatingActions from '../components/PostFloatingActions.astro';
 import PostStats from '../components/PostStats.astro';
 import BaseLayout from './BaseLayout.astro';
 import { site } from '../data/site';
@@ -16,6 +17,8 @@ const { post, headings, previous, next } = Astro.props;
 const category = getPrimaryCategory(post);
 const description = getDescription(post);
 const postStatsEnabled = site.postStats?.enabled === true;
+const commentsEnabled = site.comments?.enabled === true && site.comments.provider === 'giscus';
+const githubOAuthEnabled = site.features?.githubOAuth === true;
 ---
 
 <BaseLayout title={post.data.title} description={description} canonical={postUrl(post)}>
@@ -53,6 +56,7 @@ const postStatsEnabled = site.postStats?.enabled === true;
       </aside>
     </div>
   </article>
+  <PostFloatingActions postSlug={post.data.postSlug} commentsEnabled={commentsEnabled} githubOAuthEnabled={githubOAuthEnabled} />
 </BaseLayout>
 
 <style>

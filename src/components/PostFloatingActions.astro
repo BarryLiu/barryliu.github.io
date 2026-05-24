@@ -2,27 +2,30 @@
 type Props = {
   postSlug: string;
   commentsEnabled?: boolean;
+  githubOAuthEnabled?: boolean;
 };
 
-const { postSlug, commentsEnabled = false } = Astro.props;
+const { postSlug, commentsEnabled = false, githubOAuthEnabled = false } = Astro.props;
 ---
 
-<div class="post-actions" data-post-actions data-post-slug={postSlug} data-comments-enabled={commentsEnabled ? 'true' : 'false'}>
+<div class="post-actions" data-post-actions data-post-slug={postSlug} data-comments-enabled={commentsEnabled ? 'true' : 'false'} data-github-oauth-enabled={githubOAuthEnabled ? 'true' : 'false'}>
   <button class="action-button" type="button" data-scroll-top aria-label="回到顶部" title="回到顶部">
     <svg viewBox="0 0 24 24" aria-hidden="true">
       <path d="M12 5.2 5.4 11.8l1.4 1.4 4.2-4.2v9.8h2V9l4.2 4.2 1.4-1.4L12 5.2Z" />
     </svg>
   </button>
-  <button class="action-button favorite-button" type="button" data-favorite-toggle aria-pressed="false" aria-label="收藏文章" title="收藏文章">
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="m12 3.4 2.58 5.22 5.76.84-4.17 4.06.99 5.74L12 16.55l-5.16 2.71.99-5.74-4.17-4.06 5.76-.84L12 3.4Zm0 4.53-1.25 2.54-2.8.41 2.03 1.98-.48 2.79 2.5-1.31 2.5 1.31-.48-2.79 2.03-1.98-2.8-.41L12 7.93Z" />
-    </svg>
-  </button>
-  <a class="action-button favorites-link" href="/favorites/" data-favorites-link aria-label="查看我的收藏" title="查看我的收藏">
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M5 4.5A2.5 2.5 0 0 1 7.5 2h9A2.5 2.5 0 0 1 19 4.5v16.2l-7-3.5-7 3.5V4.5Zm2.5-.5a.5.5 0 0 0-.5.5v12.96l5-2.5 5 2.5V4.5a.5.5 0 0 0-.5-.5h-9Zm2.1 4.4h4.8v2H9.6v-2Zm0 3.6h3.2v2H9.6v-2Z" />
-    </svg>
-  </a>
+  {githubOAuthEnabled && (
+    <button class="action-button favorite-button" type="button" data-favorite-toggle aria-pressed="false" aria-label="收藏文章" title="收藏文章">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="m12 3.4 2.58 5.22 5.76.84-4.17 4.06.99 5.74L12 16.55l-5.16 2.71.99-5.74-4.17-4.06 5.76-.84L12 3.4Zm0 4.53-1.25 2.54-2.8.41 2.03 1.98-.48 2.79 2.5-1.31 2.5 1.31-.48-2.79 2.03-1.98-2.8-.41L12 7.93Z" />
+      </svg>
+    </button>
+    <a class="action-button favorites-link" href="/favorites/" data-favorites-link aria-label="查看我的收藏" title="查看我的收藏">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M5 4.5A2.5 2.5 0 0 1 7.5 2h9A2.5 2.5 0 0 1 19 4.5v16.2l-7-3.5-7 3.5V4.5Zm2.5-.5a.5.5 0 0 0-.5.5v12.96l5-2.5 5 2.5V4.5a.5.5 0 0 0-.5-.5h-9Zm2.1 4.4h4.8v2H9.6v-2Zm0 3.6h3.2v2H9.6v-2Z" />
+      </svg>
+    </a>
+  )}
   <span class="action-status" data-favorite-status role="status" aria-live="polite" hidden></span>
 </div>
 
@@ -141,6 +144,7 @@ const { postSlug, commentsEnabled = false } = Astro.props;
     const initializeRoot = async (root) => {
       const slug = root.getAttribute('data-post-slug');
       if (!slug || root.dataset.initialized === 'true') return;
+      if (root.dataset.githubOAuthEnabled !== 'true') return;
       root.dataset.initialized = 'true';
       root.querySelector('[data-favorites-link]')?.setAttribute('href', `/favorites/`);
 
