@@ -36,4 +36,8 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist --project-name=${{ secrets.CLOUDFLARE_PROJECT_NAME }}
+          command: |
+            wrangler secret put AUTH_COOKIE_SECRET --project-name=${{ secrets.CLOUDFLARE_PROJECT_NAME }} <<< '${{ secrets.AUTH_COOKIE_SECRET }}'
+            wrangler secret put GITHUB_OAUTH_CLIENT_ID --project-name=${{ secrets.CLOUDFLARE_PROJECT_NAME }} <<< '${{ secrets.GITHUB_OAUTH_CLIENT_ID }}'
+            wrangler secret put GITHUB_OAUTH_CLIENT_SECRET --project-name=${{ secrets.CLOUDFLARE_PROJECT_NAME }} <<< '${{ secrets.GITHUB_OAUTH_CLIENT_SECRET }}'
+            wrangler pages deploy dist --project-name=${{ secrets.CLOUDFLARE_PROJECT_NAME }}
