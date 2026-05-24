@@ -185,6 +185,9 @@ const { compact = false } = Astro.props;
       activeDialog = document.querySelector('[data-search-dialog]');
       activeInput = document.querySelector('[data-search-input]');
       if (!activeDialog || !activeInput) return;
+      if (activeDialog.parentElement !== document.body) {
+        document.body.appendChild(activeDialog);
+      }
       activeDialog.hidden = false;
       document.body.classList.add('search-open');
       activeInput.focus();

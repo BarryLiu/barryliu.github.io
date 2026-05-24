@@ -25,6 +25,14 @@ describe('interactive site features', () => {
     assert.match(nav, /data-search-open/);
   });
 
+  it('keeps the global search dialog usable from the mobile menu', () => {
+    const nav = read('src/components/CyberNav.astro');
+    const search = read('src/components/GlobalSearch.astro');
+
+    assert.match(nav, /<a href="\/archive\/" data-search-open/);
+    assert.match(search, /document\.body\.appendChild\(activeDialog\)/);
+  });
+
   it('supports a persistent zh and en UI language switch', () => {
     const site = read('src/data/site.ts');
     const nav = read('src/components/CyberNav.astro');

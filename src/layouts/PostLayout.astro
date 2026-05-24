@@ -79,8 +79,8 @@ const postStatsEnabled = site.postStats?.enabled === true;
 
   h1 {
     margin: 0;
-    font-size: clamp(2.35rem, 7vw, 4.7rem);
-    line-height: 1.08;
+    font-size: clamp(2rem, 5.6vw, 3.9rem);
+    line-height: 1.12;
     letter-spacing: 0;
   }
 
@@ -104,8 +104,8 @@ const postStatsEnabled = site.postStats?.enabled === true;
 
   .post-grid {
     display: grid;
-    grid-template-columns: minmax(0, 760px) minmax(220px, 280px);
-    gap: 58px;
+    grid-template-columns: minmax(0, 1fr) minmax(220px, 280px);
+    gap: clamp(32px, 4vw, 58px);
     align-items: start;
   }
 
