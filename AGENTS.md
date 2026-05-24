@@ -18,11 +18,12 @@ Astro 入口在 `src/`：页面放在 `src/pages/`，布局放在 `src/layouts/`
 - `npm run dev`：启动 Astro，本地访问 `http://localhost:4321`。
 - `npm run build`：执行迁移、复制资源并构建 `dist/`。
 - `npm run preview`：预览 `dist/`。
+- `npm run dev:cloudflare`：先构建 `dist/`，再用 Wrangler Pages 本地预览 Cloudflare Functions 和 KV 绑定。
 - `npm run test`：运行 Node 内置测试，覆盖迁移和项目配置。
 - `docker compose up`：用 Node 22 容器启动 Astro dev server。
 - `docker compose run --rm astro npm run build`：在容器中执行完整构建。
 
-Cloudflare Pages 配置：Build command 使用 `npm run build`，Build output directory 使用 `dist`，Node 版本建议 `22`。如使用 GitHub Actions 发布，需要配置 `CLOUDFLARE_API_TOKEN`、`CLOUDFLARE_ACCOUNT_ID` 和 `CLOUDFLARE_PROJECT_NAME`。
+Cloudflare Pages 配置：Build command 使用 `npm run build`，Build output directory 使用 `dist`，Node 版本建议 `22`。如使用 GitHub Actions 发布，需要配置 `CLOUDFLARE_API_TOKEN`、`CLOUDFLARE_ACCOUNT_ID` 和 `CLOUDFLARE_PROJECT_NAME`。文章访问量和赞/踩统计使用 Pages Function `functions/api/post-stats.ts` 与 KV 绑定 `POST_STATS`；Cloudflare 后台需要创建同名 KV namespace，并让 Pages 项目绑定为 `POST_STATS`。本地调试统计接口使用 `npm run dev:cloudflare`，接口路径是 `/api/post-stats`。
 
 ## 编码和命名规范
 

@@ -11,6 +11,7 @@
     "prebuild": "npm run migrate && npm run assets",
     "build": "ASTRO_TELEMETRY_DISABLED=1 astro build",
     "preview": "ASTRO_TELEMETRY_DISABLED=1 astro preview",
+    "dev:cloudflare": "npm run build && wrangler pages dev dist --kv=POST_STATS",
     "test": "node --test tests/*.test.mjs",
     "deploy:cloudflare": "npm run build && wrangler pages deploy dist"
   },

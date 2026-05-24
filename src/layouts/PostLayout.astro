@@ -1,6 +1,8 @@
 ---
 import CommentPanel from '../components/CommentPanel.astro';
+import PostStats from '../components/PostStats.astro';
 import BaseLayout from './BaseLayout.astro';
+import { site } from '../data/site';
 import { formatDate, getDescription, getPrimaryCategory, getReadingTime, postUrl, taxonomySlug, type Post } from '../utils/posts';
 
 type Props = {
@@ -13,6 +15,7 @@ type Props = {
 const { post, headings, previous, next } = Astro.props;
 const category = getPrimaryCategory(post);
 const description = getDescription(post);
+const postStatsEnabled = site.postStats?.enabled === true;
 ---
 
 <BaseLayout title={post.data.title} description={description} canonical={postUrl(post)}>
@@ -26,6 +29,7 @@ const description = getDescription(post);
         <span>{getReadingTime(post)} 分钟读完</span>
         {post.data.tags.slice(0, 5).map((tag) => <a href={`/tag/${taxonomySlug(tag)}/`}>#{tag}</a>)}
       </div>
+      {postStatsEnabled && <PostStats slug={post.data.postSlug} variant="inline" />}
     </header>
 
     <div class="post-grid">
@@ -35,6 +39,7 @@ const description = getDescription(post);
           {previous && <a href={postUrl(previous)}><span>上一篇</span><strong>{previous.data.title}</strong></a>}
           {next && <a href={postUrl(next)}><span>下一篇</span><strong>{next.data.title}</strong></a>}
         </nav>
+        {postStatsEnabled && <PostStats slug={post.data.postSlug} variant="compact" />}
         <CommentPanel />
       </div>
 

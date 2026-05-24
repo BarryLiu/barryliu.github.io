@@ -9,6 +9,9 @@ export const site = {
   github: 'https://github.com/BarryLiu',
   email: 'barry.lyj@outlook.com',
   defaultLang: 'zh',
+  postStats: {
+    enabled: true,
+  },
   nav: [
     { label: '首页', labelEn: 'Home', href: '/' },
     { label: 'AI 笔记', labelEn: 'AI Notes', href: '/ai-notes/' },
