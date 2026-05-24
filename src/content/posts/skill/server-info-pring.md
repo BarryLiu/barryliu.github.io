@@ -19,9 +19,9 @@ featured: false
 > server_running8080_info_app.py  监控8080端口
 #### 效果
 server_running_info_app.py 
-![psutil_print1](/images/skill/psutil_print1.png)
+![psutil_print1](/posts-assets/skill/assets/psutil_print1.png)
 server_running8080_info_app.py 
-![psutil_print2](/images/skill/psutil_print2.png)
+![psutil_print2](/posts-assets/skill/assets/psutil_print2.png)
 #### 代码  
 * # server_running_info_app.py
 ``` python

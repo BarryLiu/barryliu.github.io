@@ -63,7 +63,7 @@ featured: false
 ### AutoResponder(重定向规则)
 > 可以根据请求规则定义不同的服务器,方便解决问题
 * 前后端分离,前端程序到服务器,让前端地址指向本地跑的程序
-  ![转发配置](/images/fiddler_autoresponder.png)
+  ![转发配置](/posts-assets/skill/assets/fiddler_autoresponder.png)
 * regex:(?insx)^http://192.168.1.67:8093/hw-exam/(?<name>.+)$ 
 * *redir:http://127.0.0.1:8605/hw-exam/${name}
 ### Composer(模拟请求)

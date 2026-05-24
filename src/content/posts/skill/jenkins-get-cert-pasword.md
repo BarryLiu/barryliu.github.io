@@ -13,7 +13,7 @@ featured: false
 
 Jenkins ==> 系统管理 ==> 脚本命令行
 
-![../../images/skill/jenkins-console.png](/images/skill/jenkins-console.png)
+![jenkins-console](/posts-assets/skill/assets/jenkins-console.png)
 
 输入下面命令
 

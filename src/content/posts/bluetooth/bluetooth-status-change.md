@@ -27,7 +27,7 @@ featured: false
 > 
 #### 耳机之间各功能状态变化
 >  耳机盒充电盒之间状态由耳机内络达提供的库里面自己维护, 一共有四种状态。通过自己注册事件给络达提供的库，各个状态变化后由它回调通知应用层。
-![bluetooth-status](/images/bluetooth/bluetooth-status.png)
+![bluetooth-status](/posts-assets/bluetooth/assets/bluetooth-status.png)
 #### 状态介绍
 * SMART_CASE_OFF_IND                     0  充满电  耳机在仓内，充电仓通知耳机要断电啦
 * SMART_CASE_OUT_OF_CASE_IND  1  出仓  耳机在仓外
@@ -36,11 +36,11 @@ featured: false
 #### 调用代码：
 1. 编写自定义业务： (App_SmartChgCase.c 文件里面)
    
-![bluetooth-status-code0](/images/bluetooth/bluetooth-status-code0.png)
+![bluetooth-status-code0](/posts-assets/bluetooth/assets/bluetooth-status-code0.png)
 2. 创建对象
-   ![bluetooth-status-code1](/images/bluetooth/bluetooth-status-code1.png)
+   ![bluetooth-status-code1](/posts-assets/bluetooth/assets/bluetooth-status-code1.png)
 3. 传递给络达库调用 ，(App_ChargeBattery.c)
-   ![bluetooth-status-code2](/images/bluetooth/bluetooth-status-code2.png)
+   ![bluetooth-status-code2](/posts-assets/bluetooth/assets/bluetooth-status-code2.png)
 ### 调用log
 >    App_SmartChgCase.c # app_SmtChgCse_SetChargeIn(): 入仓事件  销毁sensor
 >
@@ -50,12 +50,12 @@ featured: false
 >
 >   
 *  从关盖状态到开仓取出耳机
-![bluetooth-status-log1](/images/bluetooth/bluetooth-status-log1.png)
+![bluetooth-status-log1](/posts-assets/bluetooth/assets/bluetooth-status-log1.png)
 > 如果将开仓事件的log加到一起：
 >
- ![bluetooth-status-log3](/images/bluetooth/bluetooth-status-log3.png)
+ ![bluetooth-status-log3](/posts-assets/bluetooth/assets/bluetooth-status-log3.png)
 * 从耳机到仓外放入耳机并合盖
-![bluetooth-status-log2](/images/bluetooth/bluetooth-status-log2.png)
+![bluetooth-status-log2](/posts-assets/bluetooth/assets/bluetooth-status-log2.png)
 > 关盖log也一样，先调用 入仓事件销毁sensor,再进入这里回调状态改变
 > 
 ----

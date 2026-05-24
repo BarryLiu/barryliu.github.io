@@ -37,7 +37,7 @@ python manage.py migrate
 # python manage.py sqlmigrate 应用名 文件id
 python manage.py sqlmigrate blog2 0001
 ```
-### 结构![python1](/images/python1.png)
+### 结构![python1](/posts-assets/skill/assets/python1.png)
 ### 运行
 ​	运行manage.py 不通可以在 edit configurations 里面 script parameters 添加 runserver 参数
 ### admin 模块

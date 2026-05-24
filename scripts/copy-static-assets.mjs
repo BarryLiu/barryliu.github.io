@@ -1,4 +1,4 @@
-import { cp, mkdir, readdir, stat } from 'node:fs/promises';
+import { cp, mkdir, readdir, rm, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -37,18 +37,26 @@ async function walkAssetDirs(dir) {
   return dirs;
 }
 
+async function removeLegacyPublicAssets(publicRoot) {
+  const assetsRoot = path.join(publicRoot, 'assets');
+  if (!await exists(assetsRoot)) return;
+
+  const entries = await readdir(assetsRoot, { withFileTypes: true });
+  await Promise.all(entries
+    .filter((entry) => entry.name !== 'brand')
+    .map((entry) => rm(path.join(assetsRoot, entry.name), { recursive: true, force: true })));
+}
+
 export async function copyStaticAssets(options = {}) {
   const repoRoot = options.repoRoot ?? defaultRepoRoot;
   const publicRoot = options.publicRoot ?? path.join(repoRoot, 'public');
   const contentRoot = options.contentRoot ?? path.join(repoRoot, 'src/content/posts');
 
+  await rm(path.join(publicRoot, 'posts-assets'), { recursive: true, force: true });
+  await rm(path.join(publicRoot, 'images'), { recursive: true, force: true });
+  await removeLegacyPublicAssets(publicRoot);
   await mkdir(publicRoot, { recursive: true });
   const copied = [];
-
-  for (const name of ['images', 'assets']) {
-    const didCopy = await copyIfExists(path.join(repoRoot, name), path.join(publicRoot, name));
-    if (didCopy) copied.push(name);
-  }
 
   if (await exists(path.join(repoRoot, 'favicon.ico'))) {
     await copyIfExists(path.join(repoRoot, 'favicon.ico'), path.join(publicRoot, 'favicon.ico'));

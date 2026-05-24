@@ -14,7 +14,7 @@ Astro 入口在 `src/`：页面放在 `src/pages/`，布局放在 `src/layouts/`
 
 - `npm install`：安装 Astro 和构建依赖。
 - `npm run migrate`：兼容旧迁移入口；旧 Jekyll 目录不存在时返回 0，不覆盖现有 Astro 内容。
-- `npm run assets`：从 `images/`、`assets/` 和 `src/content/posts/**/assets` 复制静态资源到 `public/` 兼容路径。
+- `npm run assets`：从 `src/content/posts/**/assets` 复制文章静态资源到 `public/posts-assets/` 兼容路径，并复制根 `favicon.ico`。
 - `npm run dev`：启动 Astro，本地访问 `http://localhost:4321`。
 - `npm run build`：执行迁移、复制资源并构建 `dist/`。
 - `npm run preview`：预览 `dist/`。

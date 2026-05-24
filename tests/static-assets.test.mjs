@@ -15,11 +15,23 @@ describe('static asset copying', () => {
       const publicRoot = path.join(tempRoot, 'public');
       const workAsset = path.join(contentRoot, 'work/assets/image.png');
       const mysqlAsset = path.join(contentRoot, 'skill/mysql/assets/index.png');
+      const stalePostAsset = path.join(publicRoot, 'posts-assets/old/assets/stale.png');
+      const staleLegacyImage = path.join(publicRoot, 'images/stale.png');
+      const staleLegacyAsset = path.join(publicRoot, 'assets/image.png');
+      const brandAsset = path.join(publicRoot, 'assets/brand/logo.svg');
 
       await mkdir(path.dirname(workAsset), { recursive: true });
       await mkdir(path.dirname(mysqlAsset), { recursive: true });
+      await mkdir(path.dirname(stalePostAsset), { recursive: true });
+      await mkdir(path.dirname(staleLegacyImage), { recursive: true });
+      await mkdir(path.dirname(staleLegacyAsset), { recursive: true });
+      await mkdir(path.dirname(brandAsset), { recursive: true });
       await writeFile(workAsset, 'work image', 'utf8');
       await writeFile(mysqlAsset, 'mysql image', 'utf8');
+      await writeFile(stalePostAsset, 'stale image', 'utf8');
+      await writeFile(staleLegacyImage, 'legacy image', 'utf8');
+      await writeFile(staleLegacyAsset, 'legacy asset', 'utf8');
+      await writeFile(brandAsset, 'brand logo', 'utf8');
 
       const copied = await copyStaticAssets({ contentRoot, publicRoot, repoRoot: tempRoot });
 
@@ -35,30 +47,42 @@ describe('static asset copying', () => {
         await readFile(path.join(publicRoot, 'posts-assets/skill/mysql/assets/index.png'), 'utf8'),
         'mysql image',
       );
+      await assert.rejects(readFile(stalePostAsset, 'utf8'), { code: 'ENOENT' });
+      await assert.rejects(readFile(staleLegacyImage, 'utf8'), { code: 'ENOENT' });
+      await assert.rejects(readFile(staleLegacyAsset, 'utf8'), { code: 'ENOENT' });
+      assert.equal(await readFile(brandAsset, 'utf8'), 'brand logo');
     } finally {
       await rm(tempRoot, { recursive: true, force: true });
     }
   });
 
-  it('ignores legacy Jekyll include images when root images are the active source', async () => {
+  it('ignores legacy root image and asset directories after content assets are colocated', async () => {
     const tempRoot = await mkdtemp(path.join(tmpdir(), 'legacy-static-assets-'));
 
     try {
       const contentRoot = path.join(tempRoot, 'src/content/posts');
       const publicRoot = path.join(tempRoot, 'public');
       const rootImage = path.join(tempRoot, 'images/startnginx.png');
+      const rootAsset = path.join(tempRoot, 'assets/image.png');
       const legacyImage = path.join(tempRoot, '_includes/images/startnginx.png');
 
       await mkdir(path.dirname(rootImage), { recursive: true });
+      await mkdir(path.dirname(rootAsset), { recursive: true });
       await mkdir(path.dirname(legacyImage), { recursive: true });
       await mkdir(contentRoot, { recursive: true });
       await writeFile(rootImage, 'root image', 'utf8');
+      await writeFile(rootAsset, 'root asset', 'utf8');
       await writeFile(legacyImage, 'legacy image', 'utf8');
 
       const copied = await copyStaticAssets({ contentRoot, publicRoot, repoRoot: tempRoot });
 
-      assert.deepEqual(copied, ['images']);
-      assert.equal(await readFile(path.join(publicRoot, 'images/startnginx.png'), 'utf8'), 'root image');
+      assert.deepEqual(copied, []);
+      await assert.rejects(readFile(path.join(publicRoot, 'images/startnginx.png'), 'utf8'), {
+        code: 'ENOENT',
+      });
+      await assert.rejects(readFile(path.join(publicRoot, 'assets/image.png'), 'utf8'), {
+        code: 'ENOENT',
+      });
     } finally {
       await rm(tempRoot, { recursive: true, force: true });
     }

@@ -12,7 +12,7 @@ featured: false
 ---
 
 redis缓存,nginx反向代理,动静分离
-![startnginx](/images/startnginx.png)
+![startnginx](/posts-assets/skill/assets/startnginx.png)
 ## redis命令
 	启动:	redis-server redis.conf
 	关闭：redis-cli  shutdown 有密码先登录auth登录直接敲  shutdown
