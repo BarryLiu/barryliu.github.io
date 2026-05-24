@@ -97,6 +97,13 @@ const { compact = false } = Astro.props;
       "'": '&#39;',
     })[char]);
 
+    const normalizeSearchQuery = (value = '') => String(value ?? '')
+      .normalize('NFKC')
+      .toLowerCase()
+      .replace(/[^\p{L}\p{N}]+/gu, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+
     const loadIndex = async () => {
       if (!indexPromise) {
         indexPromise = fetch('/search.json')
@@ -107,6 +114,10 @@ const { compact = false } = Astro.props;
           .then((items) => {
             searchIndex = items.map((item) => ({
               ...item,
+              titleText: normalizeSearchQuery(item.title),
+              descriptionText: normalizeSearchQuery(item.description),
+              categoryText: normalizeSearchQuery(item.category),
+              tagText: normalizeSearchQuery((item.tags ?? []).join(' ')),
               haystack: [
                 item.title,
                 item.description,
@@ -114,7 +125,7 @@ const { compact = false } = Astro.props;
                 ...(item.categories ?? []),
                 ...(item.tags ?? []),
                 item.text,
-              ].join(' ').toLowerCase(),
+              ].map(normalizeSearchQuery).join(' '),
             }));
             return searchIndex;
           });
@@ -131,16 +142,19 @@ const { compact = false } = Astro.props;
     const emptyState = (message) => `<div class="search-empty">${escapeHtml(message)}</div>`;
 
     const scoreItem = (item, tokens) => {
-      if (!tokens.every((token) => item.haystack.includes(token))) return 0;
+      let matchedTokens = 0;
       let score = 1;
-      const title = item.title.toLowerCase();
-      const description = (item.description ?? '').toLowerCase();
       for (const token of tokens) {
-        if (title.includes(token)) score += 8;
-        if ((item.tags ?? []).some((tag) => tag.toLowerCase().includes(token))) score += 5;
-        if ((item.categories ?? []).some((category) => category.toLowerCase().includes(token))) score += 4;
-        if (description.includes(token)) score += 2;
+        if (!item.haystack.includes(token)) continue;
+        matchedTokens += 1;
+        if (item.titleText.includes(token)) score += 8;
+        if (item.tagText.includes(token)) score += 5;
+        if (item.categoryText.includes(token)) score += 4;
+        if (item.descriptionText.includes(token)) score += 2;
       }
+      if (matchedTokens === tokens.length) score += 6;
+      if (matchedTokens > 0) score += matchedTokens;
+      if (matchedTokens === 0) return 0;
       return score;
     };
 
@@ -163,7 +177,7 @@ const { compact = false } = Astro.props;
     };
 
     const runSearch = () => {
-      const query = (activeInput?.value ?? '').trim().toLowerCase();
+      const query = normalizeSearchQuery(activeInput?.value ?? '');
       const results = document.querySelector('[data-search-results]');
       if (!results) return;
       if (!query) {
@@ -217,6 +231,12 @@ const { compact = false } = Astro.props;
         return;
       }
       if (event.target.closest('[data-search-close]')) closeDialog();
+    });
+
+    document.addEventListener('input', (event) => {
+      if (!event.target.matches('[data-search-input]')) return;
+      activeInput = event.target;
+      runSearch();
     });
 
     const isMac = /Mac|iPhone|iPad|iPod/.test(navigator.userAgent);

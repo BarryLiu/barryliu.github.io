@@ -64,6 +64,6 @@ describe('post stats', () => {
     assert.match(agents, /POST_STATS/);
     assert.match(agents, /api\/post-stats/);
     assert.match(agents, /post-stats/);
-    assert.equal(packageJson.scripts['dev:cloudflare'], 'npm run build && wrangler pages dev dist --kv=POST_STATS');
+    assert.equal(packageJson.scripts['dev:cloudflare'], 'npm run build && wrangler pages dev dist --kv=POST_STATS --kv=POST_FAVORITES');
   });
 });

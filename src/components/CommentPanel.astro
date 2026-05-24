@@ -11,7 +11,7 @@ const commentsEnabled =
   Boolean(comments.categoryId);
 ---
 
-<section class="comments" aria-labelledby="comments-title">
+<section id="comments" class="comments" aria-labelledby="comments-title" data-giscus-comments>
   <h2 id="comments-title">讨论与反馈</h2>
   {commentsEnabled ? (
     <div class="comment-widget">

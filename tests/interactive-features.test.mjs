@@ -33,6 +33,48 @@ describe('interactive site features', () => {
     assert.match(search, /document\.body\.appendChild\(activeDialog\)/);
   });
 
+  it('normalizes global search queries and keeps the JSON index prerendered', () => {
+    const endpoint = read('src/pages/search.json.ts');
+    const search = read('src/components/GlobalSearch.astro');
+
+    assert.match(endpoint, /export const prerender = true/);
+    assert.match(search, /const normalizeSearchQuery/);
+    assert.match(search, /\.normalize\('NFKC'\)/);
+    assert.match(search, /document\.addEventListener\('input'/);
+    assert.match(search, /event\.target\.matches\('\[data-search-input\]'\)/);
+    assert.match(search, /query\.split\(\/\\s\+\/\)/);
+    assert.match(search, /matchedTokens > 0/);
+    assert.match(search, /matchedTokens === tokens\.length/);
+  });
+
+  it('adds article floating actions for back to top and GitHub-backed favorite context', () => {
+    const layout = read('src/layouts/PostLayout.astro');
+    const actions = read('src/components/PostFloatingActions.astro');
+    const favorites = read('src/pages/favorites.astro');
+
+    assert.match(layout, /PostFloatingActions/);
+    assert.match(layout, /postSlug=\{post\.data\.postSlug\}/);
+    assert.match(actions, /data-post-actions/);
+    assert.match(actions, /data-scroll-top/);
+    assert.match(actions, /data-favorite-toggle/);
+    assert.match(actions, /data-favorites-link/);
+    assert.match(actions, /href="\/favorites\/"/);
+    assert.match(actions, /\/api\/auth\/me/);
+    assert.match(actions, /\/api\/favorites/);
+    assert.match(actions, /\/api\/auth\/github\/start/);
+    assert.match(actions, /请先登录 GitHub，同步收藏到账号/);
+    assert.match(actions, /已同步到账号收藏/);
+    assert.doesNotMatch(actions, /已收藏，登录 GitHub 评论后可同步反应/);
+    assert.doesNotMatch(actions, /flying-fish-favorite:/);
+    assert.match(favorites, /data-favorites-app/);
+    assert.match(favorites, /\/api\/auth\/me/);
+    assert.match(favorites, /\/api\/favorites/);
+    assert.match(favorites, /\/api\/auth\/github\/start\?returnTo=\/favorites\//);
+    assert.match(favorites, /Cloudflare KV/);
+    assert.doesNotMatch(favorites, /localStorage/);
+    assert.match(favorites, /post\.data\.postSlug/);
+  });
+
   it('supports a persistent zh and en UI language switch', () => {
     const site = read('src/data/site.ts');
     const nav = read('src/components/CyberNav.astro');

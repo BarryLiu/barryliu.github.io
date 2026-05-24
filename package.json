@@ -11,11 +11,12 @@
     "prebuild": "npm run migrate && npm run assets",
     "build": "ASTRO_TELEMETRY_DISABLED=1 astro build",
     "preview": "ASTRO_TELEMETRY_DISABLED=1 astro preview",
-    "dev:cloudflare": "npm run build && wrangler pages dev dist --kv=POST_STATS",
+    "dev:cloudflare": "npm run build && wrangler pages dev dist --kv=POST_STATS --kv=POST_FAVORITES",
     "test": "node --test tests/*.test.mjs",
     "deploy:cloudflare": "npm run build && wrangler pages deploy dist"
   },
   "dependencies": {
+    "@astrojs/cloudflare": "^12.6.13",
     "@astrojs/mdx": "^4.2.5",
     "@astrojs/rss": "^4.0.11",
     "@astrojs/sitemap": "^3.2.1",
