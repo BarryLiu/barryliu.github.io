@@ -14,6 +14,12 @@ import { site } from '../data/site';
     <div class="desktop-actions">
       <GlobalSearch />
       <LanguageToggle />
+      <a class="icon-link rss-link" href="/rss.xml" aria-label="RSS 订阅" data-i18n-aria-label-zh="RSS 订阅" data-i18n-aria-label-en="RSS feed">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M5 4.5C13 4.5 19.5 11 19.5 19h-3C16.5 12.66 11.34 7.5 5 7.5v-3Zm0 5.5a9 9 0 0 1 9 9h-3a6 6 0 0 0-6-6v-3Zm2.25 5.5a2.25 2.25 0 1 1 0 4.5a2.25 2.25 0 0 1 0-4.5Z" />
+        </svg>
+        <span data-i18n-zh="RSS 订阅" data-i18n-en="RSS">RSS 订阅</span>
+      </a>
       <a class="icon-link" href={site.github} aria-label="GitHub">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.18-3.37-1.18a2.65 2.65 0 0 0-1.11-1.46c-.91-.62.07-.61.07-.61a2.1 2.1 0 0 1 1.53 1.03a2.13 2.13 0 0 0 2.91.83a2.13 2.13 0 0 1 .64-1.34c-2.22-.25-4.56-1.11-4.56-4.94a3.87 3.87 0 0 1 1.03-2.68a3.6 3.6 0 0 1 .1-2.64s.84-.27 2.75 1.02a9.48 9.48 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02c.37.84.4 1.8.1 2.64a3.85 3.85 0 0 1 1.03 2.68c0 3.84-2.34 4.69-4.57 4.94c.36.31.68.92.68 1.86v2.76c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/></svg>
       </a>
@@ -28,6 +34,7 @@ import { site } from '../data/site';
       <div class="mobile-panel">
         {site.nav.map((item) => <a href={item.href} data-i18n-zh={item.label} data-i18n-en={item.labelEn}>{item.label}</a>)}
         <a href="/archive/" data-search-open data-i18n-zh="全局搜索" data-i18n-en="Global search">全局搜索</a>
+        <a href="/rss.xml" data-i18n-zh="RSS 订阅" data-i18n-en="RSS">RSS 订阅</a>
         <LanguageToggle compact />
         <a href={site.github}>GitHub</a>
         <a href={`mailto:${site.email}`} data-i18n-zh="邮箱联系" data-i18n-en="Email">邮箱联系</a>
@@ -95,6 +102,18 @@ import { site } from '../data/site';
 
   .icon-link {
     width: 38px;
+  }
+
+  .rss-link {
+    width: auto;
+    gap: 7px;
+    padding: 0 12px;
+    color: var(--color-lime);
+  }
+
+  .rss-link span {
+    font-size: 0.8rem;
+    font-weight: 900;
   }
 
   .contact {

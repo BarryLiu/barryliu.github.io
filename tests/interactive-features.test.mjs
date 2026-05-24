@@ -57,4 +57,20 @@ describe('interactive site features', () => {
     assert.match(card, /border-radius:\s*32px/);
     assert.match(home, /home-stage/);
   });
+
+  it('surfaces RSS in the top header and uses the current contact email everywhere', () => {
+    const site = read('src/data/site.ts');
+    const nav = read('src/components/CyberNav.astro');
+    const comment = read('src/components/CommentPanel.astro');
+    const about = read('src/pages/about.astro');
+
+    assert.match(site, /email:\s*'barry\.lyj@outlook\.com'/);
+    assert.doesNotMatch(site, /1025587160@qq\.com/);
+    assert.match(nav, /href="\/rss\.xml"/);
+    assert.match(nav, /data-i18n-zh="RSS 订阅"/);
+    assert.match(nav, /data-i18n-en="RSS"/);
+    assert.match(nav, /site\.email/);
+    assert.match(comment, /site\.email/);
+    assert.match(about, /site\.email/);
+  });
 });

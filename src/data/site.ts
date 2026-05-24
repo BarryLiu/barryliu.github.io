@@ -7,7 +7,7 @@ export const site = {
   descriptionEn: 'A personal technical blog for AI engineering, agents, RAG, multimodal systems, automation, and long-term learning notes.',
   url: 'https://www.mrlyj.com',
   github: 'https://github.com/BarryLiu',
-  email: '1025587160@qq.com',
+  email: 'barry.lyj@outlook.com',
   defaultLang: 'zh',
   nav: [
     { label: '首页', labelEn: 'Home', href: '/' },

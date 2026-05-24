@@ -34,7 +34,7 @@ type: page
 ## 联系我
 
 * GitHub：[BarryLiu](https://github.com/BarryLiu)
-* email：1025587160@qq.com
+* email：barry.lyj@outlook.com
 
   
 
