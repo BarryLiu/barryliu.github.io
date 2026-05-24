@@ -37,9 +37,7 @@ jobs:
           echo "${{ secrets.CF_GITHUB_OAUTH_CLIENT_ID }}" | npx wrangler pages secret put CF_GITHUB_OAUTH_CLIENT_ID --project-name=${{ secrets.CLOUDFLARE_PROJECT_NAME }}
           echo "${{ secrets.CF_GITHUB_OAUTH_CLIENT_SECRET }}" | npx wrangler pages secret put CF_GITHUB_OAUTH_CLIENT_SECRET --project-name=${{ secrets.CLOUDFLARE_PROJECT_NAME }}
         env:
-          AUTH_COOKIE_SECRET: ${{ secrets.AUTH_COOKIE_SECRET }}
-          CF_GITHUB_OAUTH_CLIENT_ID: ${{ secrets.CF_GITHUB_OAUTH_CLIENT_ID }}
-          CF_GITHUB_OAUTH_CLIENT_SECRET: ${{ secrets.CF_GITHUB_OAUTH_CLIENT_SECRET }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
