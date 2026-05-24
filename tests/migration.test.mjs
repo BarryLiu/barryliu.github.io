@@ -1,4 +1,7 @@
 import assert from 'node:assert/strict';
+import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
 import { describe, it } from 'node:test';
 
 import {
@@ -78,5 +81,82 @@ describe('post migration helpers', () => {
     assert.match(migrated, /tags: \[\]\n/);
     assert.match(migrated, /postSlug: "skill\/dingding-login"\n/);
     assert.match(migrated, /### 钉钉扫码登陆\n\n正文\n$/);
+  });
+
+  it('preserves existing Astro posts while migrating remaining Jekyll posts', async () => {
+    const { migratePostsInto } = await import('../scripts/migrate-posts.mjs');
+    assert.equal(typeof migratePostsInto, 'function');
+
+    const tempRoot = await mkdtemp(path.join(tmpdir(), 'post-migration-'));
+
+    try {
+      const sourceRoot = path.join(tempRoot, '_posts');
+      const targetRoot = path.join(tempRoot, 'src/content/posts');
+      const existingTarget = path.join(targetRoot, 'already-migrated.md');
+      const sourcePost = path.join(sourceRoot, 'skill/2024-01-02-new-post.md');
+
+      await mkdir(path.dirname(sourcePost), { recursive: true });
+      await mkdir(path.dirname(existingTarget), { recursive: true });
+      await writeFile(existingTarget, '---\ntitle: Existing\ndate: 2024-01-01\n---\n\nKeep me\n', 'utf8');
+      await writeFile(sourcePost, '---\ntitle: New Post\n---\n\nNew body\n', 'utf8');
+
+      const count = await migratePostsInto({ sourceRoot, targetRoot });
+
+      assert.equal(count, 1);
+      assert.equal(await readFile(existingTarget, 'utf8'), '---\ntitle: Existing\ndate: 2024-01-01\n---\n\nKeep me\n');
+      assert.match(
+        await readFile(path.join(targetRoot, 'skill/new-post.md'), 'utf8'),
+        /postSlug: "skill\/new-post"/,
+      );
+    } finally {
+      await rm(tempRoot, { recursive: true, force: true });
+    }
+  });
+
+  it('treats a removed Jekyll post source directory as no remaining posts', async () => {
+    const { migratePostsInto } = await import('../scripts/migrate-posts.mjs');
+    const tempRoot = await mkdtemp(path.join(tmpdir(), 'missing-post-source-'));
+
+    try {
+      const count = await migratePostsInto({
+        sourceRoot: path.join(tempRoot, '_posts'),
+        targetRoot: path.join(tempRoot, 'src/content/posts'),
+      });
+
+      assert.equal(count, 0);
+    } finally {
+      await rm(tempRoot, { recursive: true, force: true });
+    }
+  });
+
+  it('migrates Jekyll drafts into an Astro drafts collection', async () => {
+    const { migrateDraftsInto } = await import('../scripts/migrate-posts.mjs');
+    assert.equal(typeof migrateDraftsInto, 'function');
+
+    const tempRoot = await mkdtemp(path.join(tmpdir(), 'draft-migration-'));
+
+    try {
+      const sourceRoot = path.join(tempRoot, '_drafts');
+      const targetRoot = path.join(tempRoot, 'src/content/drafts');
+      const sourceDraft = path.join(sourceRoot, 'android/2015-7-13-sample-draft.md');
+
+      await mkdir(path.dirname(sourceDraft), { recursive: true });
+      await writeFile(
+        sourceDraft,
+        '---\ntitle: Sample Draft\ncategory: Android\ntags: Android Test\n---\n\nDraft body\n',
+        'utf8',
+      );
+
+      const count = await migrateDraftsInto({ sourceRoot, targetRoot });
+      const migrated = await readFile(path.join(targetRoot, 'android/sample-draft.md'), 'utf8');
+
+      assert.equal(count, 1);
+      assert.match(migrated, /postSlug: "android\/sample-draft"/);
+      assert.match(migrated, /categories:\n  - Android\n/);
+      assert.match(migrated, /draft: true\n---/);
+      assert.match(migrated, /Draft body\n$/);
+    } finally {
+      await rm(tempRoot, { recursive: true, force: true });
+    }
   });
 });

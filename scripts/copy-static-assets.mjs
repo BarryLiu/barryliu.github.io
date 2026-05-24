@@ -1,9 +1,8 @@
-import { cp, mkdir, readdir, stat, writeFile } from 'node:fs/promises';
+import { cp, mkdir, readdir, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const publicRoot = path.join(repoRoot, 'public');
+const defaultRepoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 async function exists(target) {
   try {
@@ -38,7 +37,11 @@ async function walkAssetDirs(dir) {
   return dirs;
 }
 
-export async function copyStaticAssets() {
+export async function copyStaticAssets(options = {}) {
+  const repoRoot = options.repoRoot ?? defaultRepoRoot;
+  const publicRoot = options.publicRoot ?? path.join(repoRoot, 'public');
+  const contentRoot = options.contentRoot ?? path.join(repoRoot, 'src/content/posts');
+
   await mkdir(publicRoot, { recursive: true });
   const copied = [];
 
@@ -47,20 +50,14 @@ export async function copyStaticAssets() {
     if (didCopy) copied.push(name);
   }
 
-  const didCopyIncludeImages = await copyIfExists(
-    path.join(repoRoot, '_includes/images'),
-    path.join(publicRoot, 'images'),
-  );
-  if (didCopyIncludeImages) copied.push('_includes/images');
-
   if (await exists(path.join(repoRoot, 'favicon.ico'))) {
     await copyIfExists(path.join(repoRoot, 'favicon.ico'), path.join(publicRoot, 'favicon.ico'));
     copied.push('favicon.ico');
   }
 
-  const postAssetDirs = await walkAssetDirs(path.join(repoRoot, '_posts'));
+  const postAssetDirs = await walkAssetDirs(contentRoot);
   for (const assetDir of postAssetDirs) {
-    const relative = path.relative(path.join(repoRoot, '_posts'), assetDir);
+    const relative = path.relative(contentRoot, assetDir);
     const target = path.join(publicRoot, 'posts-assets', relative);
     await copyIfExists(assetDir, target);
     copied.push(`posts-assets/${relative.split(path.sep).join('/')}`);

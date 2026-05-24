@@ -3,8 +3,10 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const sourceRoot = path.join(repoRoot, '_posts');
-const targetRoot = path.join(repoRoot, 'src/content/posts');
+const defaultSourceRoot = path.join(repoRoot, '_posts');
+const defaultTargetRoot = path.join(repoRoot, 'src/content/posts');
+const defaultDraftSourceRoot = path.join(repoRoot, '_drafts');
+const defaultDraftTargetRoot = path.join(repoRoot, 'src/content/drafts');
 
 const postFilePattern = /^(\d{4})-(\d{1,2})-(\d{1,2})-(.+)\.(md|markdown)$/i;
 
@@ -26,6 +28,16 @@ function slugify(value) {
     .replace(/\.(md|markdown)$/i, '')
     .replace(/[^a-z0-9\u4e00-\u9fa5]+/gi, '-')
     .replace(/^-+|-+$/g, '') || 'untitled';
+}
+
+function relativeToSourceRoot(sourcePath, sourceRootName) {
+  const normalized = toPosix(sourcePath);
+  const relativePrefix = `${sourceRootName}/`;
+  if (normalized.startsWith(relativePrefix)) return normalized.slice(relativePrefix.length);
+
+  const marker = `/${sourceRootName}/`;
+  const markerIndex = normalized.lastIndexOf(marker);
+  return markerIndex === -1 ? path.posix.basename(normalized) : normalized.slice(markerIndex + marker.length);
 }
 
 function yamlString(value) {
@@ -60,9 +72,8 @@ export function normalizeList(value) {
     .filter(Boolean);
 }
 
-export function derivePostIdentity(sourcePath) {
-  const normalized = toPosix(sourcePath);
-  const relative = normalized.replace(/^.*?_posts\//, '');
+export function derivePostIdentity(sourcePath, options = {}) {
+  const relative = relativeToSourceRoot(sourcePath, options.sourceRootName ?? '_posts');
   const segments = relative.split('/');
   const file = segments.at(-1);
   const match = file.match(postFilePattern);
@@ -186,14 +197,15 @@ function frontmatterBlock(data) {
   if (data.keywords) lines.push(`keywords: ${yamlString(data.keywords)}`);
   if (data.project) lines.push(`project: ${yamlString(data.project)}`);
   lines.push('featured: false');
+  if (data.draft) lines.push('draft: true');
   lines.push('---');
   return lines.join('\n');
 }
 
-export function buildMigratedPost({ sourcePath, raw }) {
-  const identity = derivePostIdentity(sourcePath);
+export function buildMigratedPost({ sourcePath, raw, sourceRootName = '_posts', draft = false }) {
+  const identity = derivePostIdentity(sourcePath, { sourceRootName });
   const { data, body } = parseFrontmatter(raw);
-  const sourceDir = path.posix.dirname(toPosix(sourcePath).replace(/^.*?_posts\//, ''));
+  const sourceDir = path.posix.dirname(relativeToSourceRoot(sourcePath, sourceRootName));
   const rewrittenBody = rewriteJekyllMarkdown(body, { sourceDir });
   const categories = normalizeList(data.categories ?? data.category);
   const tags = normalizeList(data.tags);
@@ -209,11 +221,19 @@ export function buildMigratedPost({ sourcePath, raw }) {
     description,
     keywords: stripQuotes(data.keywords),
     project: stripQuotes(data.project),
+    draft,
   })}\n\n${rewrittenBody.trimEnd()}\n`;
 }
 
 async function walk(dir) {
-  const entries = await readdir(dir, { withFileTypes: true });
+  let entries;
+  try {
+    entries = await readdir(dir, { withFileTypes: true });
+  } catch (error) {
+    if (error?.code === 'ENOENT') return [];
+    throw error;
+  }
+
   const files = [];
 
   for (const entry of entries) {
@@ -228,22 +248,59 @@ async function walk(dir) {
   return files;
 }
 
-export async function migratePosts() {
+async function migrateMarkdownInto({
+  sourceRoot,
+  targetRoot,
+  clean = false,
+  sourceRootName,
+  draft = false,
+} = {}) {
   const sourceFiles = await walk(sourceRoot);
-  await rm(targetRoot, { recursive: true, force: true });
+  if (clean) await rm(targetRoot, { recursive: true, force: true });
 
   for (const sourceFile of sourceFiles) {
     const raw = await readFile(sourceFile, 'utf8');
-    const identity = derivePostIdentity(sourceFile);
+    const identity = derivePostIdentity(sourceFile, { sourceRootName });
     const outputPath = path.join(targetRoot, ...identity.outputPath.split('/'));
     await mkdir(path.dirname(outputPath), { recursive: true });
-    await writeFile(outputPath, buildMigratedPost({ sourcePath: sourceFile, raw }), 'utf8');
+    await writeFile(outputPath, buildMigratedPost({ sourcePath: sourceFile, raw, sourceRootName, draft }), 'utf8');
   }
 
   return sourceFiles.length;
 }
 
+export async function migratePostsInto({
+  sourceRoot = defaultSourceRoot,
+  targetRoot = defaultTargetRoot,
+  clean = false,
+} = {}) {
+  return migrateMarkdownInto({
+    sourceRoot,
+    targetRoot,
+    clean,
+    sourceRootName: path.basename(sourceRoot),
+  });
+}
+
+export async function migrateDraftsInto({
+  sourceRoot = defaultDraftSourceRoot,
+  targetRoot = defaultDraftTargetRoot,
+  clean = false,
+} = {}) {
+  return migrateMarkdownInto({
+    sourceRoot,
+    targetRoot,
+    clean,
+    sourceRootName: path.basename(sourceRoot),
+    draft: true,
+  });
+}
+
+export async function migratePosts(options = {}) {
+  return migratePostsInto(options);
+}
+
 if (import.meta.url === `file://${process.argv[1]}`) {
   const count = await migratePosts();
-  console.log(`Migrated ${count} posts to ${toPosix(path.relative(repoRoot, targetRoot))}`);
+  console.log(`Migrated ${count} posts to ${toPosix(path.relative(repoRoot, defaultTargetRoot))}`);
 }

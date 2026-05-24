@@ -30,7 +30,6 @@ const commentsEnabled =
         data-lang={comments.lang}
         crossorigin="anonymous"
         async
-        is:inline
       ></script>
     </div>
   ) : (
@@ -43,6 +42,21 @@ const commentsEnabled =
     </>
   )}
 </section>
+
+<script is:inline>
+  // 恢复滚动位置（Giscus 登录授权后会刷新页面）
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
+  const savedScroll = sessionStorage.getItem('giscus-scroll');
+  if (savedScroll !== null) {
+    sessionStorage.removeItem('giscus-scroll');
+    setTimeout(() => window.scrollTo(0, parseInt(savedScroll, 10)), 100);
+  }
+  window.addEventListener('beforeunload', () => {
+    sessionStorage.setItem('giscus-scroll', String(window.scrollY));
+  });
+</script>
 
 <style>
   .comments {

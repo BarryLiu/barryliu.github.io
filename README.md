@@ -17,11 +17,9 @@
 
 1. fork 仓库到自己的 GitHub
 2. 修改仓库名字为：`username.github.io`
-3. clone 到本地，参考 `_posts` 目录结构创建文章
+3. clone 到本地，在 `src/content/posts` 创建正式文章，在 `src/content/drafts` 保存草稿
 4. 修改 CNAME 或删掉使用默认域名
-5. 修改 `_config.yml` 配置项
-6. 修改 `src/data/site.ts` 配置项
-7. fork 后将 `_posts/barry` 目录删除（博主生活吐槽）
+5. 修改 `src/data/site.ts` 配置项
 
 ### 2. Cloudflare Pages 部署
 
