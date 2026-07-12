@@ -1,5 +1,9 @@
 ---
 const { compact = false } = Astro.props;
+const gradientSuffix = compact ? 'compact' : 'full';
+const bodyGradientId = `logo-body-${gradientSuffix}`;
+const finGradientId = `logo-fin-${gradientSuffix}`;
+const tailGradientId = `logo-tail-${gradientSuffix}`;
 ---
 
 <a
@@ -9,11 +13,36 @@ const { compact = false } = Astro.props;
   data-i18n-aria-label-zh="想飞的鱼首页"
   data-i18n-aria-label-en="Flying Fish homepage"
 >
-  <svg viewBox="0 0 88 56" role="img" aria-hidden="true">
-    <path class="wing" d="M16 33C29 6 57 0 75 7C62 15 50 26 47 44C37 36 28 33 16 33Z" />
-    <path class="body" d="M8 31C24 16 46 14 61 28C48 44 25 46 8 31Z" />
-    <path class="tail" d="M59 28L81 17L75 31L82 43L59 35Z" />
-    <circle cx="26" cy="29" r="3" />
+  <svg viewBox="0 0 120 84" role="img" aria-hidden="true">
+    <defs>
+      <linearGradient id={bodyGradientId} x1="22" y1="60" x2="104" y2="31" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#18c8d8" />
+        <stop offset=".52" stop-color="#35b6e5" />
+        <stop offset="1" stop-color="#6275e7" />
+      </linearGradient>
+      <linearGradient id={finGradientId} x1="25" y1="21" x2="67" y2="54" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#9474e9" stop-opacity=".92" />
+        <stop offset=".55" stop-color="#6b92ec" stop-opacity=".78" />
+        <stop offset="1" stop-color="#27d3df" stop-opacity=".48" />
+      </linearGradient>
+      <linearGradient id={tailGradientId} x1="8" y1="31" x2="32" y2="57" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#e557c5" />
+        <stop offset="1" stop-color="#8b6ee8" />
+      </linearGradient>
+    </defs>
+    <path class="water-arc" d="M12 72C39 61 76 60 108 72" />
+    <circle class="water-drop" cx="29" cy="66" r="2" />
+    <circle class="water-drop water-drop-small" cx="96" cy="65" r="1.4" />
+    <g transform="rotate(-12 62 43)">
+      <path class="tail" d="M31 46 12 30l5 18-10 14 25-7Z" fill={`url(#${tailGradientId})`} />
+      <path class="fish-body" d="M25 46C42 28 72 24 104 38c-10 12-30 23-51 26-12 2-23 0-31-4-5-3-5-9 3-14Z" fill={`url(#${bodyGradientId})`} />
+      <path class="pectoral-fin lower-fin" d="M61 54C50 64 39 69 27 68c8-7 15-14 20-22 6 2 11 5 14 8Z" fill={`url(#${finGradientId})`} />
+      <path class="pectoral-fin" d="M68 43C57 29 39 19 20 22c12 8 21 19 27 34 9 0 17-5 21-13Z" fill={`url(#${finGradientId})`} />
+      <path class="fin-ray" d="M62 42C49 34 37 28 26 26M59 47C46 40 36 35 29 30M55 51C44 46 36 41 32 36" />
+      <path class="body-highlight" d="M40 56c18 2 39-5 54-15" />
+      <circle class="eye-ring" cx="91" cy="39" r="4" />
+      <circle class="eye" cx="92" cy="38" r="1.7" />
+    </g>
   </svg>
   <span>
     <strong data-i18n-zh="想飞的鱼" data-i18n-en="Flying Fish">想飞的鱼</strong>
@@ -32,30 +61,79 @@ const { compact = false } = Astro.props;
   }
 
   svg {
-    width: 48px;
-    height: 32px;
+    width: 52px;
+    height: 36px;
+    flex: 0 0 auto;
     overflow: visible;
-    filter: drop-shadow(0 0 16px rgb(40 247 255 / 45%));
+    filter: drop-shadow(0 4px 10px rgb(21 183 207 / 24%));
   }
 
-  path {
-    fill: none;
-    stroke: var(--color-cyan);
+  .fish-body,
+  .tail,
+  .pectoral-fin {
+    stroke: #075d72;
     stroke-linejoin: round;
-    stroke-width: 3.5;
   }
 
-  .wing {
-    stroke: var(--color-lime);
-    opacity: 0.82;
+  .fish-body {
+    stroke-width: 3px;
   }
 
   .tail {
-    stroke: var(--color-magenta);
+    stroke-width: 2.8px;
   }
 
-  circle {
-    fill: #fff;
+  .pectoral-fin {
+    stroke: #476fbd;
+    stroke-width: 2.6px;
+  }
+
+  .lower-fin {
+    stroke: #286f94;
+    stroke-width: 2.2px;
+    opacity: 0.76;
+  }
+
+  .fin-ray,
+  .body-highlight,
+  .water-arc {
+    fill: none;
+    stroke-linecap: round;
+  }
+
+  .fin-ray {
+    stroke: #d9fbff;
+    stroke-width: 1.35px;
+    opacity: 0.68;
+  }
+
+  .body-highlight {
+    stroke: #b9f7ff;
+    stroke-width: 2px;
+    opacity: 0.76;
+  }
+
+  .water-arc {
+    stroke: #20bed3;
+    stroke-width: 4px;
+  }
+
+  .water-drop {
+    fill: #54d8e7;
+  }
+
+  .water-drop-small {
+    fill: #7ce4ee;
+  }
+
+  .eye-ring {
+    fill: #f7feff;
+    stroke: #075d72;
+    stroke-width: 1.8px;
+  }
+
+  .eye {
+    fill: #062e42;
   }
 
   span {

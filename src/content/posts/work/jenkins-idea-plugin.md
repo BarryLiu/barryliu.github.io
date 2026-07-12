@@ -1,7 +1,7 @@
 ---
-title: "idea插件-【Jenkins Control】使用"
+title: idea插件-【Jenkins Control】使用
 date: 2024-03-12
-postSlug: "work/jenkins-idea-plugin"
+postSlug: work/jenkins-idea-plugin
 categories:
   - java
 tags:
@@ -9,8 +9,8 @@ tags:
   - Idea
   - jetbrains
   - jenkins
-  - "插件"
-description: "在实际开发中，我们经常要一边开发一边测试，当然这里说的测试并不是程序员对自己代码的单元测试，而是同组程序员将代码提交后，由测试人员测试；"
+  - 插件
+description: 在实际开发中，我们经常要一边开发一边测试，当然这里说的测试并不是程序员对自己代码的单元测试，而是同组程序员将代码提交后，由测试人员测试；
 featured: false
 ---
 

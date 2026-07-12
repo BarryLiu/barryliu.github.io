@@ -1,8 +1,39 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 88 56" role="img" aria-labelledby="title">
-  <title id="title">Flying Fish logo mark</title>
-  <rect width="88" height="56" rx="14" fill="#03040B"/>
-  <path d="M16 33C29 6 57 0 75 7C62 15 50 26 47 44C37 36 28 33 16 33Z" fill="none" stroke="#B9FF4A" stroke-width="4" stroke-linejoin="round"/>
-  <path d="M8 31C24 16 46 14 61 28C48 44 25 46 8 31Z" fill="none" stroke="#28F7FF" stroke-width="4" stroke-linejoin="round"/>
-  <path d="M59 28L81 17L75 31L82 43L59 35Z" fill="none" stroke="#FF47DF" stroke-width="4" stroke-linejoin="round"/>
-  <circle cx="26" cy="29" r="3" fill="#FFFFFF"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 84" role="img" aria-labelledby="title description">
+  <title id="title">想飞的鱼品牌图标</title>
+  <desc id="description">一条张开侧胸鳍、朝右上方跃出海面的飞鱼</desc>
+  <defs>
+    <linearGradient id="fish-body-gradient" x1="22" y1="60" x2="104" y2="31" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#18c8d8"/>
+      <stop offset=".52" stop-color="#35b6e5"/>
+      <stop offset="1" stop-color="#6275e7"/>
+    </linearGradient>
+    <linearGradient id="fish-fin-gradient" x1="25" y1="21" x2="67" y2="54" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#9474e9" stop-opacity=".92"/>
+      <stop offset=".55" stop-color="#6b92ec" stop-opacity=".78"/>
+      <stop offset="1" stop-color="#27d3df" stop-opacity=".48"/>
+    </linearGradient>
+    <linearGradient id="fish-tail-gradient" x1="8" y1="31" x2="32" y2="57" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#e557c5"/>
+      <stop offset="1" stop-color="#8b6ee8"/>
+    </linearGradient>
+    <filter id="fish-glow" x="-24%" y="-24%" width="148%" height="160%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#13b8cf" flood-opacity=".2"/>
+    </filter>
+  </defs>
+  <g filter="url(#fish-glow)">
+    <path data-part="water-arc" d="M12 72C39 61 76 60 108 72" fill="none" stroke="#20bed3" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="29" cy="66" r="2" fill="#54d8e7"/>
+    <circle cx="96" cy="65" r="1.4" fill="#7ce4ee"/>
+    <g transform="rotate(-12 62 43)">
+      <path data-part="tail" d="M31 46 12 30l5 18-10 14 25-7Z" fill="url(#fish-tail-gradient)" stroke="#075d72" stroke-width="2.8" stroke-linejoin="round"/>
+      <path data-part="fish-body" d="M25 46C42 28 72 24 104 38c-10 12-30 23-51 26-12 2-23 0-31-4-5-3-5-9 3-14Z" fill="url(#fish-body-gradient)" stroke="#075d72" stroke-width="3" stroke-linejoin="round"/>
+      <path data-part="pectoral-fin-lower" d="M61 54C50 64 39 69 27 68c8-7 15-14 20-22 6 2 11 5 14 8Z" fill="url(#fish-fin-gradient)" fill-opacity=".72" stroke="#286f94" stroke-width="2.2" stroke-linejoin="round"/>
+      <path data-part="pectoral-fin" d="M68 43C57 29 39 19 20 22c12 8 21 19 27 34 9 0 17-5 21-13Z" fill="url(#fish-fin-gradient)" stroke="#476fbd" stroke-width="2.6" stroke-linejoin="round"/>
+      <path data-part="fin-ray" d="M62 42C49 34 37 28 26 26M59 47C46 40 36 35 29 30M55 51C44 46 36 41 32 36" fill="none" stroke="#d9fbff" stroke-width="1.35" stroke-linecap="round" opacity=".68"/>
+      <path d="M40 56c18 2 39-5 54-15" fill="none" stroke="#b9f7ff" stroke-width="2" stroke-linecap="round" opacity=".76"/>
+      <path d="M82 32c7 1 13 3 19 6" fill="none" stroke="#e7fcff" stroke-width="1.5" stroke-linecap="round" opacity=".7"/>
+      <circle cx="91" cy="39" r="4" fill="#f7feff" stroke="#075d72" stroke-width="1.8"/>
+      <circle cx="92" cy="38" r="1.7" fill="#062e42"/>
+    </g>
+  </g>
 </svg>

@@ -25,6 +25,8 @@ desktop.ini
 *.tmp
 test-results/
 playwright-report/
+.astro-dev.pid
+.astro-dev.log
 
 
 # claude忽略文件
@@ -59,3 +61,5 @@ MAC_README.md
 
 # Cloudflare Wrangler
 .wrangler/
+
+.obsidian/

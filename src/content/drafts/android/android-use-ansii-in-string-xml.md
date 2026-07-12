@@ -1,13 +1,13 @@
 ---
-title: "在Android的string.xml中使用转义字符实现想要的显示效果"
+title: 在Android的string.xml中使用转义字符实现想要的显示效果
 date: 2014-12-06
-postSlug: "android/android-use-ansii-in-string-xml"
+postSlug: android/android-use-ansii-in-string-xml
 categories:
   - Android
 tags:
   - Android
-description: "在Android的string.xml中使用转义字符实现想要的显示效果"
-keywords: "Android，转义字符，string.xml，空格"
+description: 在Android的string.xml中使用转义字符实现想要的显示效果
+keywords: Android，转义字符，string.xml，空格
 featured: false
 draft: true
 ---

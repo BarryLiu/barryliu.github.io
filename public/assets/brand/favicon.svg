@@ -1,7 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="14" fill="#03040B"/>
-  <path d="M12 37C21 14 43 8 55 14C45 20 38 29 36 50C28 41 21 37 12 37Z" fill="none" stroke="#B9FF4A" stroke-width="4" stroke-linejoin="round"/>
-  <path d="M7 35C20 22 37 20 49 34C37 48 20 48 7 35Z" fill="none" stroke="#28F7FF" stroke-width="4" stroke-linejoin="round"/>
-  <path d="M48 34L60 26L57 36L60 45L48 40Z" fill="none" stroke="#FF47DF" stroke-width="4" stroke-linejoin="round"/>
-  <circle cx="22" cy="33" r="2.5" fill="#FFFFFF"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">想飞的鱼</title>
+  <defs>
+    <linearGradient id="favicon-body-gradient" x1="13" y1="43" x2="58" y2="23" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#12c8d8"/>
+      <stop offset="1" stop-color="#6674e7"/>
+    </linearGradient>
+    <linearGradient id="favicon-fin-gradient" x1="13" y1="19" x2="39" y2="39" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#9871e7"/>
+      <stop offset="1" stop-color="#32cbdc" stop-opacity=".65"/>
+    </linearGradient>
+  </defs>
+  <path data-part="water-arc" d="M7 56c15-7 35-7 51 0" fill="none" stroke="#20bed3" stroke-width="3.5" stroke-linecap="round"/>
+  <g transform="rotate(-11 34 32)">
+    <path data-part="tail" d="M18 34 7 24l3 12-6 9 15-5Z" fill="#d85bc8" stroke="#075d72" stroke-width="2.5" stroke-linejoin="round"/>
+    <path data-part="fish-body" d="M16 33c10-11 27-14 44-6-6 9-19 16-32 18-8 1-14-1-17-4-2-2 0-6 5-8Z" fill="url(#favicon-body-gradient)" stroke="#075d72" stroke-width="2.7" stroke-linejoin="round"/>
+    <path data-part="pectoral-fin" d="M39 30C32 23 22 18 12 20c7 5 12 12 16 20 5-1 9-4 11-10Z" fill="url(#favicon-fin-gradient)" stroke="#456eae" stroke-width="2.3" stroke-linejoin="round"/>
+    <circle cx="52" cy="29" r="2.7" fill="#f7feff" stroke="#075d72" stroke-width="1.5"/>
+    <circle cx="52.6" cy="28.5" r="1.1" fill="#062e42"/>
+  </g>
 </svg>
