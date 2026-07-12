@@ -1,0 +1,6 @@
+{
+  "id": "app/demo.py",
+  "kind": "source",
+  "language": "python",
+  "code": "\"\"\"Small uv-managed demo used by the Python content article.\"\"\"\n\n\ndef build_greeting(name: str) -> str:\n    \"\"\"Return a greeting that can be reused by scripts and notebooks.\"\"\"\n    return f\"你好，{name}！欢迎查看博客里的 Python 示例。\"\n\n\ndef main() -> None:\n    print(build_greeting(\"想飞的鱼\"))\n\n\nif __name__ == \"__main__\":\n    main()\n\n"
+}

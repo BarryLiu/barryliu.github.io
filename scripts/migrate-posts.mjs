@@ -4,9 +4,9 @@ import { fileURLToPath } from 'node:url';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const defaultSourceRoot = path.join(repoRoot, '_posts');
-const defaultTargetRoot = path.join(repoRoot, 'src/content/posts');
+const defaultTargetRoot = path.join(repoRoot, 'content/posts');
 const defaultDraftSourceRoot = path.join(repoRoot, '_drafts');
-const defaultDraftTargetRoot = path.join(repoRoot, 'src/content/drafts');
+const defaultDraftTargetRoot = path.join(repoRoot, 'content/drafts');
 
 const postFilePattern = /^(\d{4})-(\d{1,2})-(\d{1,2})-(.+)\.(md|markdown)$/i;
 

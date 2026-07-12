@@ -2,7 +2,7 @@ name: Deploy Astro site to Cloudflare Pages
 
 on:
   push:
-    branches: [master]
+    branches: [main]
   workflow_dispatch:
 
 permissions:

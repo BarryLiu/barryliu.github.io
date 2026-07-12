@@ -83,14 +83,15 @@ const githubOAuthEnabled = site.features?.githubOAuth === true;
 
   h1 {
     margin: 0;
-    font-size: clamp(2rem, 5.6vw, 3.9rem);
+    max-width: 960px;
+    font-size: clamp(2rem, 4.7vw, 3.25rem);
     line-height: 1.12;
     letter-spacing: 0;
   }
 
   .post-hero p {
     margin: 0;
-    color: #b8c7d2;
+    color: var(--color-muted);
     font-size: 1.05rem;
   }
 
@@ -121,7 +122,7 @@ const githubOAuthEnabled = site.features?.githubOAuth === true;
     border: 1px solid var(--color-line);
     border-radius: var(--radius-sm);
     padding: 16px;
-    background: rgb(9 20 36 / 72%);
+    background: var(--surface-card);
   }
 
   .toc strong {
@@ -156,7 +157,7 @@ const githubOAuthEnabled = site.features?.githubOAuth === true;
     border: 1px solid var(--color-line);
     border-radius: var(--radius-sm);
     padding: 16px;
-    background: rgb(9 20 36 / 62%);
+    background: var(--surface-card);
   }
 
   .post-neighbors span {
@@ -165,7 +166,7 @@ const githubOAuthEnabled = site.features?.githubOAuth === true;
   }
 
   .post-neighbors strong {
-    color: #dffbff;
+    color: var(--color-text);
     line-height: 1.35;
   }
 

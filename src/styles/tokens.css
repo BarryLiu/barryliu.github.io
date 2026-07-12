@@ -20,5 +20,77 @@
   --radius-lg: 22px;
   --shadow-glow: 0 0 42px rgb(40 247 255 / 18%);
   --shadow-magenta: 0 0 52px rgb(255 71 223 / 18%);
+  --page-background: linear-gradient(135deg, #03040b 0%, #07152a 58%, #0b0312 100%);
+  --page-overlay: linear-gradient(180deg, rgb(3 4 11 / 10%), rgb(3 4 11 / 72%) 70%, #03040b);
+  --page-grid-line: rgb(40 247 255 / 9%);
+  --page-cyan-glow: rgb(40 247 255 / 22%);
+  --page-magenta-glow: rgb(255 71 223 / 19%);
+  --page-lime-glow: rgb(185 255 74 / 10%);
+  --control-background: rgb(14 24 49 / 72%);
+  --surface-card: rgb(9 20 36 / 68%);
+  --surface-soft: rgb(2 6 23 / 58%);
+  --surface-strong: rgb(4 12 24 / 94%);
+  --surface-overlay:
+    radial-gradient(circle at 20% 0%, rgb(40 247 255 / 16%), transparent 34rem),
+    radial-gradient(circle at 90% 12%, rgb(255 71 223 / 16%), transparent 32rem),
+    rgb(2 6 23 / 78%);
+  --surface-grid:
+    linear-gradient(90deg, rgb(40 247 255 / 10%) 1px, transparent 1px),
+    linear-gradient(0deg, rgb(40 247 255 / 8%) 1px, transparent 1px),
+    linear-gradient(135deg, rgb(14 24 49 / 96%), rgb(3 4 11 / 96%));
+  --nav-background: #08101f;
+  --nav-background-compact: #0b1424;
+  --nav-shadow: 0 24px 64px rgb(0 0 0 / 40%);
+  --nav-item-shadow: 0 9px 24px rgb(40 247 255 / 16%), 0 2px 8px rgb(0 0 0 / 28%);
+  --hero-background:
+    linear-gradient(135deg, rgb(40 247 255 / 13%), rgb(8 16 31 / 78%) 42%, rgb(255 71 223 / 10%)),
+    rgb(8 16 31 / 78%);
+  --hero-heading-start: #ffffff;
   --container: min(1312px, calc(100vw - 40px));
+}
+
+:root[data-color-theme='light'] {
+  color-scheme: light;
+  --color-bg: #f4fbff;
+  --color-bg-soft: #eaf6fc;
+  --color-panel: rgb(249 253 255 / 88%);
+  --color-panel-strong: rgb(252 254 255 / 97%);
+  --color-line: rgb(8 88 120 / 18%);
+  --color-line-strong: rgb(0 139 169 / 38%);
+  --color-text: #102a3a;
+  --color-muted: #496979;
+  --color-subtle: #6b8794;
+  --color-cyan: #007f9b;
+  --color-magenta: #b22091;
+  --color-lime: #527c00;
+  --color-gold: #9a6200;
+  --shadow-glow: 0 12px 36px rgb(0 127 155 / 12%);
+  --shadow-magenta: 0 12px 40px rgb(178 32 145 / 10%);
+  --page-background: linear-gradient(145deg, #f7fcff 0%, #eef8fc 56%, #fff8fd 100%);
+  --page-overlay: linear-gradient(180deg, rgb(255 255 255 / 0%), rgb(239 249 252 / 28%) 72%, #f7fcff);
+  --page-grid-line: rgb(0 127 155 / 5%);
+  --page-cyan-glow: rgb(53 205 224 / 13%);
+  --page-magenta-glow: rgb(221 107 197 / 10%);
+  --page-lime-glow: rgb(132 181 39 / 7%);
+  --control-background: rgb(255 255 255 / 68%);
+  --surface-card: rgb(255 255 255 / 82%);
+  --surface-soft: rgb(238 247 250 / 88%);
+  --surface-strong: rgb(252 254 255 / 98%);
+  --surface-overlay:
+    radial-gradient(circle at 18% 0%, rgb(47 181 205 / 14%), transparent 34rem),
+    radial-gradient(circle at 92% 12%, rgb(203 91 181 / 12%), transparent 32rem),
+    rgb(24 44 58 / 42%);
+  --surface-grid:
+    linear-gradient(90deg, rgb(0 127 155 / 7%) 1px, transparent 1px),
+    linear-gradient(0deg, rgb(0 127 155 / 7%) 1px, transparent 1px),
+    linear-gradient(145deg, rgb(255 255 255 / 98%), rgb(238 249 252 / 96%));
+  --nav-background: #f8fcff;
+  --nav-background-compact: #ffffff;
+  --nav-shadow: 0 16px 46px rgb(46 99 118 / 13%);
+  --nav-item-shadow: 0 10px 26px rgb(0 127 155 / 14%), 0 2px 8px rgb(46 99 118 / 10%);
+  --hero-background:
+    radial-gradient(circle at 12% 8%, rgb(62 205 222 / 14%), transparent 32rem),
+    radial-gradient(circle at 92% 90%, rgb(207 86 181 / 10%), transparent 28rem),
+    linear-gradient(145deg, rgb(255 255 255 / 94%), rgb(238 249 252 / 88%));
+  --hero-heading-start: #173b4b;
 }

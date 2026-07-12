@@ -4,30 +4,33 @@
 
 本仓库当前主站是一个 **Astro + TypeScript + Content Collections** 静态博客，部署目标是 **Cloudflare Pages**。旧 Jekyll 文章和草稿已迁移到 Astro Content Collections，旧 Jekyll 目录结构不再作为内容来源。
 
-Astro 入口在 `src/`：页面放在 `src/pages/`，布局放在 `src/layouts/`，组件放在 `src/components/`，站点数据放在 `src/data/`，通用样式放在 `src/styles/`，工具函数放在 `src/utils/`。正式文章位于 `src/content/posts/`，草稿位于 `src/content/drafts/`，内容集合 schema 在 `src/content/config.ts`。迁移脚本是 `scripts/migrate-posts.mjs`，静态资源复制脚本是 `scripts/copy-static-assets.mjs`。构建产物是 `dist/`，Astro 缓存是 `.astro/`，不要提交。
+Astro 入口在 `src/`：页面放在 `src/pages/`，布局放在 `src/layouts/`，组件放在 `src/components/`，站点数据放在 `src/data/`，通用样式放在 `src/styles/`，工具函数放在 `src/utils/`。正式文章位于 `content/posts/`，草稿位于 `content/drafts/`，内容集合 schema 在 `src/content/config.ts`。迁移脚本是 `scripts/migrate-posts.mjs`，静态资源复制脚本是 `scripts/copy-static-assets.mjs`。构建产物是 `dist/`，Astro 缓存是 `.astro/`，不要提交。
 
 ## 文件结构规范
 
-新增页面优先放在 `src/pages/`，新增组件放在 `src/components/`，新增布局放在 `src/layouts/`。新增站点级数据优先放在 `src/data/`，不要把导航、项目列表、社交链接硬编码散落到多个页面里。新增正式文章写入 `src/content/posts/<topic>/title.md`，新增草稿写入 `src/content/drafts/<topic>/title.md` 并保留 `draft: true`。全站品牌图标放在 `public/assets/brand/`，构建前复制出来的 `public/images/`、`public/posts-assets/` 不要手动维护。
+新增页面优先放在 `src/pages/`，新增组件放在 `src/components/`，新增布局放在 `src/layouts/`。新增站点级数据优先放在 `src/data/`，不要把导航、项目列表、社交链接硬编码散落到多个页面里。新增正式文章写入 `content/posts/<topic>/title.md`，新增草稿写入 `content/drafts/<topic>/title.md` 并保留 `draft: true`。全站品牌图标放在 `public/assets/brand/`，构建前复制出来的 `public/images/`、`public/posts-assets/` 不要手动维护。
 
 ## 构建、测试和本地运行
 
 - `npm install`：安装 Astro 和构建依赖。
 - `npm run migrate`：兼容旧迁移入口；旧 Jekyll 目录不存在时返回 0，不覆盖现有 Astro 内容。
-- `npm run assets`：从 `src/content/posts/**/assets` 复制文章静态资源到 `public/posts-assets/` 兼容路径，并复制根 `favicon.ico`。
+- `npm run assets`：从 `content/posts/**/assets` 复制文章静态资源到 `public/posts-assets/` 兼容路径，并复制根 `favicon.ico`。
 - `npm run dev`：启动 Astro，本地访问 `http://localhost:4321`。
 - `npm run build`：执行迁移、复制资源并构建 `dist/`。
 - `npm run preview`：预览 `dist/`。
 - `npm run dev:cloudflare`：先构建 `dist/`，再用 Wrangler Pages 本地预览 Cloudflare Functions 和 KV 绑定。
+- `npm run deploy:cloudflare`：完成生产构建后，将 `dist/` 发布到 Cloudflare Pages 项目 `barryliu-github-io`；生产分支固定为 `main`。
 - `npm run test`：运行 Node 内置测试，覆盖迁移和项目配置。
 - `docker compose up`：用 Node 22 容器启动 Astro dev server。
 - `docker compose run --rm astro npm run build`：在容器中执行完整构建。
 
 Cloudflare Pages 配置：Build command 使用 `npm run build`，Build output directory 使用 `dist`，Node 版本建议 `22`。如使用 GitHub Actions 发布，需要配置 `CLOUDFLARE_API_TOKEN`、`CLOUDFLARE_ACCOUNT_ID` 和 `CLOUDFLARE_PROJECT_NAME`。文章访问量和赞/踩统计使用 Pages Function `functions/api/post-stats.ts` 与 KV 绑定 `POST_STATS`；Cloudflare 后台需要创建同名 KV namespace，并让 Pages 项目绑定为 `POST_STATS`。文章收藏使用 GitHub OAuth 登录和 Pages Function `/api/favorites`，收藏数据存入 KV 绑定 `POST_FAVORITES`；Cloudflare 后台需要创建同名 KV namespace，并配置环境变量/密钥 `GITHUB_OAUTH_CLIENT_ID`、`GITHUB_OAUTH_CLIENT_SECRET`、`AUTH_COOKIE_SECRET`。本地调试统计和收藏接口使用 `npm run dev:cloudflare`，接口路径是 `/api/post-stats`、`/api/favorites`、`/api/auth/me`。
 
+发布约定：默认直接执行 `npm run deploy:cloudflare`，不要再临时拼接 Wrangler 发布参数。Cloudflare Pages 项目固定为 `barryliu-github-io`，生产分支固定为 `main`，不再使用 `master`。除非用户明确要求变更发布目标，否则无需重复询问项目名或生产分支。
+
 ## 编码和命名规范
 
-TypeScript、Astro、Markdown、YAML、CSS 都使用 UTF-8。保持两个空格缩进。组件文件使用 PascalCase，例如 `CyberHero.astro`；工具函数使用 camelCase；数据文件使用小写复数名，例如 `projects.ts`。文章文件名使用短横线关键词，例如 `src/content/posts/skill/pyqt6-learn.md`。迁移脚本会把旧 Jekyll frontmatter 统一为 Astro Content Collections 可读格式。
+TypeScript、Astro、Markdown、YAML、CSS 都使用 UTF-8。保持两个空格缩进。组件文件使用 PascalCase，例如 `CyberHero.astro`；工具函数使用 camelCase；数据文件使用小写复数名，例如 `projects.ts`。文章文件名使用短横线关键词，例如 `content/posts/skill/pyqt6-learn.md`。迁移脚本会把旧 Jekyll frontmatter 统一为 Astro Content Collections 可读格式。
 
 ## 主题设计规范
 
@@ -35,7 +38,7 @@ TypeScript、Astro、Markdown、YAML、CSS 都使用 UTF-8。保持两个空格�
 
 ## 验证要求
 
-修改迁移脚本、内容模型、页面、样式或部署配置后，至少运行 `npm run test` 和 `npm run build`。涉及页面展示时，还要本地打开或请求关键页面：`/`、`/ai-notes/`、`/knowledge/`、`/about/`、`/archive/`、任意一篇 `/posts/.../` 文章，以及 `rss.xml`。当前正式文章目标是 `src/content/posts/` 下 185 篇，草稿在 `src/content/drafts/` 下且不生成公开文章路由。不要提交 `dist/`、`.astro/`、`node_modules/`、复制生成的 `public/images/`、`public/posts-assets/`、日志、临时文件、IDE 配置或本机私有配置。
+修改迁移脚本、内容模型、页面、样式或部署配置后，至少运行 `npm run test` 和 `npm run build`。涉及页面展示时，还要本地打开或请求关键页面：`/`、`/ai-notes/`、`/knowledge/`、`/about/`、`/archive/`、任意一篇 `/posts/.../` 文章，以及 `rss.xml`。当前正式文章目标是 `content/posts/` 下 185 篇，草稿在 `content/drafts/` 下且不生成公开文章路由。不要提交 `dist/`、`.astro/`、`node_modules/`、复制生成的 `public/images/`、`public/posts-assets/`、日志、临时文件、IDE 配置或本机私有配置。
 
 ## 提交和 PR 规范
 

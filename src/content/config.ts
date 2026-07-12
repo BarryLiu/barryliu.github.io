@@ -1,4 +1,5 @@
 import { defineCollection, z } from 'astro:content';
+import { glob } from 'astro/loaders';
 
 const postSchema = z.object({
   title: z.string(),
@@ -16,12 +17,18 @@ const postSchema = z.object({
 });
 
 const posts = defineCollection({
-  type: 'content',
+  loader: glob({
+    base: './content/posts',
+    pattern: '**/*.{md,mdx}',
+  }),
   schema: postSchema,
 });
 
 const drafts = defineCollection({
-  type: 'content',
+  loader: glob({
+    base: './content/drafts',
+    pattern: '**/*.{md,mdx}',
+  }),
   schema: postSchema,
 });
 

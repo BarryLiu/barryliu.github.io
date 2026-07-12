@@ -174,7 +174,7 @@ const compactProjects = projects.filter((project) => project.id !== featuredProj
     border: 1px solid var(--color-line);
     border-radius: var(--radius-sm);
     padding: 16px;
-    background: rgb(9 20 36 / 64%);
+    background: var(--surface-card);
   }
 
   .article-index {
@@ -195,7 +195,7 @@ const compactProjects = projects.filter((project) => project.id !== featuredProj
   }
 
   .article-text strong {
-    color: #f0fdff;
+    color: var(--color-text);
     line-height: 1.35;
   }
 
@@ -219,8 +219,8 @@ const compactProjects = projects.filter((project) => project.id !== featuredProj
     border-radius: var(--radius-sm);
     padding: 24px;
     background:
-      radial-gradient(circle at 88% 20%, rgb(255 71 223 / 14%), transparent 16rem),
-      rgb(9 20 36 / 64%);
+      radial-gradient(circle at 88% 20%, rgb(255 71 223 / 10%), transparent 16rem),
+      var(--surface-card);
   }
 
   .topic-teaser h3 {
@@ -244,8 +244,8 @@ const compactProjects = projects.filter((project) => project.id !== featuredProj
     border: 1px solid var(--color-line);
     border-radius: 999px;
     padding: 7px 11px;
-    background: rgb(2 6 23 / 60%);
-    color: #dffbff;
+    background: var(--surface-soft);
+    color: var(--color-text);
     font-size: 0.82rem;
     font-weight: 800;
   }
@@ -258,7 +258,7 @@ const compactProjects = projects.filter((project) => project.id !== featuredProj
     border: 1px solid var(--color-line-strong);
     border-radius: var(--radius-sm);
     padding: 18px;
-    background: rgb(2 6 23 / 62%);
+    background: var(--surface-soft);
   }
 
   .mini-logo-card span {
@@ -272,7 +272,7 @@ const compactProjects = projects.filter((project) => project.id !== featuredProj
   }
 
   .mini-logo-card strong {
-    color: #f0fdff;
+    color: var(--color-text);
   }
 
   .split {
@@ -298,11 +298,11 @@ const compactProjects = projects.filter((project) => project.id !== featuredProj
     border: 1px solid var(--color-line);
     border-radius: var(--radius-sm);
     padding: 13px 14px;
-    background: rgb(2 6 23 / 44%);
+    background: var(--surface-soft);
   }
 
   .ai-route-list strong {
-    color: #dffbff;
+    color: var(--color-text);
   }
 
   .ai-route-list span {
@@ -316,7 +316,7 @@ const compactProjects = projects.filter((project) => project.id !== featuredProj
     border: 1px solid var(--color-line);
     border-radius: var(--radius-sm);
     padding: 22px;
-    background: rgb(9 20 36 / 60%);
+    background: var(--surface-card);
   }
 
   @media (max-width: 900px) {

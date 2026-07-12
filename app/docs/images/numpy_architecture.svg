@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1300" height="820" viewBox="0 0 1300 820" role="img" aria-labelledby="title desc">
+  <title id="title">NumPy 架构图</title>
+  <desc id="desc">展示 NumPy 以 ndarray 为核心，连接数据输入、数组属性、向量化运算、线性代数、随机数和 AI 应用向量计算。</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#eff8ff"/>
+    </linearGradient>
+    <linearGradient id="core" x1="0" x2="1">
+      <stop offset="0%" stop-color="#e6f2ff"/>
+      <stop offset="100%" stop-color="#cfe7ff"/>
+    </linearGradient>
+    <linearGradient id="calc" x1="0" x2="1">
+      <stop offset="0%" stop-color="#eefdf5"/>
+      <stop offset="100%" stop-color="#d9f8e7"/>
+    </linearGradient>
+    <linearGradient id="app" x1="0" x2="1">
+      <stop offset="0%" stop-color="#fff8e9"/>
+      <stop offset="100%" stop-color="#ffecc7"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="9" stdDeviation="11" flood-color="#0f172a" flood-opacity="0.10"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <style>
+      .title { font: 700 40px "PingFang SC", "Microsoft YaHei", Arial, sans-serif; fill: #0f172a; }
+      .sub { font: 400 18px "PingFang SC", "Microsoft YaHei", Arial, sans-serif; fill: #475569; }
+      .section { font: 700 24px "PingFang SC", "Microsoft YaHei", Arial, sans-serif; fill: #0f172a; }
+      .box-title { font: 700 19px "PingFang SC", "Microsoft YaHei", Arial, sans-serif; fill: #172033; }
+      .text { font: 400 15px "PingFang SC", "Microsoft YaHei", Arial, sans-serif; fill: #43536a; }
+      .code { font: 600 14px "SFMono-Regular", Consolas, monospace; fill: #0f766e; }
+      .card { stroke: #d5dee9; stroke-width: 1.4; rx: 16; filter: url(#shadow); }
+      .small { stroke: #d5dee9; stroke-width: 1.2; rx: 12; }
+      .line { fill: none; stroke: #475569; stroke-width: 2.2; marker-end: url(#arrow); }
+      .dash { fill: none; stroke: #64748b; stroke-width: 2; stroke-dasharray: 7 7; marker-end: url(#arrow); }
+      .label { font: 600 13px "PingFang SC", "Microsoft YaHei", Arial, sans-serif; fill: #64748b; }
+    </style>
+  </defs>
+
+  <rect width="1300" height="820" fill="url(#bg)"/>
+  <text x="64" y="72" class="title">NumPy 架构图</text>
+  <text x="64" y="108" class="sub">以 ndarray 为核心，支撑数组处理、向量化计算、线性代数和 Embedding 相似度计算</text>
+  <rect x="50" y="140" width="1200" height="610" rx="26" fill="#ffffff" opacity="0.84" stroke="#dbe5ef"/>
+
+  <rect x="92" y="190" width="245" height="160" class="card" fill="#f7fbff"/>
+  <text x="122" y="232" class="section">数据输入</text>
+  <text x="122" y="268" class="text">Python list / tuple</text>
+  <text x="122" y="296" class="text">CSV、JSON、文本向量</text>
+  <text x="122" y="324" class="text">图片、矩阵、时间序列</text>
+
+  <rect x="455" y="170" width="390" height="210" class="card" fill="url(#core)"/>
+  <text x="492" y="214" class="section">核心对象：ndarray</text>
+  <text x="492" y="250" class="text">统一的多维数组容器，所有计算围绕它展开</text>
+  <rect x="492" y="278" width="145" height="66" class="small" fill="#ffffff"/>
+  <text x="518" y="307" class="box-title">shape</text>
+  <text x="518" y="331" class="text">维度与大小</text>
+  <rect x="665" y="278" width="145" height="66" class="small" fill="#ffffff"/>
+  <text x="694" y="307" class="box-title">dtype</text>
+  <text x="694" y="331" class="text">元素类型</text>
+
+  <rect x="965" y="190" width="245" height="160" class="card" fill="url(#calc)"/>
+  <text x="995" y="232" class="section">基础操作</text>
+  <text x="995" y="268" class="text">索引、切片、重塑</text>
+  <text x="995" y="296" class="text">广播机制、聚合函数</text>
+  <text x="995" y="324" class="text">向量化替代循环</text>
+
+  <rect x="92" y="450" width="340" height="190" class="card" fill="url(#calc)"/>
+  <text x="122" y="493" class="section">计算能力</text>
+  <text x="122" y="529" class="text">逐元素运算、矩阵乘法、统计聚合</text>
+  <text x="122" y="558" class="text">线性代数：norm、dot、solve、svd</text>
+  <text x="122" y="587" class="text">随机数：采样、初始化、模拟数据</text>
+  <text x="122" y="618" class="code">np.dot / np.linalg / np.random</text>
+
+  <rect x="520" y="450" width="315" height="190" class="card" fill="#f8fafc"/>
+  <text x="550" y="493" class="section">性能模型</text>
+  <text x="550" y="529" class="text">连续内存布局减少 Python 循环开销</text>
+  <text x="550" y="558" class="text">底层 C/BLAS 负责高性能数值计算</text>
+  <text x="550" y="587" class="text">优先批量计算，避免逐条 for 循环</text>
+  <text x="550" y="618" class="code">embeddings @ query_vector</text>
+
+  <rect x="925" y="450" width="285" height="190" class="card" fill="url(#app)"/>
+  <text x="955" y="493" class="section">AI 应用场景</text>
+  <text x="955" y="529" class="text">Embedding 归一化</text>
+  <text x="955" y="558" class="text">余弦相似度、欧氏距离</text>
+  <text x="955" y="587" class="text">RAG 检索前的向量处理</text>
+  <text x="955" y="618" class="code">cosine_similarity()</text>
+
+  <path d="M 337 270 C 378 270, 407 270, 452 270" class="line"/>
+  <path d="M 845 270 C 886 270, 920 270, 960 270" class="line"/>
+  <path d="M 650 380 C 610 420, 420 420, 312 450" class="line"/>
+  <path d="M 650 380 C 650 410, 660 425, 675 448" class="line"/>
+  <path d="M 845 330 C 905 390, 955 410, 1066 450" class="line"/>
+  <path d="M 432 548 C 460 548, 490 548, 515 548" class="dash"/>
+  <path d="M 835 548 C 860 548, 895 548, 922 548" class="dash"/>
+  <text x="372" y="250" class="label">转换为数组</text>
+  <text x="875" y="250" class="label">执行操作</text>
+  <text x="458" y="532" class="label">批量计算</text>
+  <text x="854" y="532" class="label">服务应用</text>
+</svg>

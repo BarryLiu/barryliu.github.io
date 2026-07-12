@@ -1,0 +1,23 @@
+{
+  "id": "notebooks/demo.ipynb",
+  "kind": "notebook",
+  "language": "python",
+  "cells": [
+    {
+      "type": "markdown",
+      "source": "## 从 app 引用 Python 程序\n\n这个 Notebook 只展示已经保存的代码和输出，博客构建不会重新执行它。",
+      "html": "<h2>从 app 引用 Python 程序</h2>\n<p>这个 Notebook 只展示已经保存的代码和输出，博客构建不会重新执行它。</p>"
+    },
+    {
+      "type": "code",
+      "source": "from app.demo import build_greeting\n\nprint(build_greeting(\"Notebook\"))",
+      "executionCount": 1,
+      "outputs": [
+        {
+          "type": "text",
+          "text": "你好，Notebook！欢迎查看博客里的 Python 示例。\n"
+        }
+      ]
+    }
+  ]
+}

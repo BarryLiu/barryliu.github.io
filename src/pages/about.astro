@@ -1,79 +1,707 @@
 ---
 import { site } from '../data/site';
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+const capabilities = [
+  { name: 'Java 后端', value: 100, label: '10 年', color: 'cyan' },
+  { name: '前端开发', value: 82, label: '7 年', color: 'magenta' },
+  { name: 'AI 工程', value: 88, label: '重点', color: 'lime' },
+  { name: '系统设计', value: 92, label: '核心', color: 'cyan' },
+  { name: '自动化运维', value: 86, label: '熟练', color: 'magenta' },
+  { name: '问题排查', value: 94, label: '熟练', color: 'lime' },
+];
+
+const stacks = [
+  { title: 'Java 后端', meta: '10 年经验', tags: ['Java', 'Spring', '微服务', 'SQL', 'API'] },
+  { title: '前端工程', meta: '7 年经验', tags: ['JavaScript', 'TypeScript', 'Vue', 'CSS', 'Astro'] },
+  { title: 'AI 工程', meta: '重点方向', tags: ['Agent', 'RAG', 'Prompt', 'Vector DB', 'Multimodal'] },
+  { title: '自动化运维', meta: '交付与运行', tags: ['Docker', 'Linux', 'Jenkins', 'Nginx', 'TLS', 'Monitoring'] },
+  { title: '数据与中间件', meta: '存储与架构', tags: ['MySQL', 'PostgreSQL', 'MongoDB', 'Redis', 'MQ'] },
+  { title: '工程工具链', meta: '效率系统', tags: ['Claude Code', 'MCP', 'Shell', 'Git', 'Scripts'] },
+];
+
+const achievements = [
+  { number: '10+', title: 'Java 后端', text: '长期从事服务端开发、系统设计、接口与数据库工程。', tone: 'cyan' },
+  { number: '7+', title: '前端与全栈', text: '从第 3 年开始持续参与前端开发与完整产品交付。', tone: 'magenta' },
+  { number: 'AI', title: '智能应用', text: '重点实践 Agent、RAG、大模型应用与 AI 工程工具链。', tone: 'lime' },
+  { number: 'OPS', title: '工程交付', text: '覆盖 Linux、容器、构建发布、自动化运维与问题排查。', tone: 'amber' },
+];
 ---
 
 <BaseLayout title="关于" description="关于想飞的鱼和这个技术博客">
-  <section class="section container about">
-    <div>
-      <p class="eyebrow">About</p>
-      <h1 class="section-title">想飞的鱼</h1>
-      <p class="lead">这里记录我对 AI 工程、自动化工具、软件开发和长期学习路线的持续整理。新站点使用 Astro 重构，保留旧 Markdown 内容，同时把项目、文章、分类和标签连接成更清晰的技术地图。</p>
-      <div class="button-row">
-        <a class="button primary" href={site.github}>GitHub</a>
-        <a class="button" href={`mailto:${site.email}`}>邮箱联系</a>
+  <section class="section container about-page">
+    <section class="about-hero">
+      <div class="about-intro">
+        <p class="about-eyebrow">关于博主 / About</p>
+        <h1>用工程方法学习 AI，<br />把经验沉淀成可复用的项目。</h1>
+        <div class="about-actions button-row">
+          <a class="button primary" href={site.github}>GitHub 主页</a>
+          <a class="button" href={`mailto:${site.email}`}>邮箱联系</a>
+        </div>
+        <p class="about-lead">我是想飞的鱼，拥有 10 年 Java 后端开发经验，并从第 3 年开始持续参与前端开发，积累了 7 年前端与全栈实践。现在重点投入 AI 工程、自动化运维和工具链建设，把长期经验沉淀成可检索、可复盘、可落地的知识资产。</p>
       </div>
-    </div>
-    <dl>
+
+      <aside class="profile-card">
+        <h2>联系与入口</h2>
+        <a href={site.github}>
+          <small>GitHub</small>
+          <strong>github.com/BarryLiu</strong>
+        </a>
+        <a href={`mailto:${site.email}`}>
+          <small>Email</small>
+          <strong>{site.email}</strong>
+        </a>
+        <div>
+          <small>站点运行环境</small>
+          <strong>Astro + Cloudflare Pages</strong>
+        </div>
+      </aside>
+    </section>
+
+    <header class="capability-heading">
       <div>
-        <dt>站点定位</dt>
-        <dd>个人技术实验室与知识库</dd>
+        <p>技能属性</p>
+        <h2>能力模型与技术栈</h2>
       </div>
-      <div>
-        <dt>内容主线</dt>
-        <dd>AI、RAG、Agent、工程自动化、开发工具</dd>
+      <span>10 年 Java 后端、7 年前端，如今专注 AI 工程与全栈实践。</span>
+    </header>
+
+    <section class="capability-model">
+      <div class="capability-card">
+        <div class="capability-radar" aria-label="六项能力雷达图">
+          <svg viewBox="0 0 300 280" role="img">
+            <g transform="translate(30 20)">
+              <polygon class="radar-grid outer" points="120,18 208,69 208,171 120,222 32,171 32,69" />
+              <polygon class="radar-grid middle" points="120,52 178,86 178,154 120,188 62,154 62,86" />
+              <polygon class="radar-grid inner" points="120,84 150,101 150,139 120,156 90,139 90,101" />
+              <line x1="120" y1="120" x2="120" y2="18" />
+              <line x1="120" y1="120" x2="208" y2="69" />
+              <line x1="120" y1="120" x2="208" y2="171" />
+              <line x1="120" y1="120" x2="120" y2="222" />
+              <line x1="120" y1="120" x2="32" y2="171" />
+              <line x1="120" y1="120" x2="32" y2="69" />
+              <polygon class="radar-value" points="120,31 190,79 196,164 120,207 45,164 50,80" />
+            </g>
+            <text class="radar-label" x="150" y="12" text-anchor="middle">Java 后端</text>
+            <text class="radar-label" x="292" y="72" text-anchor="end">前端开发</text>
+            <text class="radar-label" x="292" y="224" text-anchor="end">AI 工程</text>
+            <text class="radar-label" x="150" y="276" text-anchor="middle">系统设计</text>
+            <text class="radar-label" x="8" y="224">自动化运维</text>
+            <text class="radar-label" x="8" y="72">问题排查</text>
+          </svg>
+          <div><strong>10+ 年</strong><span>后端开发经验</span></div>
+        </div>
+
+        <div class="capability-list">
+          <header><strong>能力属性</strong><span>持续成长</span></header>
+          {capabilities.map((capability) => (
+            <div class:list={['capability-row', `tone-${capability.color}`]}>
+              <span>{capability.name}</span>
+              <div><i style={`--value: ${capability.value}%`}></i></div>
+              <strong>{capability.label}</strong>
+            </div>
+          ))}
+        </div>
       </div>
-      <div>
-        <dt>构建方式</dt>
-        <dd>Astro 静态输出，GitHub Pages 发布</dd>
+
+      <div class="tech-stack-matrix">
+        <header><strong>技术栈矩阵</strong><span>6 个方向</span></header>
+        <div class="stack-grid">
+          {stacks.map((stack) => (
+            <article>
+              <div><h3>{stack.title}</h3><small>{stack.meta}</small></div>
+              <p>{stack.tags.map((tag) => <span>{tag}</span>)}</p>
+            </article>
+          ))}
+        </div>
       </div>
-    </dl>
+    </section>
+
+    <section class="about-achievements">
+      {achievements.map((item) => (
+        <article class={`tone-${item.tone}`}>
+          <strong>{item.number}</strong>
+          <h2>{item.title}</h2>
+          <p>{item.text}</p>
+        </article>
+      ))}
+    </section>
+
+    <section class="about-contact-grid">
+      <article class="github-contact">
+        <p>PROJECTS / CODE / NOTES</p>
+        <h2>GitHub 主页</h2>
+        <span>查看项目、代码片段、学习仓库和后续开放的个人工具。</span>
+        <a href={site.github}>github.com/BarryLiu</a>
+      </article>
+      <article class="mail-contact">
+        <p>DISCUSSION / COOPERATION</p>
+        <h2>邮箱联系</h2>
+        <span>交流 AI 工程、博客内容、项目合作或问题排查。</span>
+        <a href={`mailto:${site.email}`}>{site.email}</a>
+      </article>
+    </section>
   </section>
 </BaseLayout>
 
 <style>
-  .about {
+  .about-page {
     display: grid;
-    grid-template-columns: minmax(0, 0.9fr) minmax(280px, 0.55fr);
-    gap: 48px;
-    align-items: start;
-    min-height: 68vh;
+    gap: 34px;
+    padding-top: 42px;
   }
 
-  .lead {
-    max-width: 760px;
-    margin: 22px 0;
-    color: #b8c7d2;
-    font-size: 1.08rem;
+  .about-hero,
+  .capability-model,
+  .about-achievements,
+  .about-contact-grid {
+    display: grid;
   }
 
-  dl {
+  .about-hero {
+    grid-template-columns: minmax(0, 1fr) 390px;
+    gap: 26px;
+    min-height: 460px;
+    overflow: hidden;
+    border: 1px solid rgb(40 247 255 / 20%);
+    border-radius: 34px;
+    padding: 36px;
+    background:
+      radial-gradient(circle at 4% 8%, rgb(40 247 255 / 16%), transparent 30rem),
+      radial-gradient(circle at 84% 12%, rgb(255 71 223 / 17%), transparent 26rem),
+      linear-gradient(135deg, #071321, #0d1830 55%, #210c2b);
+    box-shadow: 0 28px 76px rgb(0 0 0 / 26%), var(--shadow-glow);
+  }
+
+  .about-intro {
     display: grid;
-    gap: 14px;
+    align-content: center;
+    gap: 22px;
+  }
+
+  .about-eyebrow,
+  .capability-heading p,
+  .about-contact-grid article > p {
     margin: 0;
+    color: #28f7ff;
+    font-size: 0.76rem;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
   }
 
-  dl div {
-    border: 1px solid var(--color-line);
-    border-radius: var(--radius-sm);
-    padding: 18px;
-    background: rgb(9 20 36 / 64%);
+  .about-intro h1 {
+    max-width: 780px;
+    margin: 0;
+    color: #f0fdff;
+    background: linear-gradient(90deg, #fff 0%, #28f7ff 58%, #ff47df 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    font-size: clamp(2.45rem, 4.5vw, 3.65rem);
+    line-height: 1.06;
+    -webkit-text-fill-color: transparent;
   }
 
-  dt {
-    color: var(--color-cyan);
-    font-size: 0.78rem;
+  .about-actions {
+    margin-top: 2px;
+  }
+
+  .about-lead {
+    max-width: 800px;
+    margin: 0;
+    color: #b8c7d2;
+    font-size: 1rem;
+  }
+
+  .profile-card,
+  .capability-card,
+  .tech-stack-matrix {
+    border: 1px solid rgb(255 255 255 / 13%);
+    background: rgb(2 6 23 / 62%);
+  }
+
+  .profile-card {
+    display: grid;
+    align-content: start;
+    gap: 16px;
+    border-radius: 30px;
+    padding: 24px;
+  }
+
+  .profile-card h2 {
+    margin: 0 0 4px;
+    color: #f0fdff;
+    font-size: 1.6rem;
+  }
+
+  .profile-card a,
+  .profile-card > div {
+    display: grid;
+    gap: 5px;
+    border: 1px solid rgb(40 247 255 / 16%);
+    border-radius: 20px;
+    padding: 14px;
+    background: rgb(14 24 49 / 62%);
+  }
+
+  .profile-card a:nth-of-type(2) {
+    border-color: rgb(255 71 223 / 20%);
+  }
+
+  .profile-card > div {
+    border-color: rgb(185 255 74 / 20%);
+  }
+
+  .profile-card small {
+    color: #8ea7b8;
+    font-family: var(--font-mono);
+  }
+
+  .profile-card strong {
+    color: #dffbff;
+    overflow-wrap: anywhere;
+  }
+
+  .capability-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 32px;
+    padding-top: 18px;
+  }
+
+  .capability-heading p {
+    color: var(--color-lime);
+  }
+
+  .capability-heading h2 {
+    margin: 6px 0 0;
+    color: var(--color-text);
+    font-size: clamp(2rem, 4vw, 2.65rem);
+  }
+
+  .capability-heading > span {
+    max-width: 500px;
+    color: var(--color-muted);
+    text-align: right;
+  }
+
+  .capability-model {
+    grid-template-columns: 560px minmax(0, 1fr);
+    gap: 18px;
+  }
+
+  .capability-card,
+  .tech-stack-matrix {
+    border-radius: 32px;
+    padding: 24px;
+    box-shadow: 0 22px 58px rgb(0 0 0 / 18%);
+  }
+
+  .capability-card {
+    display: grid;
+    grid-template-columns: 270px minmax(0, 1fr);
+    gap: 22px;
+    align-items: center;
+  }
+
+  .capability-radar {
+    position: relative;
+    display: grid;
+    width: 270px;
+    height: 270px;
+    place-items: center;
+  }
+
+  .capability-radar svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .radar-grid,
+  .capability-radar line {
+    fill: none;
+    stroke: rgb(40 247 255 / 30%);
+    stroke-width: 1;
+  }
+
+  .radar-grid.inner {
+    stroke: rgb(255 71 223 / 38%);
+  }
+
+  .radar-value {
+    fill: rgb(40 247 255 / 20%);
+    stroke: rgb(255 255 255 / 55%);
+    stroke-width: 2;
+  }
+
+  .radar-label {
+    fill: #b8c7d2;
+    font-family: var(--font-sans);
+    font-size: 10px;
     font-weight: 800;
   }
 
-  dd {
-    margin: 8px 0 0;
-    color: #dffbff;
+  .capability-radar > div {
+    position: absolute;
+    display: grid;
+    min-width: 92px;
+    place-items: center;
+    border: 1px solid rgb(255 255 255 / 16%);
+    border-radius: 18px;
+    padding: 9px;
+    background: rgb(2 6 23 / 88%);
   }
 
-  @media (max-width: 820px) {
-    .about {
+  .capability-radar strong {
+    color: #f0fdff;
+    font-size: 1rem;
+  }
+
+  .capability-radar span {
+    color: #8ea7b8;
+    font-size: 0.55rem;
+  }
+
+  .capability-list {
+    display: grid;
+    gap: 14px;
+  }
+
+  .capability-list header,
+  .tech-stack-matrix > header {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    color: #f0fdff;
+  }
+
+  .capability-list header span,
+  .tech-stack-matrix > header span {
+    color: #b9ff4a;
+    font-size: 0.75rem;
+    font-weight: 900;
+  }
+
+  .capability-row {
+    display: grid;
+    grid-template-columns: 78px minmax(80px, 1fr) 42px;
+    gap: 10px;
+    align-items: center;
+    color: #dffbff;
+    font-size: 0.76rem;
+  }
+
+  .capability-row > div {
+    height: 7px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 9%);
+  }
+
+  .capability-row i {
+    display: block;
+    width: var(--value);
+    height: 100%;
+    border-radius: inherit;
+  }
+
+  .tone-cyan { --tone: #28f7ff; }
+  .tone-magenta { --tone: #ff47df; }
+  .tone-lime { --tone: #b9ff4a; }
+  .tone-amber { --tone: #ffbc6b; }
+  .capability-row i { background: var(--tone); box-shadow: 0 0 12px var(--tone); }
+  .capability-row > strong { color: var(--tone, #28f7ff); }
+
+  .tech-stack-matrix {
+    display: grid;
+    gap: 18px;
+  }
+
+  .stack-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .stack-grid article {
+    display: grid;
+    gap: 12px;
+    border: 1px solid rgb(255 255 255 / 10%);
+    border-radius: 18px;
+    padding: 14px;
+    background: rgb(14 24 49 / 44%);
+  }
+
+  .stack-grid article > div {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .stack-grid h3 {
+    margin: 0;
+    color: #28f7ff;
+    font-size: 0.9rem;
+  }
+
+  .stack-grid small {
+    color: #8ea7b8;
+  }
+
+  .stack-grid p {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0;
+  }
+
+  .stack-grid p span {
+    border: 1px solid rgb(185 255 74 / 20%);
+    border-radius: 999px;
+    padding: 3px 7px;
+    color: #dffbff;
+    font-size: 0.68rem;
+  }
+
+  .about-achievements {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .about-achievements article {
+    display: grid;
+    min-height: 190px;
+    align-content: start;
+    gap: 10px;
+    border: 1px solid color-mix(in srgb, var(--tone) 30%, transparent);
+    border-radius: 26px;
+    padding: 20px;
+    background: var(--surface-card);
+  }
+
+  .about-achievements strong { color: var(--tone); font-size: 1.75rem; }
+  .about-achievements h2 { margin: 0; color: var(--color-text); font-size: 1.1rem; }
+  .about-achievements p { margin: 0; color: var(--color-muted); }
+
+  .about-contact-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  .about-contact-grid article {
+    display: grid;
+    min-height: 240px;
+    align-content: start;
+    gap: 14px;
+    border: 1px solid rgb(40 247 255 / 28%);
+    border-radius: 32px;
+    padding: 26px;
+    background:
+      linear-gradient(135deg, rgb(40 247 255 / 14%), transparent 52%),
+      var(--surface-card);
+  }
+
+  .about-contact-grid .mail-contact {
+    border-color: rgb(255 71 223 / 28%);
+    background:
+      linear-gradient(135deg, rgb(255 71 223 / 14%), transparent 52%),
+      var(--surface-card);
+  }
+
+  .about-contact-grid .mail-contact > p { color: var(--color-magenta); }
+  .about-contact-grid h2 { margin: 0; color: var(--color-text); font-size: 1.8rem; }
+  .about-contact-grid span { color: var(--color-muted); }
+  .about-contact-grid a { width: fit-content; margin-top: auto; color: var(--color-cyan); font-weight: 900; }
+  .about-contact-grid .mail-contact a { color: var(--color-magenta); }
+
+  :global(html[data-color-theme='light']) .profile-card,
+  :global(html[data-color-theme='light']) .capability-card,
+  :global(html[data-color-theme='light']) .tech-stack-matrix {
+    border-color: var(--color-line);
+    background: rgb(255 255 255 / 82%);
+    box-shadow: 0 18px 48px rgb(36 88 108 / 12%);
+  }
+
+  :global(html[data-color-theme='light']) .about-hero {
+    border-color: rgb(13 139 166 / 20%);
+    background:
+      radial-gradient(circle at 4% 8%, rgb(40 247 255 / 24%), transparent 30rem),
+      radial-gradient(circle at 84% 12%, rgb(255 71 223 / 13%), transparent 26rem),
+      linear-gradient(135deg, rgb(247 253 255 / 97%), rgb(239 249 252 / 97%) 55%, rgb(250 244 255 / 97%));
+    box-shadow: 0 24px 64px rgb(36 88 108 / 14%), 0 0 0 1px rgb(255 255 255 / 72%) inset;
+  }
+
+  :global(html[data-color-theme='light']) .about-intro h1 {
+    background: linear-gradient(90deg, #123247 0%, #087f9c 58%, #983480 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+
+  :global(html[data-color-theme='light']) .about-lead {
+    color: #3d6073;
+  }
+
+  :global(html[data-color-theme='light']) .profile-card h2,
+  :global(html[data-color-theme='light']) .profile-card strong {
+    color: var(--color-text);
+  }
+
+  :global(html[data-color-theme='light']) .profile-card small {
+    color: #587386;
+  }
+
+  :global(html[data-color-theme='light']) .profile-card a,
+  :global(html[data-color-theme='light']) .profile-card > div {
+    background: rgb(244 251 253 / 92%);
+  }
+
+  :global(html[data-color-theme='light']) .profile-card a:nth-of-type(2) {
+    background: rgb(255 247 253 / 92%);
+  }
+
+  :global(html[data-color-theme='light']) .profile-card > div {
+    background: rgb(249 253 241 / 92%);
+  }
+
+  :global(html[data-color-theme='light']) :is(.capability-list header, .tech-stack-matrix > header) {
+    color: var(--color-text);
+  }
+
+  :global(html[data-color-theme='light']) .tone-lime {
+    --tone: #2d7568;
+  }
+
+  :global(html[data-color-theme='light']) .capability-list header span,
+  :global(html[data-color-theme='light']) .tech-stack-matrix > header span {
+    color: #006f86 !important;
+  }
+
+  :global(html[data-color-theme='light']) .capability-card,
+  :global(html[data-color-theme='light']) .tech-stack-matrix {
+    border-color: rgb(22 112 137 / 24%);
+    background: rgb(248 253 255 / 94%);
+  }
+
+  :global(html[data-color-theme='light']) :is(.radar-grid, .capability-radar line) {
+    stroke: rgb(8 143 172 / 42%);
+  }
+
+  :global(html[data-color-theme='light']) .radar-grid.inner {
+    stroke: rgb(188 47 156 / 46%);
+  }
+
+  :global(html[data-color-theme='light']) .radar-value {
+    fill: rgb(16 193 217 / 22%);
+    stroke: rgb(8 127 156 / 72%);
+  }
+
+  :global(html[data-color-theme='light']) .radar-label {
+    fill: #31586c;
+  }
+
+  :global(html[data-color-theme='light']) .capability-radar > div {
+    border-color: rgb(12 102 128 / 28%);
+    background: rgb(238 250 253 / 96%);
+    box-shadow: 0 10px 28px rgb(16 91 112 / 16%);
+  }
+
+  :global(html[data-color-theme='light']) .capability-radar strong {
+    color: #123247;
+  }
+
+  :global(html[data-color-theme='light']) .capability-radar span {
+    color: #496c7f;
+  }
+
+  :global(html[data-color-theme='light']) .capability-row,
+  :global(html[data-color-theme='light']) .stack-grid p span {
+    color: var(--color-text);
+  }
+
+  :global(html[data-color-theme='light']) .capability-row > div {
+    background: rgb(28 95 116 / 14%);
+  }
+
+  :global(html[data-color-theme='light']) .stack-grid article {
+    border-color: rgb(22 112 137 / 24%);
+    background: rgb(235 247 251 / 92%);
+    box-shadow: 0 8px 22px rgb(36 88 108 / 8%);
+  }
+
+  :global(html[data-color-theme='light']) .stack-grid h3 {
+    color: #0785a2;
+  }
+
+  :global(html[data-color-theme='light']) .stack-grid small {
+    color: #587386;
+  }
+
+  :global(html[data-color-theme='light']) .stack-grid p span {
+    border-color: rgb(103 153 45 / 28%);
+    background: rgb(249 253 241 / 92%);
+  }
+
+  :global(html[data-color-theme='light']) .about-achievements article {
+    background:
+      linear-gradient(145deg, color-mix(in srgb, var(--tone) 9%, white), rgb(255 255 255 / 94%));
+    box-shadow: 0 12px 32px rgb(36 88 108 / 9%);
+  }
+
+  :global(html[data-color-theme='light']) .about-achievements .tone-lime {
+    border-color: rgb(45 117 104 / 30%);
+    background: linear-gradient(145deg, rgb(232 246 242 / 98%), rgb(255 255 255 / 96%));
+  }
+
+  :global(html[data-color-theme='light']) .about-achievements .tone-lime > strong {
+    color: #2d7568;
+  }
+
+  @media (max-width: 1040px) {
+    .about-hero,
+    .capability-model {
       grid-template-columns: 1fr;
     }
+
+    .profile-card {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .profile-card h2 {
+      grid-column: 1 / -1;
+    }
+
+    .capability-heading {
+      align-items: start;
+      flex-direction: column;
+    }
+
+    .capability-heading > span {
+      max-width: none;
+      text-align: left;
+    }
+
+    .capability-model {
+      gap: 16px;
+    }
+
+    .about-achievements {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 700px) {
+    .about-page { padding-top: 28px; }
+    .about-hero { padding: 26px 22px; }
+    .about-intro h1 { font-size: clamp(2rem, 10vw, 2.8rem); }
+    .profile-card { grid-template-columns: 1fr; }
+    .capability-card { grid-template-columns: 1fr; }
+    .capability-radar { justify-self: center; }
+    .stack-grid,
+    .about-achievements,
+    .about-contact-grid { grid-template-columns: 1fr; }
+    .capability-heading h2 { font-size: 2rem; }
   }
 </style>

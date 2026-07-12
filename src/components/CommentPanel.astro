@@ -58,6 +58,25 @@ const commentsEnabled =
   });
 </script>
 
+<script is:inline>
+  const syncGiscusTheme = (colorTheme = document.documentElement.dataset.colorTheme) => {
+    const theme = colorTheme === 'light' ? 'light' : 'transparent_dark';
+    const frame = document.querySelector('iframe.giscus-frame');
+    frame?.contentWindow?.postMessage({ giscus: { setConfig: { theme } } }, 'https://giscus.app');
+  };
+
+  window.addEventListener('flying-fish:theme', (event) => {
+    syncGiscusTheme(event.detail?.theme);
+  });
+
+  const giscusObserver = new MutationObserver(() => {
+    if (!document.querySelector('iframe.giscus-frame')) return;
+    syncGiscusTheme();
+    giscusObserver.disconnect();
+  });
+  giscusObserver.observe(document.querySelector('[data-giscus-comments]'), { childList: true, subtree: true });
+</script>
+
 <style>
   .comments {
     display: grid;

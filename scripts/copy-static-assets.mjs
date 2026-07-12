@@ -50,7 +50,7 @@ async function removeLegacyPublicAssets(publicRoot) {
 export async function copyStaticAssets(options = {}) {
   const repoRoot = options.repoRoot ?? defaultRepoRoot;
   const publicRoot = options.publicRoot ?? path.join(repoRoot, 'public');
-  const contentRoot = options.contentRoot ?? path.join(repoRoot, 'src/content/posts');
+  const contentRoot = options.contentRoot ?? path.join(repoRoot, 'content/posts');
 
   await rm(path.join(publicRoot, 'posts-assets'), { recursive: true, force: true });
   await rm(path.join(publicRoot, 'images'), { recursive: true, force: true });

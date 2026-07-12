@@ -2,17 +2,33 @@
 import CyberLogo from './CyberLogo.astro';
 import GlobalSearch from './GlobalSearch.astro';
 import LanguageToggle from './LanguageToggle.astro';
+import ThemeToggle from './ThemeToggle.astro';
 import { site } from '../data/site';
+
+const currentPath = Astro.url.pathname;
+const isCurrentNavItem = (href: string) => href === '/' ? currentPath === '/' : currentPath.startsWith(href);
 ---
 
-<header class="site-header">
+<header class="site-header" data-nav-shell data-compact="false">
   <nav class="nav nav-panel container" aria-label="主导航" data-i18n-aria-label-zh="主导航" data-i18n-aria-label-en="Primary navigation">
     <CyberLogo />
-    <div class="desktop-links">
-      {site.nav.map((item) => <a href={item.href} data-i18n-zh={item.label} data-i18n-en={item.labelEn}>{item.label}</a>)}
+    <div class="desktop-links" data-nav-links>
+      <span class="nav-highlight" data-nav-highlight aria-hidden="true"></span>
+      {site.nav.map((item) => (
+        <a
+          href={item.href}
+          data-nav-link
+          aria-current={isCurrentNavItem(item.href) ? 'page' : undefined}
+          data-i18n-zh={item.label}
+          data-i18n-en={item.labelEn}
+        >
+          {item.label}
+        </a>
+      ))}
     </div>
     <div class="desktop-actions">
       <GlobalSearch />
+      <ThemeToggle />
       <LanguageToggle />
       <a class="icon-link rss-link" href="/rss.xml" aria-label="RSS 订阅" data-i18n-aria-label-zh="RSS 订阅" data-i18n-aria-label-en="RSS feed">
         <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -23,7 +39,9 @@ import { site } from '../data/site';
       <a class="icon-link" href={site.github} aria-label="GitHub">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.18-3.37-1.18a2.65 2.65 0 0 0-1.11-1.46c-.91-.62.07-.61.07-.61a2.1 2.1 0 0 1 1.53 1.03a2.13 2.13 0 0 0 2.91.83a2.13 2.13 0 0 1 .64-1.34c-2.22-.25-4.56-1.11-4.56-4.94a3.87 3.87 0 0 1 1.03-2.68a3.6 3.6 0 0 1 .1-2.64s.84-.27 2.75 1.02a9.48 9.48 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02c.37.84.4 1.8.1 2.64a3.85 3.85 0 0 1 1.03 2.68c0 3.84-2.34 4.69-4.57 4.94c.36.31.68.92.68 1.86v2.76c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/></svg>
       </a>
-      <a class="contact" href={`mailto:${site.email}`} data-i18n-zh="联系" data-i18n-en="Contact">联系</a>
+      <a class="contact" href={`mailto:${site.email}`}>
+        <span data-i18n-zh="联系" data-i18n-en="Contact">联系</span><span class="contact-arrow" aria-hidden="true">↗</span>
+      </a>
     </div>
     <details class="mobile-menu">
       <summary aria-label="打开菜单" data-i18n-aria-label-zh="打开菜单" data-i18n-aria-label-en="Open menu">
@@ -36,6 +54,7 @@ import { site } from '../data/site';
         <a href="/archive/" data-search-open data-i18n-zh="全局搜索" data-i18n-en="Global search">全局搜索</a>
         <a href="/rss.xml" data-i18n-zh="RSS 订阅" data-i18n-en="RSS">RSS 订阅</a>
         <LanguageToggle compact />
+        <ThemeToggle compact />
         <a href={site.github}>GitHub</a>
         <a href={`mailto:${site.email}`} data-i18n-zh="邮箱联系" data-i18n-en="Email">邮箱联系</a>
       </div>
@@ -48,45 +67,119 @@ import { site } from '../data/site';
     position: sticky;
     top: 0;
     z-index: 40;
-    padding: 20px 0 0;
+    height: 94px;
+    padding: 12px 0 0;
     pointer-events: none;
+    animation: nav-enter 500ms cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 
   .nav {
+    --nav-expanded-width: min(1400px, calc(100vw - 24px));
+    --nav-compact-width: var(--container);
     display: flex;
-    min-height: 92px;
+    width: var(--nav-expanded-width);
+    min-height: 70px;
     align-items: center;
     justify-content: space-between;
     gap: 18px;
   }
 
   .nav-panel {
+    position: relative;
+    isolation: isolate;
     pointer-events: auto;
     border: 1px solid rgb(40 247 255 / 22%);
-    border-radius: 24px;
-    padding: 14px 18px;
-    background: rgb(8 16 31 / 80%);
-    box-shadow: 0 24px 64px rgb(0 0 0 / 40%), var(--shadow-glow);
-    backdrop-filter: blur(18px);
+    border-radius: 20px;
+    padding: 10px 16px;
+    background: var(--nav-background);
+    box-shadow: var(--nav-shadow), var(--shadow-glow);
+    transform: translateY(0);
+    will-change: width, transform;
+    transition:
+      width 460ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 460ms cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 320ms ease,
+      border-radius 460ms cubic-bezier(0.16, 1, 0.3, 1),
+      padding 460ms cubic-bezier(0.16, 1, 0.3, 1),
+      background-color 320ms ease,
+      box-shadow 460ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .site-header[data-compact='true'] {
+    pointer-events: none;
+  }
+
+  .site-header[data-compact='true'] .nav {
+    width: var(--nav-compact-width);
+  }
+
+  .site-header[data-compact='true'] .nav-panel {
+    border-color: rgb(40 247 255 / 34%);
+    border-radius: 16px;
+    padding-block: 7px;
+    background: var(--nav-background-compact);
+    box-shadow: 0 16px 48px rgb(0 0 0 / 34%), var(--shadow-glow);
+    transform: translateY(-6px);
   }
 
   .desktop-links,
   .desktop-actions {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 7px;
+  }
+
+  .desktop-links {
+    position: relative;
+    --nav-highlight-x: 0px;
+    --nav-highlight-width: 0px;
+    --nav-highlight-opacity: 0;
+  }
+
+  .nav-highlight {
+    position: absolute;
+    top: 2px;
+    bottom: 2px;
+    left: 0;
+    width: var(--nav-highlight-width);
+    border: 1px solid rgb(40 247 255 / 14%);
+    border-radius: 999px;
+    background: linear-gradient(135deg, rgb(40 247 255 / 14%), rgb(255 71 223 / 7%));
+    box-shadow: inset 0 0 18px rgb(40 247 255 / 6%), 0 0 18px rgb(40 247 255 / 8%);
+    opacity: var(--nav-highlight-opacity);
+    transform: translateX(var(--nav-highlight-x));
+    transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), width 220ms cubic-bezier(0.22, 1, 0.36, 1), opacity 160ms ease;
   }
 
   .desktop-links a {
+    position: relative;
+    z-index: 1;
     border-radius: 999px;
     padding: 8px 12px;
-    color: #c6d6e1;
+    color: var(--color-muted);
     font-size: 0.92rem;
     font-weight: 700;
+    transition: color 180ms ease, text-shadow 180ms ease, transform 180ms ease;
   }
 
-  .desktop-links a:hover {
-    background: rgb(40 247 255 / 10%);
+  .desktop-links a:hover,
+  .desktop-links a:focus-visible {
+    color: var(--color-text);
+    text-shadow: 0 0 16px rgb(40 247 255 / 32%);
+    box-shadow: var(--nav-item-shadow);
+    transform: translateY(-1px);
+  }
+
+  .desktop-links a[aria-current='page'] {
+    color: var(--color-text);
+  }
+
+  .desktop-links a:focus-visible,
+  .icon-link:focus-visible,
+  .contact:focus-visible,
+  summary:focus-visible {
+    outline: 2px solid var(--color-cyan);
+    outline-offset: 3px;
   }
 
   .icon-link,
@@ -97,7 +190,22 @@ import { site } from '../data/site';
     justify-content: center;
     border: 1px solid var(--color-line);
     border-radius: 999px;
-    background: rgb(14 24 49 / 70%);
+    background: var(--control-background);
+    transition: color 180ms ease, border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+  }
+
+  .icon-link:hover,
+  .icon-link:focus-visible,
+  .desktop-actions :global(.search-trigger:hover),
+  .desktop-actions :global(.search-trigger:focus-visible),
+  .desktop-actions :global(.theme-toggle:hover),
+  .desktop-actions :global(.theme-toggle:focus-visible),
+  .desktop-actions :global(.language-toggle:hover),
+  .desktop-actions :global(.language-toggle:focus-visible) {
+    border-color: rgb(40 247 255 / 42%);
+    color: var(--color-cyan);
+    box-shadow: var(--nav-item-shadow);
+    transform: translateY(-2px);
   }
 
   .icon-link {
@@ -105,22 +213,72 @@ import { site } from '../data/site';
   }
 
   .rss-link {
-    width: auto;
-    gap: 7px;
-    padding: 0 12px;
+    width: 38px;
+    padding: 0;
     color: var(--color-lime);
   }
 
   .rss-link span {
-    font-size: 0.8rem;
-    font-weight: 900;
+    display: none;
   }
 
   .contact {
-    padding: 0 14px;
-    color: #dffbff;
-    font-size: 0.86rem;
+    height: auto;
+    border: 0;
+    padding: 7px 5px;
+    background: transparent;
+    color: var(--color-text);
+    font-size: 0.82rem;
     font-weight: 800;
+    gap: 4px;
+  }
+
+  .contact:hover,
+  .contact:focus-visible {
+    color: var(--color-cyan);
+    text-shadow: 0 0 16px rgb(40 247 255 / 28%);
+    box-shadow: var(--nav-item-shadow);
+    transform: translateY(-1px);
+  }
+
+  .contact-arrow {
+    display: inline-block;
+    transition: transform 180ms ease;
+  }
+
+  .contact:hover .contact-arrow,
+  .contact:focus-visible .contact-arrow {
+    transform: translate(2px, -2px);
+  }
+
+  .desktop-actions :global(.theme-toggle) {
+    width: 38px;
+    min-width: 38px;
+    height: 38px;
+    padding: 0;
+  }
+
+  .desktop-actions :global(.theme-toggle [data-theme-label]) {
+    display: none;
+  }
+
+  .desktop-actions :global(.language-toggle) {
+    min-width: 48px;
+    width: 48px;
+    height: 38px;
+    gap: 0;
+  }
+
+  .desktop-actions :global(.language-toggle .lang-divider),
+  .desktop-actions :global(.language-toggle .lang-next) {
+    display: none;
+  }
+
+  .desktop-actions :global(.search-trigger) {
+    min-width: 144px;
+    height: 38px;
+    justify-content: space-between;
+    padding: 0 9px 0 12px;
   }
 
   svg {
@@ -142,7 +300,7 @@ import { site } from '../data/site';
     place-items: center;
     border: 1px solid var(--color-line);
     border-radius: 999px;
-    background: rgb(14 24 49 / 80%);
+    background: var(--control-background);
     list-style: none;
   }
 
@@ -155,6 +313,11 @@ import { site } from '../data/site';
     width: 18px;
     height: 2px;
     background: var(--color-cyan);
+    transition: opacity 180ms ease, transform 220ms ease;
+  }
+
+  summary span + span {
+    margin-top: 4px;
   }
 
   .mobile-panel {
@@ -168,16 +331,41 @@ import { site } from '../data/site';
     border-radius: var(--radius-md);
     background: var(--color-panel-strong);
     box-shadow: var(--shadow-glow);
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+    transform-origin: top right;
+    transition: opacity 180ms ease, transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  details[open] .mobile-panel {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  details[open] summary span:nth-child(1) {
+    transform: translateY(6px) rotate(45deg);
+  }
+
+  details[open] summary span:nth-child(2) {
+    opacity: 0;
+  }
+
+  details[open] summary span:nth-child(3) {
+    transform: translateY(-6px) rotate(-45deg);
   }
 
   .mobile-panel a {
     padding: 13px 16px;
-    color: #dffbff;
+    color: var(--color-text);
     font-weight: 700;
   }
 
   .mobile-panel :global(.language-toggle) {
     margin: 10px 12px;
+  }
+
+  .mobile-panel :global(.theme-toggle) {
+    border-top: 1px solid var(--color-line);
   }
 
   .mobile-panel a + a,
@@ -195,9 +383,38 @@ import { site } from '../data/site';
       padding: 8px 9px;
       font-size: 0.84rem;
     }
+
+    .desktop-actions :global(.search-trigger span) {
+      display: none;
+    }
+
+    .desktop-actions :global(.search-trigger) {
+      min-width: 78px;
+      width: auto;
+      justify-content: space-between;
+      padding: 0 8px;
+    }
+  }
+
+  @media (max-width: 960px) {
+    .desktop-actions :global(.search-trigger kbd) {
+      display: none;
+    }
+
+    .desktop-actions :global(.search-trigger) {
+      min-width: 38px;
+      width: 38px;
+      justify-content: center;
+      padding: 0;
+    }
   }
 
   @media (max-width: 920px) {
+    .nav,
+    .site-header[data-compact='true'] .nav {
+      width: var(--container);
+    }
+
     .desktop-links,
     .desktop-actions {
       display: none;
@@ -207,4 +424,108 @@ import { site } from '../data/site';
       display: block;
     }
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-header {
+      animation: none !important;
+    }
+
+    .site-header,
+    .nav,
+    .nav-panel,
+    .nav-highlight,
+    .desktop-links a,
+    .icon-link,
+    .contact,
+    .contact-arrow,
+    .mobile-panel,
+    summary span,
+    .desktop-actions :global(*) {
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  @keyframes nav-enter {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
 </style>
+
+<script>
+  const setupCyberNav = () => {
+    document.querySelectorAll('[data-nav-shell]').forEach((shell) => {
+      if (!(shell instanceof HTMLElement) || shell.dataset.navReady === 'true') return;
+      shell.dataset.navReady = 'true';
+
+      const links = shell.querySelector('[data-nav-links]');
+      const highlight = shell.querySelector('[data-nav-highlight]');
+      const navLinks = links ? Array.from(links.querySelectorAll('[data-nav-link]')) : [];
+      let scrollFrame = 0;
+      let resizeFrame = 0;
+
+      const updateCompactState = () => {
+        scrollFrame = 0;
+        const isCompact = shell.dataset.compact === 'true';
+        shell.dataset.compact = String(isCompact ? window.scrollY > 24 : window.scrollY > 72);
+      };
+
+      const requestCompactUpdate = () => {
+        if (scrollFrame) return;
+        scrollFrame = requestAnimationFrame(updateCompactState);
+      };
+
+      const showHighlight = (link) => {
+        if (!(links instanceof HTMLElement) || !(highlight instanceof HTMLElement) || !(link instanceof HTMLElement)) return;
+        const linksRect = links.getBoundingClientRect();
+        const linkRect = link.getBoundingClientRect();
+        links.style.setProperty('--nav-highlight-x', `${linkRect.left - linksRect.left}px`);
+        links.style.setProperty('--nav-highlight-width', `${linkRect.width}px`);
+        links.style.setProperty('--nav-highlight-opacity', '1');
+      };
+
+      const restoreHighlight = () => {
+        if (!(links instanceof HTMLElement)) return;
+        const current = links.querySelector('[aria-current="page"]');
+        if (current instanceof HTMLElement) showHighlight(current);
+        else links.style.setProperty('--nav-highlight-opacity', '0');
+      };
+
+      navLinks.forEach((link) => {
+        link.addEventListener('pointerenter', () => showHighlight(link));
+        link.addEventListener('focus', () => showHighlight(link));
+      });
+      links?.addEventListener('pointerleave', restoreHighlight);
+      links?.addEventListener('focusout', (event) => {
+        if (!(event.relatedTarget instanceof Node) || !links.contains(event.relatedTarget)) restoreHighlight();
+      });
+
+      const requestHighlightUpdate = () => {
+        if (resizeFrame) return;
+        resizeFrame = requestAnimationFrame(() => {
+          resizeFrame = 0;
+          restoreHighlight();
+        });
+      };
+
+      if (links) {
+        const observer = new MutationObserver(requestHighlightUpdate);
+        observer.observe(links, { childList: true, characterData: true, subtree: true });
+      }
+
+      updateCompactState();
+      restoreHighlight();
+      window.addEventListener('scroll', requestCompactUpdate, { passive: true });
+      window.addEventListener('resize', requestHighlightUpdate, { passive: true });
+    });
+  };
+
+  setupCyberNav();
+  document.addEventListener('astro:page-load', setupCyberNav);
+</script>

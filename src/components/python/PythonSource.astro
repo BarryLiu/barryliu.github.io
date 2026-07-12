@@ -1,0 +1,18 @@
+---
+import { Code } from 'astro:components';
+
+type SourceData = { id: string; kind: 'source'; language: string; code: string };
+type Props = { src: string; title?: string };
+
+const { src, title } = Astro.props;
+const sources = import.meta.glob('../../generated/python-content/app/**/*.py.json', { eager: true, import: 'default' }) as Record<string, SourceData>;
+const key = `../../generated/python-content/${src}.json`;
+const source = sources[key];
+if (!source) throw new Error(`Python source has not been generated: ${src}`);
+---
+
+<figure class="python-source" data-python-source={source.id}>
+  <figcaption>{title ?? src}</figcaption>
+  <Code code={source.code} lang={source.language} theme="github-dark" />
+</figure>
+

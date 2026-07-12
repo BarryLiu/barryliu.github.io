@@ -1,0 +1,35 @@
+---
+import { Code } from 'astro:components';
+
+type Output = { type: 'text' | 'error'; text: string } | { type: 'image'; src: string; mime: string };
+type Cell =
+  | { type: 'markdown'; source: string; html: string }
+  | { type: 'code'; source: string; executionCount?: number | null; outputs: Output[] };
+type NotebookData = { id: string; kind: 'notebook'; language: string; cells: Cell[] };
+type Props = { src: string; title?: string };
+
+const { src, title } = Astro.props;
+const notebooks = import.meta.glob('../../generated/python-content/notebooks/**/*.ipynb.json', { eager: true, import: 'default' }) as Record<string, NotebookData>;
+const key = `../../generated/python-content/${src}.json`;
+const notebook = notebooks[key];
+if (!notebook) throw new Error(`Notebook has not been generated: ${src}`);
+---
+
+<section class="notebook" data-notebook={notebook.id}>
+  <header><span>JUPYTER NOTEBOOK</span><strong>{title ?? src}</strong></header>
+  <div class="notebook-cells">
+    {notebook.cells.map((cell) => cell.type === 'markdown' ? (
+      <section class="notebook-cell notebook-markdown" set:html={cell.html} />
+    ) : (
+      <section class="notebook-cell notebook-code">
+        <div class="notebook-input"><span>In [{cell.executionCount ?? ' '}]:</span><Code code={cell.source} lang={notebook.language} theme="github-dark" /></div>
+        {cell.outputs.map((output) => (
+          <div class:list={["notebook-output", output.type === 'error' && 'is-error']}>
+            {output.type === 'image' ? <img src={output.src} alt="Notebook 输出" loading="lazy" /> : <pre>{output.text}</pre>}
+          </div>
+        ))}
+      </section>
+    ))}
+  </div>
+</section>
+

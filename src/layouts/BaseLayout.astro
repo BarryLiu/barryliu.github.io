@@ -21,7 +21,7 @@ const canonicalUrl = new URL(canonical, site.url).toString();
 ---
 
 <!doctype html>
-<html lang="zh-CN" data-lang={site.defaultLang}>
+<html lang="zh-CN" data-lang={site.defaultLang} data-theme-mode="dark" data-color-theme="dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -37,6 +37,24 @@ const canonicalUrl = new URL(canonical, site.url).toString();
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:site_name" content={site.title} />
     <meta name="twitter:card" content="summary_large_image" />
+    <script is:inline>
+      (() => {
+        try {
+          const saved = localStorage.getItem('flying-fish-theme');
+          const mode = saved === 'light' || saved === 'dark'
+            ? saved
+            : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+          localStorage.setItem('flying-fish-theme', mode);
+          document.documentElement.dataset.themeMode = mode;
+          document.documentElement.dataset.colorTheme = mode;
+          document.documentElement.style.colorScheme = mode;
+        } catch {
+          const theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          document.documentElement.dataset.colorTheme = theme;
+          document.documentElement.style.colorScheme = theme;
+        }
+      })();
+    </script>
     <script is:inline>
       (() => {
         try {

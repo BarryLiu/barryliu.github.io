@@ -1,0 +1,135 @@
+---
+const { compact = false } = Astro.props;
+---
+
+<button
+  class:list={['theme-toggle', { compact }]}
+  type="button"
+  data-theme-toggle
+  aria-label="主题：深色模式"
+  title="主题：深色模式"
+>
+  <svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true">
+    <path data-theme-icon-light d="M12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0-5 1 3h-2l1-3Zm0 20-1-3h2l-1 3ZM2 12l3-1v2l-3-1Zm20 0-3 1v-2l3 1ZM4.22 4.22l2.83 1.41-1.42 1.42-1.41-2.83Zm15.56 15.56-2.83-1.41 1.42-1.42 1.41 2.83Zm0-15.56-1.41 2.83-1.42-1.42 2.83-1.41ZM4.22 19.78l1.41-2.83 1.42 1.42-2.83 1.41Z" />
+    <path data-theme-icon-dark d="M19.4 15.5A8 8 0 0 1 8.5 4.6 8 8 0 1 0 19.4 15.5Z" />
+  </svg>
+  <span data-theme-label>深色模式</span>
+</button>
+
+<script is:inline>
+  (() => {
+    if (window.__flyingFishThemeLoaded) return;
+    window.__flyingFishThemeLoaded = true;
+
+    const storageKey = 'flying-fish-theme';
+    const modes = ['light', 'dark'];
+    const labels = {
+      zh: { light: '浅色模式', dark: '深色模式' },
+      en: { light: 'Light', dark: 'Dark' },
+    };
+    const media = window.matchMedia('(prefers-color-scheme: dark)');
+
+    const readMode = () => {
+      try {
+        const saved = localStorage.getItem(storageKey);
+        const mode = modes.includes(saved) ? saved : (media.matches ? 'dark' : 'light');
+        if (saved !== mode) localStorage.setItem(storageKey, mode);
+        return mode;
+      } catch {
+        return media.matches ? 'dark' : 'light';
+      }
+    };
+
+    const updateControls = (mode) => {
+      const lang = document.documentElement.dataset.lang === 'en' ? 'en' : 'zh';
+      document.querySelectorAll('[data-theme-toggle]').forEach((button) => {
+        const label = labels[lang][mode];
+        button.querySelector('[data-theme-label]').textContent = label;
+        button.setAttribute('aria-label', `${lang === 'en' ? 'Theme' : '主题'}：${label}`);
+        button.setAttribute('title', `${lang === 'en' ? 'Theme' : '主题'}：${label}`);
+        button.dataset.themeMode = mode;
+      });
+    };
+
+    const applyTheme = (mode, persist = true) => {
+      const nextMode = modes.includes(mode) ? mode : (media.matches ? 'dark' : 'light');
+      const theme = nextMode;
+      document.documentElement.dataset.themeMode = nextMode;
+      document.documentElement.dataset.colorTheme = theme;
+      document.documentElement.style.colorScheme = theme;
+      if (persist) {
+        try { localStorage.setItem(storageKey, nextMode); } catch { /* Privacy mode. */ }
+      }
+      updateControls(nextMode);
+      window.dispatchEvent(new CustomEvent('flying-fish:theme', { detail: { mode: nextMode, theme } }));
+    };
+
+    window.FlyingFishTheme = {
+      get: () => document.documentElement.dataset.themeMode || readMode(),
+      set: (mode) => applyTheme(mode),
+      toggle: () => {
+        const current = document.documentElement.dataset.themeMode || readMode();
+        applyTheme(current === 'dark' ? 'light' : 'dark');
+      },
+    };
+
+    const start = () => {
+      applyTheme(readMode(), false);
+      document.addEventListener('click', (event) => {
+        if (event.target.closest('[data-theme-toggle]')) window.FlyingFishTheme.toggle();
+      });
+      window.addEventListener('flying-fish:lang', () => updateControls(window.FlyingFishTheme.get()));
+    };
+
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true });
+    else start();
+  })();
+</script>
+
+<style>
+  .theme-toggle {
+    display: inline-flex;
+    min-width: 44px;
+    height: 40px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    border: 1px solid var(--color-line-strong);
+    border-radius: 999px;
+    padding: 0 11px;
+    background: var(--control-background);
+    color: var(--color-text);
+    font: inherit;
+    font-size: 0.76rem;
+    font-weight: 800;
+  }
+
+  .theme-toggle:hover {
+    border-color: var(--color-cyan);
+    box-shadow: var(--shadow-glow);
+  }
+
+  .theme-icon {
+    width: 17px;
+    height: 17px;
+    fill: currentColor;
+  }
+
+  [data-theme-icon-light],
+  [data-theme-icon-dark] {
+    display: none;
+  }
+
+  .theme-toggle[data-theme-mode='light'] [data-theme-icon-light],
+  .theme-toggle[data-theme-mode='dark'] [data-theme-icon-dark] {
+    display: block;
+  }
+
+  .theme-toggle.compact {
+    width: calc(100% - 24px);
+    justify-content: flex-start;
+    margin: 10px 12px;
+    padding: 0 14px;
+  }
+</style>

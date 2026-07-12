@@ -1,0 +1,58 @@
+---
+title: "在 Astro 博客中引用 Python 和 Jupyter Notebook"
+date: 2026-07-12
+postSlug: "ailearn/python-source-and-notebook-demo"
+categories:
+  - AI学习
+tags:
+  - Python
+  - Jupyter
+  - uv
+  - Astro
+description: "展示博客如何直接引用 uv 管理的 Python 源文件和 Jupyter Notebook 已保存内容。"
+keywords:
+  - Python
+  - Jupyter Notebook
+  - Astro MDX
+  - uv
+draft: false
+---
+
+import PythonSource from '@components/python/PythonSource.astro';
+import Notebook from '@components/python/Notebook.astro';
+
+这篇文章是 Python 内容引用链的最小示例。Python 项目由 `uv` 管理，博客构建只读取源文件和 Notebook 已保存的输出，不会执行其中的程序。
+
+## 引用 `.py` 文件
+
+下面的代码直接来自仓库中的 `app/demo.py`。修改源文件并重新生成内容后，文章中的代码会同步更新。
+
+<PythonSource src="app/demo.py" title="app/demo.py" />
+
+本地可以直接运行：
+
+```bash
+uv run python -m app.demo
+```
+
+## 引用 `.ipynb` 文件
+
+下面的内容来自 `notebooks/demo.ipynb`，包含 Notebook 的 Markdown 单元格、代码单元格和已经保存的标准输出。
+
+<Notebook src="notebooks/demo.ipynb" title="notebooks/demo.ipynb" />
+
+## 更新博客中的 Python 内容
+
+修改 `.py` 或 `.ipynb` 后执行：
+
+```bash
+npm run python:render
+```
+
+提交前可以检查生成内容是否同步：
+
+```bash
+npm run python:check
+```
+
+这种方式保持了静态博客构建的稳定性：Cloudflare Pages 不负责执行 Notebook，也不需要在部署阶段重新计算输出。

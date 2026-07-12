@@ -17,7 +17,7 @@
 
 1. fork 仓库到自己的 GitHub
 2. 修改仓库名字为：`username.github.io`
-3. clone 到本地，在 `src/content/posts` 创建正式文章，在 `src/content/drafts` 保存草稿
+3. clone 到本地，在 `content/posts` 创建正式文章，在 `content/drafts` 保存草稿
 4. 修改 CNAME 或删掉使用默认域名
 5. 修改 `src/data/site.ts` 配置项
 6. 如需启用 GitHub OAuth 收藏功能，配置环境变量（见下方"GitHub OAuth 收藏功能"章节）
@@ -82,7 +82,7 @@ binding = "POST_STATS"            # KV 命名空间标识，代码中引用
 
 #### 自动部署
 
-push 到 `master` 分支后自动触发：
+push 到 `main` 分支后自动触发：
 ```
 npm ci → npm run build → Deploy to Cloudflare Pages
 ```

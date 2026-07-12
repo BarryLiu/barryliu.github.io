@@ -116,8 +116,8 @@ const { compact = false } = Astro.props;
     gap: 6px;
     border: 1px solid rgb(255 71 223 / 36%);
     border-radius: 999px;
-    background: rgb(14 24 49 / 72%);
-    color: #f8e8ff;
+    background: var(--control-background);
+    color: var(--color-text);
     font: inherit;
     font-size: 0.78rem;
     font-weight: 900;
@@ -135,7 +135,7 @@ const { compact = false } = Astro.props;
 
   .lang-divider,
   .lang-next {
-    color: #8ea7b8;
+    color: var(--color-muted);
   }
 
   .language-toggle.compact {

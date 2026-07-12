@@ -4,6 +4,108 @@
   box-sizing: border-box;
 }
 
+/* Python source and saved Jupyter Notebook embeds */
+.python-source,
+.notebook {
+  overflow: hidden;
+  margin: 1.75rem 0;
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface-card);
+}
+
+.python-source figcaption,
+.notebook > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0;
+  border-bottom: 1px solid var(--color-line);
+  padding: 10px 14px;
+  color: var(--color-cyan);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+}
+
+.notebook > header span {
+  color: var(--color-lime);
+  letter-spacing: 0.08em;
+}
+
+.python-source pre,
+.notebook pre {
+  margin: 0;
+  border-radius: 0;
+}
+
+.notebook-cell + .notebook-cell {
+  border-top: 1px solid var(--color-line);
+}
+
+.notebook-markdown {
+  padding: 16px 18px;
+}
+
+.notebook-markdown > :first-child {
+  margin-top: 0;
+}
+
+.notebook-markdown > :last-child {
+  margin-bottom: 0;
+}
+
+.notebook-input {
+  display: grid;
+  grid-template-columns: 74px minmax(0, 1fr);
+}
+
+.notebook-input > span {
+  padding: 14px 8px;
+  color: var(--color-cyan);
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  text-align: right;
+}
+
+.notebook-output {
+  margin-left: 74px;
+  border-top: 1px dashed var(--color-line);
+  padding: 12px 16px;
+  background: color-mix(in srgb, var(--surface-card) 82%, var(--color-lime) 3%);
+}
+
+.notebook-output pre {
+  overflow-x: auto;
+  color: var(--color-text);
+  white-space: pre-wrap;
+}
+
+.notebook-output.is-error pre {
+  color: var(--color-magenta);
+}
+
+.notebook-output img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+@media (max-width: 640px) {
+  .notebook-input {
+    grid-template-columns: 1fr;
+  }
+
+  .notebook-input > span {
+    padding: 8px 12px 0;
+    text-align: left;
+  }
+
+  .notebook-output {
+    margin-left: 0;
+  }
+}
+
 html {
   min-width: 320px;
   scroll-behavior: smooth;
@@ -14,12 +116,12 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   background:
-    linear-gradient(90deg, rgb(40 247 255 / 9%) 1px, transparent 1px),
-    linear-gradient(0deg, rgb(40 247 255 / 8%) 1px, transparent 1px),
-    radial-gradient(circle at -4% -3%, rgb(40 247 255 / 22%), transparent 34rem),
-    radial-gradient(circle at 106% -2%, rgb(255 71 223 / 19%), transparent 34rem),
-    radial-gradient(circle at 50% 56rem, rgb(185 255 74 / 10%), transparent 36rem),
-    linear-gradient(135deg, #03040b 0%, #07152a 58%, #0b0312 100%);
+    linear-gradient(90deg, var(--page-grid-line) 1px, transparent 1px),
+    linear-gradient(0deg, var(--page-grid-line) 1px, transparent 1px),
+    radial-gradient(circle at -4% -3%, var(--page-cyan-glow), transparent 34rem),
+    radial-gradient(circle at 106% -2%, var(--page-magenta-glow), transparent 34rem),
+    radial-gradient(circle at 50% 56rem, var(--page-lime-glow), transparent 36rem),
+    var(--page-background);
   background-size: 160px 160px, 160px 160px, auto, auto, auto;
   color: var(--color-text);
   font-family: var(--font-sans);
@@ -32,7 +134,7 @@ body::before {
   z-index: -1;
   pointer-events: none;
   content: "";
-  background: linear-gradient(180deg, rgb(3 4 11 / 10%), rgb(3 4 11 / 72%) 70%, #03040b);
+  background: var(--page-overlay);
 }
 
 a {
@@ -122,8 +224,8 @@ pre {
   border: 1px solid var(--color-line-strong);
   border-radius: 999px;
   padding: 0 18px;
-  background: rgb(14 24 49 / 78%);
-  color: #dffbff;
+  background: var(--control-background);
+  color: var(--color-text);
   font-size: 0.9rem;
   font-weight: 700;
 }
@@ -146,14 +248,14 @@ pre {
   border: 1px solid var(--color-line);
   border-radius: 999px;
   padding: 4px 10px;
-  background: rgb(2 6 23 / 58%);
-  color: #dffbff;
+  background: var(--color-panel);
+  color: var(--color-text);
   font-size: 0.78rem;
   line-height: 1.4;
 }
 
 .prose {
-  color: #d9e7ef;
+  color: var(--color-text);
   font-size: 0.98rem;
 }
 
@@ -190,7 +292,7 @@ pre {
 .prose blockquote {
   border-left: 3px solid var(--color-cyan);
   padding: 0.2rem 0 0.2rem 1rem;
-  color: #b8c7d2;
+  color: var(--color-muted);
   background: rgb(40 247 255 / 5%);
 }
 
@@ -199,14 +301,55 @@ pre {
   border: 1px solid var(--color-line);
   border-radius: var(--radius-sm);
   padding: 16px;
-  background: #020617;
+  background: var(--color-panel-strong);
 }
 
 .prose code:not(pre code) {
-  border: 1px solid rgb(255 255 255 / 10%);
+  border: 1px solid var(--color-line);
   border-radius: 6px;
   padding: 0.1em 0.35em;
-  background: rgb(255 255 255 / 7%);
+  background: var(--color-panel);
+}
+
+:root[data-color-theme='light'] body {
+  background-size: 160px 160px, 160px 160px, auto, auto, auto;
+}
+
+:root[data-color-theme='light'] :is(
+  .radar,
+  .comments,
+  .favorites-shell,
+  .favorites-toolbar,
+  .favorites-empty,
+  .ai-panel,
+  .knowledge-grid > *,
+  .about,
+  .footer
+) {
+  background-color: var(--color-panel) !important;
+  color: var(--color-text);
+  box-shadow: 0 18px 48px rgb(36 88 108 / 12%), var(--shadow-glow);
+}
+
+:root[data-color-theme='light'] :is(
+  .hero-desc,
+  .project-card p,
+  .radar-copy,
+  .article-text,
+  .post-meta,
+  .post-neighbors span,
+  .footer,
+  .footer a
+) {
+  color: var(--color-muted) !important;
+}
+
+:root[data-color-theme='light'] :is(
+  .mobile-panel,
+  .search-dialog
+) {
+  background: var(--color-panel-strong) !important;
+  color: var(--color-text) !important;
 }
 
 .prose table {

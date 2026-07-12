@@ -76,7 +76,7 @@ const { project, featured = false } = Astro.props as { project: Project; feature
     border: 1px solid var(--color-line);
     border-radius: 999px;
     padding: 4px 10px;
-    background: rgb(2 6 23 / 58%);
+    background: var(--surface-soft);
     color: var(--color-cyan);
     font-size: 0.75rem;
     font-weight: 800;
@@ -91,7 +91,7 @@ const { project, featured = false } = Astro.props as { project: Project; feature
 
   p {
     margin: 0;
-    color: #aebdca;
+    color: var(--color-muted);
   }
 
   .featured h3 {
@@ -112,7 +112,7 @@ const { project, featured = false } = Astro.props as { project: Project; feature
     border: 1px solid var(--color-line);
     border-radius: var(--radius-sm);
     padding: 10px 12px;
-    background: rgb(2 6 23 / 58%);
+    background: var(--surface-soft);
   }
 
   .proof-strip span,
@@ -123,7 +123,7 @@ const { project, featured = false } = Astro.props as { project: Project; feature
   }
 
   .proof-strip strong {
-    color: #dffbff;
+    color: var(--color-text);
     font-size: 0.86rem;
   }
 
@@ -139,7 +139,7 @@ const { project, featured = false } = Astro.props as { project: Project; feature
     padding: 12px;
     background:
       linear-gradient(0deg, rgb(40 247 255 / 12%) 1px, transparent 1px),
-      rgb(2 6 23 / 42%);
+      var(--surface-soft);
     background-size: 100% 32px;
   }
 

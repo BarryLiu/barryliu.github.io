@@ -26,6 +26,7 @@ describe('project configuration', () => {
   });
 
   it('keeps Cloudflare deployment configuration in source control', () => {
+    const agents = read('AGENTS.md');
     const workflow = read('.github/workflows/pages.yml');
     const wrangler = read('wrangler.toml');
     const gitignore = read('.gitignore');
@@ -43,7 +44,14 @@ describe('project configuration', () => {
     assert.doesNotMatch(gitignore, /functions\/api\/auth\//);
     assert.doesNotMatch(gitignore, /src\/pages\/favorites\.astro/);
     assert.match(wrangler, /pages_build_output_dir = "dist"/);
-    assert.equal(packageJson.scripts['deploy:cloudflare'], 'npm run build && wrangler pages deploy dist');
+    assert.equal(
+      packageJson.scripts['deploy:cloudflare'],
+      'npm run build && wrangler pages deploy dist --project-name=barryliu-github-io --branch=main',
+    );
+    assert.match(agents, /`npm run deploy:cloudflare`/);
+    assert.match(agents, /`barryliu-github-io`/);
+    assert.match(agents, /生产分支固定为 `main`/);
+    assert.doesNotMatch(agents, /www\.mrlyj\.com/);
   });
 
   it('keeps homepage project data aligned with the design sections', () => {
@@ -54,5 +62,18 @@ describe('project configuration', () => {
     assert.match(projects, /model-deploy/);
     assert.match(projects, /sign-tool/);
     assert.match(projects, /ai-roadmap/);
+  });
+
+  it('loads authored content from the root content directory', () => {
+    const contentConfig = read('src/content/config.ts');
+    const migrationScript = read('scripts/migrate-posts.mjs');
+    const assetScript = read('scripts/copy-static-assets.mjs');
+
+    assert.match(contentConfig, /from 'astro\/loaders'/);
+    assert.match(contentConfig, /base:\s*['"]\.\/content\/posts['"]/);
+    assert.match(contentConfig, /base:\s*['"]\.\/content\/drafts['"]/);
+    assert.match(migrationScript, /path\.join\(repoRoot, 'content\/posts'\)/);
+    assert.match(migrationScript, /path\.join\(repoRoot, 'content\/drafts'\)/);
+    assert.match(assetScript, /path\.join\(repoRoot, 'content\/posts'\)/);
   });
 });
