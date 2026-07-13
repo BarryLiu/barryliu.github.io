@@ -10,6 +10,7 @@ const repoRoot = path.resolve(import.meta.dirname, '..');
 test('converter renders Python source and filters hidden notebook cells', async () => {
   const root = await mkdtemp(path.join(os.tmpdir(), 'python-content-'));
   await mkdir(path.join(root, 'app'), { recursive: true });
+  await mkdir(path.join(root, 'app', 'tests'), { recursive: true });
   await mkdir(path.join(root, 'notebooks'), { recursive: true });
   await writeFile(path.join(root, 'app', 'demo.py'), 'def greet(name: str) -> str:\n    return f"Hello, {name}!"\n');
   await writeFile(path.join(root, 'notebooks', 'demo.ipynb'), JSON.stringify({
@@ -22,6 +23,12 @@ test('converter renders Python source and filters hidden notebook cells', async 
       { cell_type: 'code', execution_count: 2, metadata: { tags: ['blog-ignore'] }, source: ['print("secret")'], outputs: [] },
     ],
   }));
+  await writeFile(path.join(root, 'app', 'tests', 'private.ipynb'), JSON.stringify({
+    nbformat: 4,
+    nbformat_minor: 5,
+    metadata: {},
+    cells: [{ cell_type: 'code', execution_count: null, metadata: {}, source: ['print("test only")'], outputs: [] }],
+  }));
 
   execFileSync('python3', [path.join(repoRoot, 'scripts/render_python_content.py'), '--root', root]);
 
@@ -32,6 +39,10 @@ test('converter renders Python source and filters hidden notebook cells', async 
   assert.equal(notebook.cells.length, 2);
   assert.equal(notebook.cells[1].outputs[0].text, 'visible\\n');
   assert.doesNotMatch(JSON.stringify(notebook), /secret/);
+  await assert.rejects(
+    readFile(path.join(root, 'src/generated/python-content/app/tests/private.ipynb.json'), 'utf8'),
+    { code: 'ENOENT' },
+  );
 });
 
 test('embedding components only load generated content', async () => {

@@ -117,9 +117,11 @@ def generate(root: Path, destination: Path, assets: Path) -> None:
             if not source.is_file():
                 continue
             relative = source.relative_to(root)
-            if source.suffix == ".py" and source.name != "__init__.py" and "tests" not in relative.parts and "__pycache__" not in source.parts:
+            if "tests" in relative.parts or "__pycache__" in source.parts or ".ipynb_checkpoints" in source.parts:
+                continue
+            if source.suffix == ".py" and source.name != "__init__.py":
                 render_source(source, relative, destination)
-            elif source.suffix == ".ipynb" and ".ipynb_checkpoints" not in source.parts:
+            elif source.suffix == ".ipynb":
                 render_notebook(source, relative, destination, assets)
 
 
