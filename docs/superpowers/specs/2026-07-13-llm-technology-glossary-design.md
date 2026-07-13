@@ -8,7 +8,7 @@
 
 ## 读者与写作风格
 
-- 主要读者：准备 AI、大模型、算法或 AI 应用开发岗位面试的初中级开发者。
+- 主要读者：希望系统理解大模型并把 AI 用于日常软件开发的软件工程师，以及准备 AI、大模型、算法或 AI 应用开发岗位面试的初中级开发者。
 - 科普优先：先用自然语言或类比解释，再补充严格定义和必要公式。
 - 全面但有层次：正文覆盖主要技术链路，低频术语放入速查表，避免每个概念平均用力。
 - 不把模型厂商的营销名称当作通用技术定义。
@@ -36,11 +36,21 @@
 7. **提示与模型能力**：Prompt、System Prompt、Zero-shot、Few-shot、In-context Learning、Chain of Thought、Structured Output、Function Calling、幻觉。
 8. **知识增强与 RAG**：Chunking、Embedding Model、向量数据库、稠密检索、稀疏检索、混合检索、召回、重排序、Grounding、RAG 与微调的区别。
 9. **Agent 系统**：Tool Calling、Agent、Planning、Memory、Workflow、MCP、多智能体，以及 Agent 与普通聊天机器人的区别。
-10. **多模态与新架构**：VLM、视觉编码器、扩散模型、长上下文、推理模型和 Test-time Compute。
-11. **推理优化与部署**：Quantization、Distillation、Pruning、Speculative Decoding、Continuous Batching、吞吐量、延迟、TTFT、TPS、模型服务框架。
-12. **评测与安全**：Perplexity、BLEU、ROUGE、MMLU、HumanEval、LLM-as-a-Judge、Benchmark 污染、Prompt Injection、越狱、Guardrail、数据泄露与可解释性。
-13. **面试复习**：高频技术对比、典型问题、按岗位划分的复习重点。
-14. **术语速查表**：中英文全称、缩写、所属环节和一句话定义。
+10. **AI 编程与软件开发**：代码补全、FIM、代码生成与理解、仓库上下文、Coding Agent、IDE/CLI/云端 Agent、LSP、AST、Tree-sitter、Sandbox、Patch、测试调试、代码审查、SWE-bench、Vibe Coding 和安全边界。
+11. **多模态与新架构**：VLM、视觉编码器、扩散模型、长上下文、推理模型和 Test-time Compute。
+12. **推理优化与部署**：Quantization、Distillation、Pruning、Speculative Decoding、Continuous Batching、吞吐量、延迟、TTFT、TPS、模型服务框架。
+13. **评测与安全**：Perplexity、BLEU、ROUGE、MMLU、HumanEval、LLM-as-a-Judge、Benchmark 污染、Prompt Injection、越狱、Guardrail、数据泄露与可解释性。
+14. **面试复习**：大模型通用问题、AI 编程专项问题，以及按岗位划分的复习重点。
+15. **术语速查表**：中英文全称、缩写、所属环节和一句话定义。
+
+AI 编程章节按软件开发生命周期组织：
+
+```text
+需求与 Issue → 仓库上下文 → 计划与规格 → 生成 Patch → 测试与静态检查
+→ 根据失败调试 → 人工审查 Diff → Commit / PR → CI 与上线反馈
+```
+
+该章节重点说明 AI 编程不是单纯的代码生成，而是模型、仓库上下文、开发工具、执行环境、验证反馈、权限和人工审查组成的工程系统。产品名称只用于说明交互形态，稳定技术概念优先引用协议规范、项目文档或原始论文。
 
 ## 单个术语的表达模板
 
@@ -68,7 +78,7 @@
 - Transformer、训练对齐、RAG、Agent、推理优化属于重点章节，提供原理、对比和面试问题。
 - 数学公式只保留帮助理解的核心公式，例如注意力、Softmax、交叉熵和困惑度，不进行完整数学推导。
 - 对具体框架提供作用定位和官方入口，不写容易过期的安装教程。
-- 术语总量目标约 100 个，正文重点解释约 50 至 70 个，其余进入速查表。
+- 术语总量目标不少于 120 个，正文重点解释约 70 至 90 个，其余进入速查表；其中 AI 编程与软件工程术语不少于 20 个。
 
 ## 验证与完成标准
 
