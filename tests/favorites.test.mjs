@@ -19,11 +19,13 @@ describe('server synced favorites', () => {
     const logout = read('functions/api/auth/logout.ts');
 
     assert.match(start, /github\.com\/login\/oauth\/authorize/);
-    assert.match(start, /GITHUB_OAUTH_CLIENT_ID/);
-    assert.match(start, /AUTH_COOKIE_SECRET/);
+    assert.match(start, /getGitHubOAuthConfig\(env\)/);
     assert.match(callback, /github\.com\/login\/oauth\/access_token/);
     assert.match(callback, /api\.github\.com\/user/);
-    assert.match(callback, /GITHUB_OAUTH_CLIENT_SECRET/);
+    assert.match(callback, /getGitHubOAuthConfig\(env\)/);
+    assert.match(auth, /GITHUB_OAUTH_CLIENT_ID/);
+    assert.match(auth, /GITHUB_OAUTH_CLIENT_SECRET/);
+    assert.match(auth, /AUTH_COOKIE_SECRET/);
     assert.match(auth, /HttpOnly/);
     assert.match(auth, /SameSite=Lax/);
     assert.match(auth, /crypto\.subtle/);
