@@ -22,7 +22,7 @@ describe('Mermaid article rendering', () => {
   it('renders fenced Mermaid source safely and keeps a readable fallback', () => {
     const renderer = read('src/components/MermaidRenderer.astro');
 
-    assert.match(renderer, /code\.language-mermaid/);
+    assert.match(renderer, /pre\[data-language=['"]mermaid['"]\]\s*>\s*code/);
     assert.match(renderer, /await import\(['"]mermaid['"]\)/);
     assert.match(renderer, /await import\(['"]@mermaid-js\/mermaid-zenuml['"]\)/);
     assert.match(renderer, /registerExternalDiagrams/);

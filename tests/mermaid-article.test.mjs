@@ -78,6 +78,7 @@ describe('Mermaid complete guide', () => {
     assert.match(markdown, /主题与配置/);
     assert.match(markdown, /安全级别/);
     assert.match(markdown, /常见错误/);
+    assert.match(markdown, /Review,Revise,2\nRevise,Publish,2/, 'Sankey example must not contain a circular link');
 
     for (const type of requiredTypes) {
       assert.match(markdown, new RegExp(`^### .+${escapeRegExp(type)}`, 'm'), `${type} section should exist`);

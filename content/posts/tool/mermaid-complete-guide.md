@@ -656,7 +656,7 @@ sankey-beta
 Draft,Review,10
 Review,Publish,8
 Review,Revise,2
-Revise,Review,2
+Revise,Publish,2
 ```
 
 **关键语法：**每行是 CSV 三元组 `来源,目标,数值`，数值决定流带宽度。
