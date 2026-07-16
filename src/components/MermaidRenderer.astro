@@ -3,6 +3,9 @@
 
   if (codeBlocks.length > 0) {
     const { default: mermaid } = await import('mermaid');
+    const { default: zenuml } = await import('@mermaid-js/mermaid-zenuml');
+
+    await mermaid.registerExternalDiagrams([zenuml]);
 
     mermaid.initialize({
       startOnLoad: false,

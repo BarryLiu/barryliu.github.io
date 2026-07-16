@@ -14,6 +14,7 @@ describe('Mermaid article rendering', () => {
     const layout = read('src/layouts/PostLayout.astro');
 
     assert.equal(packageJson.dependencies.mermaid, '11.16.0');
+    assert.equal(packageJson.dependencies['@mermaid-js/mermaid-zenuml'], '0.2.3');
     assert.match(layout, /import MermaidRenderer from ['"]\.\.\/components\/MermaidRenderer\.astro['"]/);
     assert.match(layout, /<MermaidRenderer\s*\/>/);
   });
@@ -23,6 +24,8 @@ describe('Mermaid article rendering', () => {
 
     assert.match(renderer, /code\.language-mermaid/);
     assert.match(renderer, /await import\(['"]mermaid['"]\)/);
+    assert.match(renderer, /await import\(['"]@mermaid-js\/mermaid-zenuml['"]\)/);
+    assert.match(renderer, /registerExternalDiagrams/);
     assert.match(renderer, /securityLevel:\s*['"]strict['"]/);
     assert.match(renderer, /startOnLoad:\s*false/);
     assert.match(renderer, /suppressErrorRendering:\s*true/);
