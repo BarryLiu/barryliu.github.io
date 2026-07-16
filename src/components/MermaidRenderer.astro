@@ -2,10 +2,13 @@
   const codeBlocks = Array.from(document.querySelectorAll<HTMLElement>('.prose pre > code.language-mermaid'));
 
   if (codeBlocks.length > 0) {
+    const hasZenUml = codeBlocks.some((code) => /^\s*zenuml\b/i.test(code.textContent ?? ''));
     const { default: mermaid } = await import('mermaid');
-    const { default: zenuml } = await import('@mermaid-js/mermaid-zenuml');
 
-    await mermaid.registerExternalDiagrams([zenuml]);
+    if (hasZenUml) {
+      const { default: zenuml } = await import('@mermaid-js/mermaid-zenuml');
+      await mermaid.registerExternalDiagrams([zenuml]);
+    }
 
     mermaid.initialize({
       startOnLoad: false,
