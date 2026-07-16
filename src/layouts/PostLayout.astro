@@ -1,5 +1,6 @@
 ---
 import CommentPanel from '../components/CommentPanel.astro';
+import MermaidRenderer from '../components/MermaidRenderer.astro';
 import PostFloatingActions from '../components/PostFloatingActions.astro';
 import PostStats from '../components/PostStats.astro';
 import BaseLayout from './BaseLayout.astro';
@@ -57,6 +58,7 @@ const githubOAuthEnabled = site.features?.githubOAuth === true;
     </div>
   </article>
   <PostFloatingActions postSlug={post.data.postSlug} commentsEnabled={commentsEnabled} githubOAuthEnabled={githubOAuthEnabled} />
+  <MermaidRenderer />
 </BaseLayout>
 
 <style>

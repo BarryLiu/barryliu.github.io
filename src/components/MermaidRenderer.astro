@@ -1,0 +1,197 @@
+<script>
+  const codeBlocks = Array.from(document.querySelectorAll<HTMLElement>('.prose pre > code.language-mermaid'));
+
+  if (codeBlocks.length > 0) {
+    const { default: mermaid } = await import('mermaid');
+
+    mermaid.initialize({
+      startOnLoad: false,
+      securityLevel: 'strict',
+      suppressErrorRendering: true,
+      theme: 'base',
+      fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif',
+      themeVariables: {
+        background: '#071322',
+        primaryColor: '#0b1f36',
+        primaryTextColor: '#f0fdff',
+        primaryBorderColor: '#28f7ff',
+        secondaryColor: '#24102d',
+        secondaryTextColor: '#f0fdff',
+        secondaryBorderColor: '#ff47df',
+        tertiaryColor: '#16240b',
+        tertiaryTextColor: '#f0fdff',
+        tertiaryBorderColor: '#b9ff4a',
+        lineColor: '#8ea7b8',
+        textColor: '#f0fdff',
+        noteBkgColor: '#111d31',
+        noteTextColor: '#f0fdff',
+        noteBorderColor: '#ffd166',
+      },
+    });
+
+    const copySource = async (source: string) => {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(source);
+        return;
+      }
+
+      const textarea = document.createElement('textarea');
+      textarea.value = source;
+      textarea.setAttribute('readonly', '');
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      textarea.remove();
+    };
+
+    for (const [index, code] of codeBlocks.entries()) {
+      const sourcePre = code.parentElement;
+      if (!sourcePre || sourcePre.dataset.mermaidProcessed === 'true') continue;
+
+      sourcePre.dataset.mermaidProcessed = 'true';
+      const source = code.textContent?.trim() ?? '';
+      const diagramType = source.split(/\r?\n/, 1)[0]?.trim() || 'Mermaid';
+      const shell = document.createElement('section');
+      const preview = document.createElement('div');
+      const sourceDetails = document.createElement('details');
+      const summary = document.createElement('summary');
+      const sourceLabel = document.createElement('span');
+      const copyButton = document.createElement('button');
+      const preservedSource = sourcePre.cloneNode(true) as HTMLElement;
+
+      shell.className = 'mermaid-example';
+      shell.dataset.mermaidProcessed = 'true';
+      preview.className = 'mermaid-preview';
+      preview.setAttribute('role', 'img');
+      preview.setAttribute('aria-label', `${diagramType} Mermaid 图表`);
+      sourceDetails.className = 'mermaid-source';
+      sourceLabel.textContent = '查看 Mermaid 源码';
+      copyButton.type = 'button';
+      copyButton.dataset.mermaidCopy = 'true';
+      copyButton.textContent = '复制源码';
+      preservedSource.removeAttribute('data-mermaid-processed');
+
+      copyButton.addEventListener('click', async (event) => {
+        event.preventDefault();
+        try {
+          await copySource(source);
+          copyButton.textContent = '已复制';
+        } catch {
+          copyButton.textContent = '复制失败';
+        }
+        window.setTimeout(() => {
+          copyButton.textContent = '复制源码';
+        }, 1600);
+      });
+
+      summary.append(sourceLabel, copyButton);
+      sourceDetails.append(summary, preservedSource);
+      shell.append(preview, sourceDetails);
+      sourcePre.replaceWith(shell);
+
+      try {
+        const renderId = `mermaid-diagram-${Date.now()}-${index}`;
+        const { svg, bindFunctions } = await mermaid.render(renderId, source);
+        preview.innerHTML = svg;
+        bindFunctions?.(preview);
+      } catch (error) {
+        preview.classList.add('mermaid-error');
+        preview.removeAttribute('role');
+        preview.setAttribute('aria-live', 'polite');
+        preview.textContent = `图表渲染失败：${error instanceof Error ? error.message : String(error)}`;
+        sourceDetails.open = true;
+      }
+    }
+  }
+</script>
+
+<style is:global>
+  .mermaid-example {
+    display: grid;
+    gap: 0;
+    overflow: hidden;
+    margin: 1.4rem 0;
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-md);
+    background: var(--surface-strong);
+    box-shadow: var(--shadow-glow);
+  }
+
+  .mermaid-preview {
+    overflow-x: auto;
+    padding: clamp(18px, 3vw, 32px);
+    background:
+      radial-gradient(circle at 10% 0%, rgb(40 247 255 / 10%), transparent 25rem),
+      radial-gradient(circle at 95% 100%, rgb(255 71 223 / 10%), transparent 24rem),
+      var(--surface-strong);
+    color: var(--color-text);
+    text-align: center;
+  }
+
+  .mermaid-preview svg {
+    display: block;
+    width: auto;
+    min-width: min(100%, 640px);
+    max-width: none;
+    height: auto;
+    margin: 0 auto;
+  }
+
+  .mermaid-source {
+    border-top: 1px solid var(--color-line);
+    background: var(--color-panel-strong);
+  }
+
+  .mermaid-source summary {
+    display: flex;
+    min-height: 48px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 14px;
+    color: var(--color-cyan);
+    cursor: pointer;
+    font-weight: 800;
+  }
+
+  .mermaid-source summary::marker {
+    color: var(--color-magenta);
+  }
+
+  .mermaid-source [data-mermaid-copy] {
+    border: 1px solid var(--color-line-strong);
+    border-radius: 999px;
+    padding: 6px 12px;
+    background: var(--control-background);
+    color: var(--color-lime);
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.78rem;
+  }
+
+  .prose .mermaid-source pre {
+    margin: 0;
+    border: 0;
+    border-top: 1px solid var(--color-line);
+    border-radius: 0;
+  }
+
+  .mermaid-error {
+    color: #ff9ccf;
+    text-align: left;
+    white-space: pre-wrap;
+  }
+
+  @media (max-width: 620px) {
+    .mermaid-preview {
+      padding: 14px;
+    }
+
+    .mermaid-source summary {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  }
+</style>
