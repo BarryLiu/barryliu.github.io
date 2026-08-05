@@ -1,7 +1,7 @@
 ---
-title: "AI 大模型技术全景：从 Transformer 到 RAG、Agent 的专业术语手册"
+title: AI 大模型技术全景：从 Transformer 到 RAG、Agent 的专业术语手册
 date: 2026-07-13
-postSlug: "ailearn/llm-technology-glossary"
+postSlug: ailearn/llm-technology-glossary
 categories:
   - ailearn
 tags:
@@ -10,9 +10,9 @@ tags:
   - Transformer
   - RAG
   - Agent
-  - "技术面试"
-description: "沿大模型技术生命周期系统讲解数据、Transformer、训练对齐、推理、RAG、Agent、部署、评测与安全等核心技术和专业术语。"
-keywords: "AI大模型, LLM术语, Transformer, RLHF, RAG, AI Agent, 大模型面试"
+  - 技术面试
+description: 沿大模型技术生命周期系统讲解数据、Transformer、训练对齐、推理、RAG、Agent、部署、评测与安全等核心技术和专业术语。
+keywords: AI大模型, LLM术语, Transformer, RLHF, RAG, AI Agent, 大模型面试
 featured: false
 ---
 

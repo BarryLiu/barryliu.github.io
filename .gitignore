@@ -23,10 +23,19 @@ desktop.ini
 # 日志和临时文件
 *.log
 *.tmp
+*.base
+*.canvas
 test-results/
 playwright-report/
 .astro-dev.pid
 .astro-dev.log
+
+# 本机临时 Markdown 与空白占位文件
+/2222.md
+/docker system df.md
+/未命名.md
+/content/diary/2026-07-14.md
+/posts/ailearn/01-ai-foundation.md
 
 
 # claude忽略文件
